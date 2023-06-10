@@ -1,0 +1,34 @@
+plugins {
+    kotlin("jvm") version "1.8.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    java
+}
+
+allprojects {
+    group = "app.simplecloud.droplet"
+    version = "1.0-SNAPSHOT"
+
+    apply {
+        plugin("java")
+        plugin("org.jetbrains.kotlin.jvm")
+        plugin("com.github.johnrengelman.shadow")
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    kotlin {
+        jvmToolchain(16)
+    }
+}
+
+subprojects {
+    dependencies {
+        implementation(kotlin("stdlib"))
+    }
+
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions.jvmTarget = "16"
+    }
+}
