@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package app.simplecloud.droplet.player.proto;
+
+option java_package = "app.simplecloud.droplet.player.proto";
+option java_multiple_files = true;
+
+message PlayerConnectionConfiguration {
+  string uniqueId = 1;
+  string name = 2;
+  int32 numericalClientVersion = 3;
+  bool onlineMode = 4;
+}
+
+message OfflineCloudPlayerConfiguration {
+  string uniqueId = 1;
+  string name = 2;
+  int64 firstLogin = 3;
+  int64 lastLogin = 4;
+  int64 onlineTime = 5;
+  string displayName = 6;
+  PlayerConnectionConfiguration lastPlayerConnection = 7;
+}
+
+message CloudPlayerConfiguration {
+  string uniqueId = 1;
+  string name = 2;
+  int64 firstLogin = 3;
+  int64 lastLogin = 4;
+  int64 onlineTime = 5;
+  string displayName = 6;
+  PlayerConnectionConfiguration playerConnection = 7;
+  string connectedServerName = 8;
+  string connectedProxyName = 9;
+}
+
+message GetCloudPlayerByUniqueIdRequest {
+  string uniqueId = 1;
+}
+
+message GetCloudPlayerByNameRequest {
+  string name = 1;
+}
+
+message GetOfflineCloudPlayerResponse {
+  OfflineCloudPlayerConfiguration offlineCloudPlayer = 1;
+}
+
+message GetCloudPlayerResponse {
+  CloudPlayerConfiguration cloudPlayer = 1;
+}
+
+message GetOnlineCloudPlayersRequest {}
+
+message GetOnlineCloudPlayersResponse {
+  repeated CloudPlayerConfiguration onlineCloudPlayers = 1;
+}
+
+message GetOnlineCloudPlayerCountRequest {}
+
+message GetOnlineCloudPlayerCountResponse {
+  int32 count = 1;
+}
+
+message GetOnlineStatusRequest {
+  string uniqueId = 1;
+}
+
+message GetOnlineStatusResponse {
+  bool online = 1;
+}
+
+service PlayerService {
+  rpc getOfflineCloudPlayerByUniqueId(GetCloudPlayerByUniqueIdRequest) returns (GetOfflineCloudPlayerResponse);
+  rpc getOfflineCloudPlayerByName(GetCloudPlayerByNameRequest) returns (GetOfflineCloudPlayerResponse);
+  rpc getCloudPlayerByUniqueId(GetCloudPlayerByUniqueIdRequest) returns (GetCloudPlayerResponse);
+  rpc getCloudPlayerByName(GetCloudPlayerByNameRequest) returns (GetCloudPlayerResponse);
+  rpc getOnlineCloudPlayers(GetOnlineCloudPlayersRequest) returns (GetOnlineCloudPlayersResponse);
+  rpc getOnlineCloudPlayerCount(GetOnlineCloudPlayerCountRequest) returns (GetOnlineCloudPlayerCountResponse);
+  rpc getOnlineStatus(GetOnlineStatusRequest) returns (GetOnlineStatusResponse);
+}
