@@ -1,15 +1,17 @@
 package app.simplecloud.droplet.player.api.impl
 
 import app.simplecloud.droplet.player.api.OfflineCloudPlayer
-import app.simplecloud.droplet.player.api.impl.configuration.OfflineCloudPlayerConfigurationWrapper
+import app.simplecloud.droplet.player.proto.OfflineCloudPlayerConfiguration
 import java.util.*
 
 open class OfflineCloudPlayerImpl(
-    private val configurationWrapper: OfflineCloudPlayerConfigurationWrapper
+    private val configurationWrapper: OfflineCloudPlayerConfiguration
 ) : OfflineCloudPlayer {
 
+    private val uniqueId = UUID.fromString(configurationWrapper.uniqueId)
+
     override fun getUniqueId(): UUID {
-        return this.configurationWrapper.uniqueId
+        return this.uniqueId
     }
 
     override fun getName(): String {
@@ -34,10 +36,6 @@ open class OfflineCloudPlayerImpl(
 
     override fun isOnline(): Boolean {
         return false
-    }
-
-    override fun toConfiguration(): OfflineCloudPlayerConfigurationWrapper {
-        return this.configurationWrapper
     }
 
 }

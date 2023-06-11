@@ -1,7 +1,6 @@
 package app.simplecloud.droplet.player.api.impl
 
 import app.simplecloud.droplet.player.api.CloudPlayer
-import app.simplecloud.droplet.player.api.impl.configuration.CloudPlayerConfigurationWrapper
 import app.simplecloud.droplet.player.proto.*
 import app.simplecloud.droplet.player.proto.PlayerServiceGrpc.PlayerServiceFutureStub
 import net.kyori.adventure.bossbar.BossBar
@@ -16,24 +15,20 @@ import net.kyori.adventure.title.TitlePart
 
 class CloudPlayerImpl(
     private val playerServiceStub: PlayerServiceFutureStub,
-    private val configurationWrapper: CloudPlayerConfigurationWrapper,
+    private val configuration: CloudPlayerConfiguration,
     private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson(),
-) : OfflineCloudPlayerImpl(configurationWrapper), CloudPlayer {
+) : OfflineCloudPlayerImpl(OfflineCloudPlayerConfiguration.parseFrom(configuration.toByteArray())), CloudPlayer {
 
     override fun getConnectedServerName(): String? {
-        return this.configurationWrapper.connectedServerName
+        return this.configuration.connectedServerName
     }
 
     override fun getConnectedProxyName(): String {
-        return this.configurationWrapper.connectedProxyName
+        return this.configuration.connectedProxyName
     }
 
     override fun isOnline(): Boolean {
         return true
-    }
-
-    override fun toConfiguration(): CloudPlayerConfigurationWrapper {
-        return this.configurationWrapper
     }
 
     override fun sendMessage(message: Component, boundChatType: ChatType.Bound) {
