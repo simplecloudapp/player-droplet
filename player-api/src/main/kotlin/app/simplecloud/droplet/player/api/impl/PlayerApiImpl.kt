@@ -3,6 +3,8 @@ package app.simplecloud.droplet.player.api.impl
 import app.simplecloud.droplet.player.api.CloudPlayer
 import app.simplecloud.droplet.player.api.OfflineCloudPlayer
 import app.simplecloud.droplet.player.api.PlayerApi
+import app.simplecloud.droplet.player.api.impl.configuration.CloudPlayerConfigurationWrapper
+import app.simplecloud.droplet.player.api.impl.configuration.OfflineCloudPlayerConfigurationWrapper
 import app.simplecloud.droplet.player.proto.*
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
@@ -22,19 +24,21 @@ class PlayerApiImpl : PlayerApi {
                     .build()
             )
 
-            OfflineCloudPlayerImpl()
+            val configurationWrapper = OfflineCloudPlayerConfigurationWrapper.fromConfiguration(response.offlineCloudPlayer)
+            OfflineCloudPlayerImpl(configurationWrapper)
         }
     }
 
     override fun getOfflinePlayer(uniqueId: UUID): CompletableFuture<OfflineCloudPlayer> {
         return CompletableFuture.supplyAsync {
-            val response = playerServiceStub.getCloudPlayerByUniqueId(
+            val response = playerServiceStub.getOfflineCloudPlayerByUniqueId(
                 GetCloudPlayerByUniqueIdRequest.newBuilder()
                     .setUniqueId(uniqueId.toString())
                     .build()
             )
 
-            OfflineCloudPlayerImpl()
+            val configurationWrapper = OfflineCloudPlayerConfigurationWrapper.fromConfiguration(response.offlineCloudPlayer)
+            OfflineCloudPlayerImpl(configurationWrapper)
         }
     }
 
@@ -46,7 +50,8 @@ class PlayerApiImpl : PlayerApi {
                     .build()
             )
 
-            CloudPlayerImpl(playerServiceStub)
+            val configurationWrapper = CloudPlayerConfigurationWrapper.fromConfiguration(response.cloudPlayer)
+            CloudPlayerImpl(playerServiceStub, configurationWrapper)
         }
     }
 
@@ -58,7 +63,8 @@ class PlayerApiImpl : PlayerApi {
                     .build()
             )
 
-            CloudPlayerImpl(playerServiceStub)
+            val configurationWrapper = CloudPlayerConfigurationWrapper.fromConfiguration(response.cloudPlayer)
+            CloudPlayerImpl(playerServiceStub, configurationWrapper)
         }
     }
 
@@ -66,7 +72,10 @@ class PlayerApiImpl : PlayerApi {
         return CompletableFuture.supplyAsync {
             val response = playerServiceStub.getOnlineCloudPlayers(GetOnlineCloudPlayersRequest.getDefaultInstance())
 
-            response.onlineCloudPlayersList.map { CloudPlayerImpl(playerServiceStub) }
+            response.onlineCloudPlayersList.map {
+                val configurationWrapper = CloudPlayerConfigurationWrapper.fromConfiguration(it)
+                CloudPlayerImpl(playerServiceStub, configurationWrapper)
+            }
         }
     }
 

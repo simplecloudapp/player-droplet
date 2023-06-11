@@ -1,6 +1,7 @@
 package app.simplecloud.droplet.player.api.impl
 
 import app.simplecloud.droplet.player.api.CloudPlayer
+import app.simplecloud.droplet.player.api.impl.configuration.CloudPlayerConfigurationWrapper
 import app.simplecloud.droplet.player.proto.*
 import app.simplecloud.droplet.player.proto.PlayerServiceGrpc.PlayerServiceBlockingStub
 import net.kyori.adventure.bossbar.BossBar
@@ -14,15 +15,24 @@ import net.kyori.adventure.title.TitlePart
 
 class CloudPlayerImpl(
     private val playerServiceStub: PlayerServiceBlockingStub,
-    private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson()
-) : OfflineCloudPlayerImpl(), CloudPlayer {
+    private val configurationWrapper: CloudPlayerConfigurationWrapper,
+    private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson(),
+) : OfflineCloudPlayerImpl(configurationWrapper), CloudPlayer {
 
     override fun getConnectedServerName(): String? {
-        TODO("Not yet implemented")
+        return this.configurationWrapper.connectedServerName
     }
 
     override fun getConnectedProxyName(): String {
-        TODO("Not yet implemented")
+        return this.configurationWrapper.connectedProxyName
+    }
+
+    override fun isOnline(): Boolean {
+        return true
+    }
+
+    override fun toConfiguration(): CloudPlayerConfigurationWrapper {
+        return this.configurationWrapper
     }
 
     override fun sendMessage(message: Component, boundChatType: ChatType.Bound) {
@@ -122,8 +132,12 @@ class CloudPlayerImpl(
     override fun openBook(book: Book) {
         val bookBuilder = AdventureBook.newBuilder()
 
-        bookBuilder.setTitle( AdventureComponent.newBuilder().setJson(componentSerializer.serialize(book.title())).build())
-        bookBuilder.setAuthor( AdventureComponent.newBuilder().setJson(componentSerializer.serialize(book.author())).build())
+        bookBuilder.setTitle(
+            AdventureComponent.newBuilder().setJson(componentSerializer.serialize(book.title())).build()
+        )
+        bookBuilder.setAuthor(
+            AdventureComponent.newBuilder().setJson(componentSerializer.serialize(book.author())).build()
+        )
 
         for (page in book.pages()) {
             bookBuilder.addPages(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(page)).build())

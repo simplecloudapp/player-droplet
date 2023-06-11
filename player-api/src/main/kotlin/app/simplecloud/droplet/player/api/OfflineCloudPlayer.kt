@@ -1,5 +1,6 @@
 package app.simplecloud.droplet.player.api
 
+import app.simplecloud.droplet.player.api.impl.configuration.OfflineCloudPlayerConfigurationWrapper
 import java.util.UUID
 
 interface OfflineCloudPlayer {
@@ -38,5 +39,7 @@ interface OfflineCloudPlayer {
      * @returns if the player is online.
      */
     fun isOnline(): Boolean
+
+    fun toConfiguration(): OfflineCloudPlayerConfigurationWrapper
 
 }

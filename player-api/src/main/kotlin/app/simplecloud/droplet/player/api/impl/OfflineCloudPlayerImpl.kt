@@ -1,36 +1,43 @@
 package app.simplecloud.droplet.player.api.impl
 
 import app.simplecloud.droplet.player.api.OfflineCloudPlayer
+import app.simplecloud.droplet.player.api.impl.configuration.OfflineCloudPlayerConfigurationWrapper
 import java.util.*
 
-open class OfflineCloudPlayerImpl : OfflineCloudPlayer {
+open class OfflineCloudPlayerImpl(
+    private val configurationWrapper: OfflineCloudPlayerConfigurationWrapper
+) : OfflineCloudPlayer {
 
     override fun getUniqueId(): UUID {
-        TODO("Not yet implemented")
+        return this.configurationWrapper.uniqueId
     }
 
     override fun getName(): String {
-        TODO("Not yet implemented")
+        return this.configurationWrapper.name
     }
 
     override fun getDisplayName(): String {
-        TODO("Not yet implemented")
+        return this.configurationWrapper.displayName
     }
 
     override fun getFirstLogin(): Long {
-        TODO("Not yet implemented")
+        return this.configurationWrapper.firstLogin
     }
 
     override fun getLastLogin(): Long {
-        TODO("Not yet implemented")
+        return this.configurationWrapper.lastLogin
     }
 
     override fun getOnlineTime(): Long {
-        TODO("Not yet implemented")
+        return this.configurationWrapper.onlineTime
     }
 
     override fun isOnline(): Boolean {
-        TODO("Not yet implemented")
+        return false
+    }
+
+    override fun toConfiguration(): OfflineCloudPlayerConfigurationWrapper {
+        return this.configurationWrapper
     }
 
 }
