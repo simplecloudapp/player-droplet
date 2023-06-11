@@ -85,7 +85,6 @@ class CloudPlayerImpl(
                     .build()
             )
         }
-
     }
 
     override fun clearTitle() {
