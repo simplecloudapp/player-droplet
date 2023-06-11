@@ -40,6 +40,9 @@ interface OfflineCloudPlayer {
      */
     fun isOnline(): Boolean
 
+    /**
+     * @returns the configuration of the player.
+     */
     fun toConfiguration(): OfflineCloudPlayerConfigurationWrapper
 
 }

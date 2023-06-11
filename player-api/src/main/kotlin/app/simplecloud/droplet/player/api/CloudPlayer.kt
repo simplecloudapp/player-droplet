@@ -15,6 +15,9 @@ interface CloudPlayer : OfflineCloudPlayer, Audience {
      */
     fun getConnectedProxyName(): String
 
+    /**
+     * @returns the configuration of the player.
+     */
     override fun toConfiguration(): CloudPlayerConfigurationWrapper
 
     /**
