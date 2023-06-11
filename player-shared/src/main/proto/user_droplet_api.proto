@@ -6,10 +6,9 @@ option java_package = "app.simplecloud.droplet.player.proto";
 option java_multiple_files = true;
 
 message PlayerConnectionConfiguration {
-  string uniqueId = 1;
-  string name = 2;
-  int32 numericalClientVersion = 3;
-  bool onlineMode = 4;
+  string clientLanguage = 1;
+  int32 numericalClientVersion = 2;
+  bool onlineMode = 3;
 }
 
 message OfflineCloudPlayerConfiguration {

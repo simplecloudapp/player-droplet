@@ -5,16 +5,14 @@ import dev.morphia.annotations.Entity
 
 @Entity
 data class PlayerConnectionEntity(
-    val uniqueId: String,
-    val name: String,
+    val clientLanguage: String,
     val numericalClientVersion: Int,
     val onlineMode: Boolean
 ) {
 
     fun toConfiguration(): PlayerConnectionConfiguration {
         return PlayerConnectionConfiguration.newBuilder()
-            .setUniqueId(uniqueId)
-            .setName(name)
+            .setClientLanguage(clientLanguage)
             .setNumericalClientVersion(numericalClientVersion)
             .setOnlineMode(onlineMode)
             .build()
