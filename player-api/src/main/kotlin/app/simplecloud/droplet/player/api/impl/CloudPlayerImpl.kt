@@ -64,7 +64,7 @@ class CloudPlayerImpl(
         )
     }
 
-    override fun <T> sendTitlePart(part: TitlePart<T>, value: T) {
+    override fun <T: Any> sendTitlePart(part: TitlePart<T>, value: T) {
         if (value is Title.Times) {
             playerServiceStub.sendTitlePartTimes(
                 SendTitlePartTimesRequest.newBuilder()
@@ -75,7 +75,7 @@ class CloudPlayerImpl(
                     .build()
             )
         } else {
-            val component = part as Component
+            val component = value as Component
             playerServiceStub.sendTitlePartComponent(
                 SendTitlePartComponentRequest.newBuilder()
                     .setUniqueId(getUniqueId().toString())
