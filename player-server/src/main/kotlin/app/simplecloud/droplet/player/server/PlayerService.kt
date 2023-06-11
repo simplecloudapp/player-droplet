@@ -54,4 +54,8 @@ class PlayerService : PlayerServiceGrpc.PlayerServiceImplBase() {
 
     }
 
+    override fun sendMessage(request: SendMessageRequest?, responseObserver: StreamObserver<SendMessageResponse>?) {
+
+    }
+
 }
