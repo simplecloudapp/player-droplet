@@ -3,7 +3,7 @@ package app.simplecloud.droplet.player.api.impl
 import app.simplecloud.droplet.player.api.CloudPlayer
 import app.simplecloud.droplet.player.api.impl.configuration.CloudPlayerConfigurationWrapper
 import app.simplecloud.droplet.player.proto.*
-import app.simplecloud.droplet.player.proto.PlayerServiceGrpc.PlayerServiceBlockingStub
+import app.simplecloud.droplet.player.proto.PlayerServiceGrpc.PlayerServiceFutureStub
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.inventory.Book
@@ -15,7 +15,7 @@ import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.TitlePart
 
 class CloudPlayerImpl(
-    private val playerServiceStub: PlayerServiceBlockingStub,
+    private val playerServiceStub: PlayerServiceFutureStub,
     private val configurationWrapper: CloudPlayerConfigurationWrapper,
     private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson(),
 ) : OfflineCloudPlayerImpl(configurationWrapper), CloudPlayer {
@@ -65,7 +65,6 @@ class CloudPlayerImpl(
     }
 
     override fun <T> sendTitlePart(part: TitlePart<T>, value: T) {
-
         if (value is Title.Times) {
             playerServiceStub.sendTitlePartTimes(
                 SendTitlePartTimesRequest.newBuilder()
@@ -76,7 +75,7 @@ class CloudPlayerImpl(
                     .build()
             )
         } else {
-            var component = part as Component
+            val component = part as Component
             playerServiceStub.sendTitlePartComponent(
                 SendTitlePartComponentRequest.newBuilder()
                     .setUniqueId(getUniqueId().toString())
