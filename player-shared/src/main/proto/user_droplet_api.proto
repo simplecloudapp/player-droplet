@@ -70,6 +70,21 @@ message GetOnlineStatusResponse {
   bool online = 1;
 }
 
+message ConnectCloudPlayerRequest {
+  string uniqueId = 1;
+  string serverName = 2;
+}
+
+message ConnectCloudPlayerResponse {
+  CloudPlayerConnectResult result = 1;
+}
+
+enum CloudPlayerConnectResult {
+  SUCCESS = 0;
+  ALREADY_CONNECTED = 1;
+  FAILED = 2;
+}
+
 service PlayerService {
   rpc getOfflineCloudPlayerByUniqueId(GetCloudPlayerByUniqueIdRequest) returns (GetOfflineCloudPlayerResponse);
   rpc getOfflineCloudPlayerByName(GetCloudPlayerByNameRequest) returns (GetOfflineCloudPlayerResponse);
@@ -78,4 +93,6 @@ service PlayerService {
   rpc getOnlineCloudPlayers(GetOnlineCloudPlayersRequest) returns (GetOnlineCloudPlayersResponse);
   rpc getOnlineCloudPlayerCount(GetOnlineCloudPlayerCountRequest) returns (GetOnlineCloudPlayerCountResponse);
   rpc getOnlineStatus(GetOnlineStatusRequest) returns (GetOnlineStatusResponse);
+
+  rpc connectCloudPlayer(ConnectCloudPlayerRequest) returns (ConnectCloudPlayerResponse);
 }
