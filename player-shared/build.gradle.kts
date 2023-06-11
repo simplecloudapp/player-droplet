@@ -9,7 +9,6 @@ dependencies {
     api("io.grpc:grpc-stub:1.55.1")
     api("io.grpc:grpc-protobuf:1.55.1")
     api("io.grpc:grpc-netty-shaded:1.55.1")
-    api("redis.clients:jedis:4.4.1")
     api("com.google.code.gson:gson:2.10.1")
     api("javax.annotation:javax.annotation-api:1.3.2")
 }

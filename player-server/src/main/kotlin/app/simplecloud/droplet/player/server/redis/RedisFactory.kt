@@ -1,4 +1,4 @@
-package app.simplecloud.droplet.player.shared.redis
+package app.simplecloud.droplet.player.server.redis
 
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
