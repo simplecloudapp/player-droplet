@@ -1,6 +1,7 @@
 package app.simplecloud.droplet.player.api.impl
 
 import app.simplecloud.droplet.player.api.CloudPlayer
+import app.simplecloud.droplet.player.proto.*
 import app.simplecloud.droplet.player.proto.PlayerServiceGrpc.PlayerServiceBlockingStub
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.chat.ChatType
@@ -8,11 +9,13 @@ import net.kyori.adventure.inventory.Book
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.sound.SoundStop
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import net.kyori.adventure.title.TitlePart
 
 class CloudPlayerImpl(
     private val playerServiceStub: PlayerServiceBlockingStub,
-): OfflineCloudPlayerImpl(), CloudPlayer {
+    private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson()
+) : OfflineCloudPlayerImpl(), CloudPlayer {
 
     override fun getConnectedServerName(): String? {
         TODO("Not yet implemented")
@@ -23,14 +26,31 @@ class CloudPlayerImpl(
     }
 
     override fun sendMessage(message: Component, boundChatType: ChatType.Bound) {
-
+        playerServiceStub.sendMessage(
+            SendMessageRequest.newBuilder()
+                .setUniqueId(getUniqueId().toString())
+                .setMessage(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(message)).build())
+                .build()
+        )
     }
 
     override fun sendActionBar(message: Component) {
+        playerServiceStub.sendActionbar(
+            SendActionbarRequest.newBuilder()
+                .setUniqueId(getUniqueId().toString())
+                .setMessage(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(message)).build())
+                .build()
+        )
     }
 
     override fun sendPlayerListHeaderAndFooter(header: Component, footer: Component) {
-
+        playerServiceStub.sendPlayerListHeaderAndFooter(
+            SendPlayerListHeaderAndFooterRequest.newBuilder()
+                .setUniqueId(getUniqueId().toString())
+                .setFooter(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(footer)).build())
+                .setHeader(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(header)).build())
+                .build()
+        )
     }
 
     override fun <T> sendTitlePart(part: TitlePart<T>, value: T) {
@@ -38,11 +58,19 @@ class CloudPlayerImpl(
     }
 
     override fun clearTitle() {
-
+        playerServiceStub.sendClearTitle(
+            SendClearTitleRequest.newBuilder()
+                .setUniqueId(getUniqueId().toString())
+                .build()
+        )
     }
 
     override fun resetTitle() {
-
+        playerServiceStub.sendResetTitle(
+            SendResetTitleRequest.newBuilder()
+                .setUniqueId(getUniqueId().toString())
+                .build()
+        )
     }
 
     override fun showBossBar(bar: BossBar) {
@@ -54,23 +82,60 @@ class CloudPlayerImpl(
     }
 
     override fun playSound(sound: Sound) {
-
+        playerServiceStub.sendPlaySound(
+            SendPlaySoundRequest.newBuilder()
+                .setUniqueId(getUniqueId().toString())
+                .setSound(AdventureSound.newBuilder().setSound(sound.name().asString()).build())
+                .build()
+        )
     }
 
     override fun playSound(sound: Sound, x: Double, y: Double, z: Double) {
-
+        playerServiceStub.sendPlaySoundToCoordinates(
+            SendPlaySoundToCoordinatesRequest.newBuilder()
+                .setUniqueId(getUniqueId().toString())
+                .setSound(AdventureSound.newBuilder().setSound(sound.name().asString()).build())
+                .setX(x)
+                .setY(y)
+                .setZ(z)
+                .build()
+        )
     }
 
     override fun playSound(sound: Sound, emitter: Sound.Emitter) {
-
+        playSound(sound)
     }
 
     override fun stopSound(stop: SoundStop) {
+        val sound = stop.sound()?.let { AdventureSound.newBuilder().setSound(it.asString()).build() }
+        val source = stop.source()?.toString()
 
+        playerServiceStub.sendStopSound(
+            SendStopSoundRequest.newBuilder()
+                .setUniqueId(getUniqueId().toString())
+                .setSound(sound)
+                .setSource(source)
+                .build()
+        )
     }
 
     override fun openBook(book: Book) {
+        val bookBuilder = AdventureBook.newBuilder()
 
+        bookBuilder.setTitle( AdventureComponent.newBuilder().setJson(componentSerializer.serialize(book.title())).build())
+        bookBuilder.setAuthor( AdventureComponent.newBuilder().setJson(componentSerializer.serialize(book.author())).build())
+
+        for (page in book.pages()) {
+            bookBuilder.addPages(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(page)).build())
+        }
+
+        playerServiceStub.sendOpenBook(
+            SendOpenBookRequest.newBuilder()
+                .setUniqueId(getUniqueId().toString())
+                .setBook(bookBuilder.build())
+                .build()
+        )
     }
+
 
 }

@@ -34,6 +34,20 @@ message CloudPlayerConfiguration {
   string connectedProxyName = 9;
 }
 
+message AdventureComponent {
+  string json = 1;
+}
+
+message AdventureBook {
+  AdventureComponent author = 1;
+  AdventureComponent title = 2;
+  repeated AdventureComponent pages = 3;
+}
+
+message AdventureSound {
+  string sound = 1;
+}
+
 message GetCloudPlayerByUniqueIdRequest {
   string uniqueId = 1;
 }
@@ -85,6 +99,80 @@ enum CloudPlayerConnectResult {
   FAILED = 2;
 }
 
+message SendMessageRequest {
+  string uniqueId = 1;
+  AdventureComponent message = 2;
+}
+
+message SendMessageResponse {}
+
+message SendActionbarRequest {
+  string uniqueId = 1;
+  AdventureComponent message = 2;
+}
+
+message SendActionbarResponse {}
+
+message SendPlayerListHeaderAndFooterRequest {
+  string uniqueId = 1;
+  AdventureComponent header = 2;
+  AdventureComponent footer = 3;
+}
+
+message SendPlayerListHeaderAndFooterResponse {}
+
+message SendOpenBookRequest {
+  string uniqueId = 1;
+  AdventureBook book = 2;
+}
+
+message SendOpenBookResponse {}
+
+message SendPlaySoundRequest {
+  string uniqueId = 1;
+  AdventureSound sound = 2;
+}
+
+message SendPlaySoundResponse {}
+
+message SendPlaySoundToEmitterRequest {
+  string uniqueId = 1;
+  AdventureSound sound = 2;
+  string emitter = 3;
+}
+
+message SendPlaySoundToEmitterResponse {}
+
+message SendPlaySoundToCoordinatesRequest {
+  string uniqueId = 1;
+  AdventureSound sound = 2;
+  double x = 3;
+  double y = 4;
+  double z = 5;
+}
+
+message SendPlaySoundToCoordinatesResponse {}
+
+message SendStopSoundRequest {
+  string uniqueId = 1;
+  optional AdventureSound sound = 2;
+  optional string source = 3;
+}
+
+message SendStopSoundResponse {}
+
+message SendClearTitleRequest {
+  string uniqueId = 1;
+}
+
+message SendClearTitleResponse {}
+
+message SendResetTitleRequest {
+  string uniqueId = 1;
+}
+
+message SendResetTitleResponse {}
+
 service PlayerService {
   rpc getOfflineCloudPlayerByUniqueId(GetCloudPlayerByUniqueIdRequest) returns (GetOfflineCloudPlayerResponse);
   rpc getOfflineCloudPlayerByName(GetCloudPlayerByNameRequest) returns (GetOfflineCloudPlayerResponse);
@@ -95,4 +183,15 @@ service PlayerService {
   rpc getOnlineStatus(GetOnlineStatusRequest) returns (GetOnlineStatusResponse);
 
   rpc connectCloudPlayer(ConnectCloudPlayerRequest) returns (ConnectCloudPlayerResponse);
+
+  rpc sendMessage(SendMessageRequest) returns (SendMessageResponse);
+  rpc sendActionbar(SendActionbarRequest) returns (SendActionbarResponse);
+  rpc sendPlayerListHeaderAndFooter(SendPlayerListHeaderAndFooterRequest) returns (SendPlayerListHeaderAndFooterResponse);
+  rpc sendOpenBook(SendOpenBookRequest) returns (SendOpenBookResponse);
+  rpc sendPlaySound(SendPlaySoundRequest) returns (SendPlaySoundResponse);
+  rpc sendPlaySoundToEmitter(SendPlaySoundToEmitterRequest) returns (SendPlaySoundToEmitterResponse);
+  rpc sendPlaySoundToCoordinates(SendPlaySoundToCoordinatesRequest) returns (SendPlaySoundToCoordinatesResponse);
+  rpc sendStopSound(SendStopSoundRequest) returns (SendStopSoundResponse);
+  rpc sendClearTitle(SendClearTitleRequest) returns (SendClearTitleResponse);
+  rpc sendResetTitle(SendResetTitleRequest) returns (SendResetTitleResponse);
 }
