@@ -10,6 +10,7 @@ import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.sound.SoundStop
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
+import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.TitlePart
 
 class CloudPlayerImpl(
@@ -55,6 +56,27 @@ class CloudPlayerImpl(
 
     override fun <T> sendTitlePart(part: TitlePart<T>, value: T) {
 
+        if (value is Title.Times) {
+            playerServiceStub.sendTitlePartTimes(
+                SendTitlePartTimesRequest.newBuilder()
+                    .setUniqueId(getUniqueId().toString())
+                    .setFadeIn(value.fadeIn().toMillis().toInt())
+                    .setStay(value.stay().toMillis().toInt())
+                    .setFadeOut(value.fadeOut().toMillis().toInt())
+                    .build()
+            )
+        } else {
+            var component = part as Component
+            playerServiceStub.sendTitlePartComponent(
+                SendTitlePartComponentRequest.newBuilder()
+                    .setUniqueId(getUniqueId().toString())
+                    .setComponent(
+                        AdventureComponent.newBuilder().setJson(componentSerializer.serialize(component)).build()
+                    )
+                    .build()
+            )
+        }
+
     }
 
     override fun clearTitle() {
@@ -74,11 +96,41 @@ class CloudPlayerImpl(
     }
 
     override fun showBossBar(bar: BossBar) {
-
+        playerServiceStub.sendBossBar(
+            SendBossBarRequest.newBuilder()
+                .setUniqueId(getUniqueId().toString())
+                .setBossBar(
+                    AdventureBossBar.newBuilder()
+                        .setColor(bar.color().name)
+                        .setOverlay(bar.overlay().name)
+                        .setProgress(bar.progress())
+                        .setTitle(
+                            AdventureComponent.newBuilder().setJson(componentSerializer.serialize(bar.name())).build()
+                        )
+                        .addAllFlags(bar.flags().map { it.name })
+                        .build()
+                )
+                .build()
+        )
     }
 
     override fun hideBossBar(bar: BossBar) {
-
+        playerServiceStub.sendBossBarRemove(
+            SendBossBarHideRequest.newBuilder()
+                .setUniqueId(getUniqueId().toString())
+                .setBossBar(
+                    AdventureBossBar.newBuilder()
+                        .setColor(bar.color().name)
+                        .setOverlay(bar.overlay().name)
+                        .setProgress(bar.progress())
+                        .setTitle(
+                            AdventureComponent.newBuilder().setJson(componentSerializer.serialize(bar.name())).build()
+                        )
+                        .addAllFlags(bar.flags().map { it.name })
+                        .build()
+                )
+                .build()
+        )
     }
 
     override fun playSound(sound: Sound) {
@@ -122,8 +174,12 @@ class CloudPlayerImpl(
     override fun openBook(book: Book) {
         val bookBuilder = AdventureBook.newBuilder()
 
-        bookBuilder.setTitle( AdventureComponent.newBuilder().setJson(componentSerializer.serialize(book.title())).build())
-        bookBuilder.setAuthor( AdventureComponent.newBuilder().setJson(componentSerializer.serialize(book.author())).build())
+        bookBuilder.setTitle(
+            AdventureComponent.newBuilder().setJson(componentSerializer.serialize(book.title())).build()
+        )
+        bookBuilder.setAuthor(
+            AdventureComponent.newBuilder().setJson(componentSerializer.serialize(book.author())).build()
+        )
 
         for (page in book.pages()) {
             bookBuilder.addPages(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(page)).build())
