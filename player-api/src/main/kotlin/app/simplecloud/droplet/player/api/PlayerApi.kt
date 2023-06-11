@@ -1,5 +1,6 @@
 package app.simplecloud.droplet.player.api
 
+import app.simplecloud.droplet.player.proto.CloudPlayerConnectResult
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
@@ -44,7 +45,7 @@ interface PlayerApi {
      * @param serverName the name of the server.
      * @returns a [CompletableFuture] with a boolean if the player was successfully connected.
      */
-    fun connectPlayer(uniqueId: UUID, serverName: String): CompletableFuture<Boolean>
+    fun connectPlayer(uniqueId: UUID, serverName: String): CompletableFuture<CloudPlayerConnectResult>
 
     /**
      * @param uniqueId the uniqueId of the player.
