@@ -1,26 +1,49 @@
 package app.simplecloud.droplet.player.server
 
 import app.simplecloud.droplet.player.proto.*
+import app.simplecloud.droplet.player.server.repository.OfflinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
-import com.google.rpc.Status
 import io.grpc.stub.StreamObserver
 
 class PlayerService(
-    private val onlinePlayerRepository: OnlinePlayerRepository
+    private val onlinePlayerRepository: OnlinePlayerRepository,
+    private val offlinePlayerRepository: OfflinePlayerRepository
 ) : PlayerServiceGrpc.PlayerServiceImplBase() {
 
     override fun getOfflineCloudPlayerByUniqueId(
         request: GetCloudPlayerByUniqueIdRequest,
         responseObserver: StreamObserver<GetOfflineCloudPlayerResponse>
     ) {
+        val offlinePlayer = offlinePlayerRepository.findByUniqueId(request.uniqueId)
+        if (offlinePlayer == null) {
+            responseObserver.onError(IllegalArgumentException("OfflineCloudPlayer with uniqueId ${request.uniqueId} not found"))
+            return
+        }
 
+        responseObserver.onNext(
+            GetOfflineCloudPlayerResponse.newBuilder()
+                .setOfflineCloudPlayer(offlinePlayer.toConfiguration())
+                .build()
+        )
+        responseObserver.onCompleted()
     }
 
     override fun getOfflineCloudPlayerByName(
         request: GetCloudPlayerByNameRequest,
         responseObserver: StreamObserver<GetOfflineCloudPlayerResponse>
     ) {
+        val offlinePlayer = offlinePlayerRepository.findByName(request.name)
+        if (offlinePlayer == null) {
+            responseObserver.onError(IllegalArgumentException("OfflineCloudPlayer with name ${request.name} not found"))
+            return
+        }
 
+        responseObserver.onNext(
+            GetOfflineCloudPlayerResponse.newBuilder()
+                .setOfflineCloudPlayer(offlinePlayer.toConfiguration())
+                .build()
+        )
+        responseObserver.onCompleted()
     }
 
     override fun getCloudPlayerByUniqueId(

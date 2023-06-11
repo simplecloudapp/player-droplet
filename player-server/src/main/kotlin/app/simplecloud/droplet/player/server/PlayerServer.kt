@@ -1,6 +1,8 @@
 package app.simplecloud.droplet.player.server
 
+import app.simplecloud.droplet.player.server.mongo.MorphiaDatastoreFactory
 import app.simplecloud.droplet.player.server.redis.RedisFactory
+import app.simplecloud.droplet.player.server.repository.OfflinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.PlayerUniqueIdRepository
 import io.grpc.Server
@@ -14,8 +16,11 @@ class PlayerServer {
 
     private val server = createGrpcServerFromEnv()
     private val jedisPool = RedisFactory.createFromEnv()
+    private val datastore = MorphiaDatastoreFactory.createFromEnv()
+
     private val playerUniqueIdRepository = PlayerUniqueIdRepository(jedisPool)
     private val onlinePlayerRepository = OnlinePlayerRepository(jedisPool, playerUniqueIdRepository)
+    private val offlinePlayerRepository = OfflinePlayerRepository(datastore)
 
     fun start() {
         logger.info("Starting Player server...")
@@ -33,7 +38,7 @@ class PlayerServer {
     private fun createGrpcServerFromEnv(): Server {
         val port = System.getenv("GRPC_PORT")?.toInt() ?: 5816
         return ServerBuilder.forPort(port)
-            .addService(PlayerService(onlinePlayerRepository))
+            .addService(PlayerService(onlinePlayerRepository, offlinePlayerRepository))
             .build()
     }
 
