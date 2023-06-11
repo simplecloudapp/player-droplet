@@ -6,7 +6,7 @@ interface PlayerRepository<T> {
 
     fun save(player: T)
 
-    fun saveDisplayName(uniqueId: UUID, displayName: String)
+    fun updateDisplayName(uniqueId: UUID, displayName: String)
 
     fun delete(player: T)
 

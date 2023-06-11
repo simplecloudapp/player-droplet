@@ -18,7 +18,7 @@ class OnlinePlayerRepository(
         }
     }
 
-    override fun saveDisplayName(uniqueId: UUID, displayName: String) {
+    override fun updateDisplayName(uniqueId: UUID, displayName: String) {
         jedisPool.resource.use { jedis ->
             jedis.hset("$ONLINE_PLAYERS_KEY/$uniqueId", "displayName", displayName)
         }

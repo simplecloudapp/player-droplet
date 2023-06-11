@@ -15,7 +15,7 @@ class OfflinePlayerRepository(
         datastore.save(player)
     }
 
-    override fun saveDisplayName(uniqueId: UUID, displayName: String) {
+    override fun updateDisplayName(uniqueId: UUID, displayName: String) {
         datastore.find(OfflinePlayerEntity::class.java)
             .filter(Filters.eq("uniqueId", uniqueId.toString()))
             .update(UpdateOptions(), UpdateOperators.set("displayName", displayName))
