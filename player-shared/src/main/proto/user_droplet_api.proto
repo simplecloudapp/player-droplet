@@ -219,7 +219,7 @@ service PlayerService {
   rpc getOnlineCloudPlayerCount(GetOnlineCloudPlayerCountRequest) returns (GetOnlineCloudPlayerCountResponse);
   rpc getOnlineStatus(GetOnlineStatusRequest) returns (GetOnlineStatusResponse);
 
-  rpc connectCloudPlayer(ConnectCloudPlayerRequest) returns (ConnectCloudPlayerResponse);
+  rpc connectCloudPlayerToServer(ConnectCloudPlayerRequest) returns (ConnectCloudPlayerResponse);
 
   rpc sendMessage(SendMessageRequest) returns (SendMessageResponse);
   rpc sendActionbar(SendActionbarRequest) returns (SendActionbarResponse);

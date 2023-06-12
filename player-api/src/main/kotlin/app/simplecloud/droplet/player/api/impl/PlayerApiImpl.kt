@@ -10,7 +10,7 @@ import io.grpc.ManagedChannelBuilder
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
-class PlayerApiImpl : PlayerApi {
+open class PlayerApiImpl : PlayerApi {
 
     private val playerServiceStub =
         PlayerServiceGrpc.newFutureStub(createManagedChannelFromEnv())
@@ -72,7 +72,7 @@ class PlayerApiImpl : PlayerApi {
     }
 
     override fun connectPlayer(uniqueId: UUID, serverName: String): CompletableFuture<CloudPlayerConnectResult> {
-        return playerServiceStub.connectCloudPlayer(
+        return playerServiceStub.connectCloudPlayerToServer(
             ConnectCloudPlayerRequest.newBuilder()
                 .setUniqueId(uniqueId.toString())
                 .setServerName(serverName)
