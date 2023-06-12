@@ -9,15 +9,15 @@ import net.md_5.bungee.event.EventHandler
 class PlayerDisconnectListener(
     val playerApi: PlayerProxyApi
 ) : Listener {
-    
-     @EventHandler
-     fun onDisconnect(event: PlayerDisconnectEvent) {
-         val player = event.player
-         playerApi.proxyController.handleDisconnect(
-             CloudPlayerDisconnectRequest.newBuilder()
-                 .setUniqueId(player.uniqueId.toString())
-                 .build()
-         )
-     }
-    
+
+    @EventHandler
+    fun onDisconnect(event: PlayerDisconnectEvent) {
+        val player = event.player
+        playerApi.proxyController.handleDisconnect(
+            CloudPlayerDisconnectRequest.newBuilder()
+                .setUniqueId(player.uniqueId.toString())
+                .build()
+        )
+    }
+
 }
