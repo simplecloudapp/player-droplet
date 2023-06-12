@@ -18,7 +18,7 @@ message OfflineCloudPlayerConfiguration {
   int64 lastLogin = 4;
   int64 onlineTime = 5;
   string displayName = 6;
-  PlayerConnectionConfiguration lastPlayerConnection = 7;
+  PlayerConnectionConfiguration playerConnection = 7;
 }
 
 message CloudPlayerConfiguration {
@@ -104,6 +104,24 @@ enum CloudPlayerConnectResult {
   SUCCESS = 0;
   ALREADY_CONNECTED = 1;
   FAILED = 2;
+}
+
+message CloudPlayerLoginRequest {
+  string uniqueId = 1;
+  string name = 2;
+  PlayerConnectionConfiguration playerConnection = 3;
+}
+
+message CloudPlayerLoginResponse {
+  bool success = 1;
+}
+
+message CloudPlayerDisconnectRequest {
+  string uniqueId = 1;
+}
+
+message CloudPlayerDisconnectResponse {
+  bool success = 1;
 }
 
 message SendMessageRequest {
@@ -220,6 +238,9 @@ service PlayerService {
   rpc getOnlineStatus(GetOnlineStatusRequest) returns (GetOnlineStatusResponse);
 
   rpc connectCloudPlayerToServer(ConnectCloudPlayerRequest) returns (ConnectCloudPlayerResponse);
+
+  rpc loginCloudPlayer(CloudPlayerLoginRequest) returns (CloudPlayerLoginResponse);
+  rpc disconnectCloudPlayer(CloudPlayerDisconnectRequest) returns (CloudPlayerDisconnectResponse);
 
   rpc sendMessage(SendMessageRequest) returns (SendMessageResponse);
   rpc sendActionbar(SendActionbarRequest) returns (SendActionbarResponse);

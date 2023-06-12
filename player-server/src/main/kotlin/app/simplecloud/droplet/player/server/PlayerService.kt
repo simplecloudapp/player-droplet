@@ -1,13 +1,17 @@
 package app.simplecloud.droplet.player.server
 
 import app.simplecloud.droplet.player.proto.*
+import app.simplecloud.droplet.player.server.connection.PlayerLoginHandler
+import app.simplecloud.droplet.player.server.connection.PlayerLogoutHandler
 import app.simplecloud.droplet.player.server.repository.OfflinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import io.grpc.stub.StreamObserver
 
 class PlayerService(
     private val onlinePlayerRepository: OnlinePlayerRepository,
-    private val offlinePlayerRepository: OfflinePlayerRepository
+    private val offlinePlayerRepository: OfflinePlayerRepository,
+    private val playerLoginHandler: PlayerLoginHandler,
+    private val playerLogoutHandler: PlayerLogoutHandler
 ) : PlayerServiceGrpc.PlayerServiceImplBase() {
 
     override fun getOfflineCloudPlayerByUniqueId(
@@ -113,6 +117,34 @@ class PlayerService(
         responseObserver.onNext(
             GetOnlineStatusResponse.newBuilder()
                 .setOnline(cloudPlayer != null)
+                .build()
+        )
+        responseObserver.onCompleted()
+    }
+
+    override fun loginCloudPlayer(
+        request: CloudPlayerLoginRequest,
+        responseObserver: StreamObserver<CloudPlayerLoginResponse>
+    ) {
+        val success = playerLoginHandler.handleLogin(request)
+
+        responseObserver.onNext(
+            CloudPlayerLoginResponse.newBuilder()
+                .setSuccess(success)
+                .build()
+        )
+        responseObserver.onCompleted()
+    }
+
+    override fun disconnectCloudPlayer(
+        request: CloudPlayerDisconnectRequest,
+        responseObserver: StreamObserver<CloudPlayerDisconnectResponse>
+    ) {
+        val success = playerLogoutHandler.handleLogout(request)
+
+        responseObserver.onNext(
+            CloudPlayerDisconnectResponse.newBuilder()
+                .setSuccess(success)
                 .build()
         )
         responseObserver.onCompleted()

@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture
 
 open class PlayerApiImpl : PlayerApi {
 
-    private val playerServiceStub =
+    protected val playerServiceStub: PlayerServiceGrpc.PlayerServiceFutureStub =
         PlayerServiceGrpc.newFutureStub(createManagedChannelFromEnv())
 
     override fun getOfflinePlayer(name: String): CompletableFuture<OfflineCloudPlayer> {

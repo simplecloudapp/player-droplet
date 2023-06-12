@@ -24,7 +24,7 @@ data class OfflinePlayerEntity(
             .setFirstLogin(firstLogin)
             .setLastLogin(lastLogin)
             .setOnlineTime(onlineTime)
-            .setLastPlayerConnection(lastPlayerConnection.toConfiguration())
+            .setPlayerConnection(lastPlayerConnection.toConfiguration())
             .build()
     }
 

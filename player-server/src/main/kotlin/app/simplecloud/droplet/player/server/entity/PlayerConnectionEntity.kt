@@ -18,4 +18,14 @@ data class PlayerConnectionEntity(
             .build()
     }
 
+    companion object {
+        fun fromConfiguration(configuration: PlayerConnectionConfiguration): PlayerConnectionEntity {
+            return PlayerConnectionEntity(
+                configuration.clientLanguage,
+                configuration.numericalClientVersion,
+                configuration.onlineMode
+            )
+        }
+    }
+
 }
