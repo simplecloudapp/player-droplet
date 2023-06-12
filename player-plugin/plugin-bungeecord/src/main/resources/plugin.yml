@@ -1,0 +1,4 @@
+name: SimpleCloud-Player
+main: app.simplecloud.droplet.player.plugin.bungeecord.BungeeCordPlugin
+version: 1.0
+author: EinsLucaaa & Fllip

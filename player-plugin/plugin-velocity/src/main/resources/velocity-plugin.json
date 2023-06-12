@@ -1,7 +1,7 @@
 {
   "id": "simplecloud-player",
-  "name": "SimpleCloud_player",
-  "version": "1.0.0",
+  "name": "SimpleCloud-Player",
+  "version": "1.0",
   "authors": [
     "EinsLuca",
     "Fllip"
