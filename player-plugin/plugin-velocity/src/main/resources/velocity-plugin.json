@@ -1,0 +1,11 @@
+{
+  "id": "simplecloud-player",
+  "name": "SimpleCloud_player",
+  "version": "1.0.0",
+  "authors": [
+    "EinsLuca",
+    "Fllip"
+  ],
+  "main": "app.simplecloud.droplet.player.plugin.velocity.PlayerVelocityPlugin",
+  "dependencies": []
+}
