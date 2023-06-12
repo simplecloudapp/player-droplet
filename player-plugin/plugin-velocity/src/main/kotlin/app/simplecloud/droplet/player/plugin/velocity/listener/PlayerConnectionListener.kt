@@ -5,13 +5,14 @@ import app.simplecloud.droplet.player.proto.CloudPlayerLoginRequest
 import app.simplecloud.droplet.player.proto.PlayerConnectionConfiguration
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.LoginEvent
+import com.velocitypowered.api.event.connection.PostLoginEvent
 
 class PlayerConnectionListener(
     val playerApi: PlayerProxyApi
 ) {
 
     @Subscribe
-    fun onPlayerJoin(event: LoginEvent) {
+    fun onPlayerJoin(event: PostLoginEvent) {
         val player = event.player
         playerApi.proxyController.handleLogin(
             CloudPlayerLoginRequest.newBuilder()
