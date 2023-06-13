@@ -95,6 +95,7 @@ class PlayerService(
                 .addAllOnlineCloudPlayers(onlinePlayerRepository.findAll())
                 .build()
         )
+        responseObserver.onCompleted()
     }
 
     override fun getOnlineCloudPlayerCount(
@@ -106,6 +107,7 @@ class PlayerService(
                 .setCount(onlinePlayerRepository.count())
                 .build()
         )
+        responseObserver.onCompleted()
     }
 
     override fun getOnlineStatus(
