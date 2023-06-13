@@ -6,14 +6,14 @@ import dev.morphia.annotations.*
 @Entity("offline-players")
 data class OfflinePlayerEntity(
     @Id
-    val uniqueId: String,
+    val uniqueId: String = "",
     @Indexed()
-    val name: String,
-    val displayName: String?,
-    val firstLogin: Long,
-    val lastLogin: Long,
-    val onlineTime: Long,
-    val lastPlayerConnection: PlayerConnectionEntity
+    val name: String = "",
+    val displayName: String? = null,
+    val firstLogin: Long = 0,
+    val lastLogin: Long = 0,
+    val onlineTime: Long = 0,
+    val lastPlayerConnection: PlayerConnectionEntity = PlayerConnectionEntity()
 ) {
 
     fun toConfiguration(): OfflineCloudPlayerConfiguration {

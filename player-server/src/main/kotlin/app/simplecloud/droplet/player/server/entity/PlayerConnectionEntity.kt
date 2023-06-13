@@ -5,9 +5,9 @@ import dev.morphia.annotations.Entity
 
 @Entity
 data class PlayerConnectionEntity(
-    val clientLanguage: String,
-    val numericalClientVersion: Int,
-    val onlineMode: Boolean
+    val clientLanguage: String = "",
+    val numericalClientVersion: Int = 0,
+    val onlineMode: Boolean = false
 ) {
 
     fun toConfiguration(): PlayerConnectionConfiguration {
