@@ -3,6 +3,7 @@ package app.simplecloud.droplet.player.server.repository
 import app.simplecloud.droplet.player.proto.CloudPlayerConfiguration
 import app.simplecloud.droplet.player.proto.PlayerConnectionConfiguration
 import app.simplecloud.droplet.player.server.redis.RedisKeyNames
+import com.google.gson.GsonBuilder
 import redis.clients.jedis.JedisPool
 import java.util.*
 
@@ -71,9 +72,7 @@ class OnlinePlayerRepository(
             .setLastLogin(player["lastLogin"]?.toLong() ?: 0)
             .setOnlineTime(player["onlineTime"]?.toLong() ?: 0)
             .setPlayerConnection(
-                PlayerConnectionConfiguration.parseFrom(
-                    player["playerConnection"]?.toByteArray() ?: byteArrayOf()
-                )
+                GSON.fromJson(player["playerConnection"], PlayerConnectionConfiguration::class.java)
             )
             .setConnectedServerName(player["connectedServerName"])
             .setConnectedProxyName(player["connectedProxyName"])
@@ -89,10 +88,14 @@ class OnlinePlayerRepository(
             "lastLogin" to player.lastLogin.toString(),
             "onlineTime" to player.onlineTime.toString(),
             "displayName" to player.displayName,
-            "playerConnection" to player.playerConnection.toByteArray().toString(),
+            "playerConnection" to GSON.toJson(player.playerConnection),
             "connectedServerName" to player.connectedServerName,
             "connectedProxyName" to player.connectedProxyName,
         )
+    }
+
+    companion object {
+        private val GSON = GsonBuilder().create()
     }
 
 }
