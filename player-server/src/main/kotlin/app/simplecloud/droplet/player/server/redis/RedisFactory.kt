@@ -10,12 +10,12 @@ object RedisFactory {
     fun createFromEnv(): JedisPool {
         val host = System.getenv("REDIS_HOST") ?: "localhost"
         val port = System.getenv("REDIS_PORT")?.toInt() ?: 6379
-        val password = System.getenv("REDIS_PASSWORD") ?: ""
+        val password = System.getenv("REDIS_PASSWORD") ?: null
         return create(host, port, password)
     }
 
     @JvmStatic
-    fun create(host: String, port: Int, password: String): JedisPool {
+    fun create(host: String, port: Int, password: String?): JedisPool {
         return JedisPool(buildConfig(), host, port, 2000, password)
     }
 

@@ -20,7 +20,6 @@ class PlayerServer {
 
     private val logger = LogManager.getLogger(PlayerServer::class.java)
 
-    private val server = createGrpcServerFromEnv()
     private val jedisPool = RedisFactory.createFromEnv()
     private val datastore = MorphiaDatastoreFactory.createFromEnv()
     private val publisher = RabbitMqFactory.createPublisher(RabbitMqChannelNames.all())
@@ -30,6 +29,8 @@ class PlayerServer {
     private val offlinePlayerRepository = OfflinePlayerRepository(datastore)
     private val playerLoginHandler = PlayerLoginHandler(offlinePlayerRepository, onlinePlayerRepository)
     private val playerLogoutHandler = PlayerLogoutHandler(offlinePlayerRepository, onlinePlayerRepository)
+
+    private val server = createGrpcServerFromEnv()
 
     fun start() {
         logger.info("Starting Player server...")
@@ -53,7 +54,7 @@ class PlayerServer {
                     offlinePlayerRepository,
                     playerLoginHandler,
                     playerLogoutHandler
-                ),
+                )
             )
             .addService(PlayerAdventureService(publisher, onlinePlayerRepository))
             .build()
