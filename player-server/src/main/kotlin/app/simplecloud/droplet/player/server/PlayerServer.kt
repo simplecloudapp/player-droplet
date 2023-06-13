@@ -7,6 +7,8 @@ import app.simplecloud.droplet.player.server.redis.RedisFactory
 import app.simplecloud.droplet.player.server.repository.OfflinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.PlayerUniqueIdRepository
+import app.simplecloud.droplet.player.server.service.PlayerAdventureService
+import app.simplecloud.droplet.player.server.service.PlayerService
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqFactory
 import io.grpc.Server
@@ -47,13 +49,13 @@ class PlayerServer {
         return ServerBuilder.forPort(port)
             .addService(
                 PlayerService(
-                    publisher,
                     onlinePlayerRepository,
                     offlinePlayerRepository,
                     playerLoginHandler,
                     playerLogoutHandler
-                )
+                ),
             )
+            .addService(PlayerAdventureService(publisher, onlinePlayerRepository))
             .build()
     }
 

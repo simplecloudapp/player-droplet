@@ -15,6 +15,9 @@ open class PlayerApiImpl : PlayerApi {
     protected val playerServiceStub: PlayerServiceGrpc.PlayerServiceFutureStub =
         PlayerServiceGrpc.newFutureStub(createManagedChannelFromEnv())
 
+    protected val playerServiceAdventureStub: PlayerAdventureServiceGrpc.PlayerAdventureServiceFutureStub =
+        PlayerAdventureServiceGrpc.newFutureStub(createManagedChannelFromEnv())
+
     override fun getOfflinePlayer(name: String): CompletableFuture<OfflineCloudPlayer> {
         return playerServiceStub.getOfflineCloudPlayerByName(
             GetCloudPlayerByNameRequest.newBuilder()
@@ -41,7 +44,7 @@ open class PlayerApiImpl : PlayerApi {
                 .setName(name)
                 .build()
         ).toCompletable().thenApply {
-            CloudPlayerImpl(playerServiceStub, it.cloudPlayer)
+            CloudPlayerImpl(playerServiceStub, playerServiceAdventureStub, it.cloudPlayer)
         }
     }
 
@@ -51,7 +54,7 @@ open class PlayerApiImpl : PlayerApi {
                 .setUniqueId(uniqueId.toString())
                 .build()
         ).toCompletable().thenApply {
-            CloudPlayerImpl(playerServiceStub, it.cloudPlayer)
+            CloudPlayerImpl(playerServiceStub, playerServiceAdventureStub, it.cloudPlayer)
         }
     }
 
@@ -59,7 +62,7 @@ open class PlayerApiImpl : PlayerApi {
         return playerServiceStub.getOnlineCloudPlayers(GetOnlineCloudPlayersRequest.getDefaultInstance())
             .toCompletable().thenApply {
                 it.onlineCloudPlayersList.map { cloudPlayer ->
-                    CloudPlayerImpl(playerServiceStub, cloudPlayer)
+                    CloudPlayerImpl(playerServiceStub, playerServiceAdventureStub, cloudPlayer)
                 }
             }
     }

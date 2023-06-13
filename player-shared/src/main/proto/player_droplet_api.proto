@@ -40,28 +40,6 @@ message CloudPlayerConfiguration {
   string connectedProxyName = 9;
 }
 
-message AdventureComponent {
-  string json = 1;
-}
-
-message AdventureBook {
-  AdventureComponent author = 1;
-  AdventureComponent title = 2;
-  repeated AdventureComponent pages = 3;
-}
-
-message AdventureSound {
-  string sound = 1;
-}
-
-message AdventureBossBar {
-  AdventureComponent title = 2;
-  float progress = 3;
-  string color = 4;
-  string overlay = 5;
-  repeated string flags = 6;
-}
-
 message GetCloudPlayerByUniqueIdRequest {
   string uniqueId = 1;
 }
@@ -131,110 +109,6 @@ message CloudPlayerDisconnectResponse {
   bool success = 1;
 }
 
-message SendMessageRequest {
-  string uniqueId = 1;
-  AdventureComponent message = 2;
-}
-
-message SendMessageResponse {}
-
-message SendActionbarRequest {
-  string uniqueId = 1;
-  AdventureComponent message = 2;
-}
-
-message SendActionbarResponse {}
-
-message SendPlayerListHeaderAndFooterRequest {
-  string uniqueId = 1;
-  AdventureComponent header = 2;
-  AdventureComponent footer = 3;
-}
-
-message SendPlayerListHeaderAndFooterResponse {}
-
-message SendOpenBookRequest {
-  string uniqueId = 1;
-  AdventureBook book = 2;
-}
-
-message SendOpenBookResponse {}
-
-message SendPlaySoundRequest {
-  string uniqueId = 1;
-  AdventureSound sound = 2;
-}
-
-message SendPlaySoundResponse {}
-
-message SendPlaySoundToEmitterRequest {
-  string uniqueId = 1;
-  AdventureSound sound = 2;
-  string emitter = 3;
-}
-
-message SendPlaySoundToEmitterResponse {}
-
-message SendPlaySoundToCoordinatesRequest {
-  string uniqueId = 1;
-  AdventureSound sound = 2;
-  double x = 3;
-  double y = 4;
-  double z = 5;
-}
-
-message SendPlaySoundToCoordinatesResponse {}
-
-message SendStopSoundRequest {
-  string uniqueId = 1;
-  optional AdventureSound sound = 2;
-  optional string source = 3;
-}
-
-message SendStopSoundResponse {}
-
-message SendClearTitleRequest {
-  string uniqueId = 1;
-}
-
-message SendClearTitleResponse {}
-
-message SendResetTitleRequest {
-  string uniqueId = 1;
-}
-
-message SendResetTitleResponse {}
-
-message SendBossBarRequest {
-  string uniqueId = 1;
-  AdventureBossBar bossBar = 2;
-}
-
-message SendBossBarResponse {}
-
-message SendBossBarHideRequest {
-  string uniqueId = 1;
-  AdventureBossBar bossBar = 2;
-}
-
-message SendBossBarHideResponse {}
-
-message SendTitlePartComponentRequest {
-  string uniqueId = 1;
-  AdventureComponent component = 2;
-}
-
-message SendTitlePartComponentResponse {}
-
-message SendTitlePartTimesRequest {
-  string uniqueId = 1;
-  int32 fadeIn = 2;
-  int32 stay = 3;
-  int32 fadeOut = 4;
-}
-
-message SendTitlePartTimesResponse {}
-
 service PlayerService {
   rpc getOfflineCloudPlayerByUniqueId(GetCloudPlayerByUniqueIdRequest) returns (GetOfflineCloudPlayerResponse);
   rpc getOfflineCloudPlayerByName(GetCloudPlayerByNameRequest) returns (GetOfflineCloudPlayerResponse);
@@ -248,20 +122,4 @@ service PlayerService {
 
   rpc loginCloudPlayer(CloudPlayerLoginRequest) returns (CloudPlayerLoginResponse);
   rpc disconnectCloudPlayer(CloudPlayerDisconnectRequest) returns (CloudPlayerDisconnectResponse);
-
-  rpc sendMessage(SendMessageRequest) returns (SendMessageResponse);
-  rpc sendActionbar(SendActionbarRequest) returns (SendActionbarResponse);
-  rpc sendPlayerListHeaderAndFooter(SendPlayerListHeaderAndFooterRequest) returns (SendPlayerListHeaderAndFooterResponse);
-  rpc sendOpenBook(SendOpenBookRequest) returns (SendOpenBookResponse);
-  rpc sendPlaySound(SendPlaySoundRequest) returns (SendPlaySoundResponse);
-  rpc sendPlaySoundToEmitter(SendPlaySoundToEmitterRequest) returns (SendPlaySoundToEmitterResponse);
-  rpc sendPlaySoundToCoordinates(SendPlaySoundToCoordinatesRequest) returns (SendPlaySoundToCoordinatesResponse);
-  rpc sendStopSound(SendStopSoundRequest) returns (SendStopSoundResponse);
-  rpc sendClearTitle(SendClearTitleRequest) returns (SendClearTitleResponse);
-  rpc sendResetTitle(SendResetTitleRequest) returns (SendResetTitleResponse);
-  rpc sendBossBar(SendBossBarRequest) returns (SendBossBarResponse);
-  rpc sendBossBarToPlayer(SendBossBarRequest) returns (SendBossBarResponse);
-  rpc sendBossBarRemove(SendBossBarHideRequest) returns (SendBossBarHideResponse);
-  rpc sendTitlePartComponent(SendTitlePartComponentRequest) returns (SendTitlePartComponentResponse);
-  rpc sendTitlePartTimes(SendTitlePartTimesRequest) returns (SendTitlePartTimesResponse);
 }

@@ -2,6 +2,7 @@ package app.simplecloud.droplet.player.api.impl
 
 import app.simplecloud.droplet.player.api.CloudPlayer
 import app.simplecloud.droplet.player.proto.*
+import app.simplecloud.droplet.player.proto.PlayerAdventureServiceGrpc.PlayerAdventureServiceFutureStub
 import app.simplecloud.droplet.player.proto.PlayerServiceGrpc.PlayerServiceFutureStub
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.chat.ChatType
@@ -15,6 +16,7 @@ import net.kyori.adventure.title.TitlePart
 
 class CloudPlayerImpl(
     private val playerServiceStub: PlayerServiceFutureStub,
+    private val playerAdventureServiceStub: PlayerAdventureServiceFutureStub,
     private val configuration: CloudPlayerConfiguration,
     private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson(),
 ) : OfflineCloudPlayerImpl(OfflineCloudPlayerConfiguration.parseFrom(configuration.toByteArray())), CloudPlayer {
@@ -36,7 +38,7 @@ class CloudPlayerImpl(
     }
 
     override fun sendMessage(message: Component, boundChatType: ChatType.Bound) {
-        playerServiceStub.sendMessage(
+        playerAdventureServiceStub.sendMessage(
             SendMessageRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
                 .setMessage(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(message)).build())
@@ -45,7 +47,7 @@ class CloudPlayerImpl(
     }
 
     override fun sendActionBar(message: Component) {
-        playerServiceStub.sendActionbar(
+        playerAdventureServiceStub.sendActionbar(
             SendActionbarRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
                 .setMessage(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(message)).build())
@@ -54,7 +56,7 @@ class CloudPlayerImpl(
     }
 
     override fun sendPlayerListHeaderAndFooter(header: Component, footer: Component) {
-        playerServiceStub.sendPlayerListHeaderAndFooter(
+        playerAdventureServiceStub.sendPlayerListHeaderAndFooter(
             SendPlayerListHeaderAndFooterRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
                 .setFooter(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(footer)).build())
@@ -65,7 +67,7 @@ class CloudPlayerImpl(
 
     override fun <T: Any> sendTitlePart(part: TitlePart<T>, value: T) {
         if (value is Title.Times) {
-            playerServiceStub.sendTitlePartTimes(
+            playerAdventureServiceStub.sendTitlePartTimes(
                 SendTitlePartTimesRequest.newBuilder()
                     .setUniqueId(getUniqueId().toString())
                     .setFadeIn(value.fadeIn().toMillis().toInt())
@@ -75,7 +77,7 @@ class CloudPlayerImpl(
             )
         } else {
             val component = value as Component
-            playerServiceStub.sendTitlePartComponent(
+            playerAdventureServiceStub.sendTitlePartComponent(
                 SendTitlePartComponentRequest.newBuilder()
                     .setUniqueId(getUniqueId().toString())
                     .setComponent(
@@ -87,7 +89,7 @@ class CloudPlayerImpl(
     }
 
     override fun clearTitle() {
-        playerServiceStub.sendClearTitle(
+        playerAdventureServiceStub.sendClearTitle(
             SendClearTitleRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
                 .build()
@@ -95,7 +97,7 @@ class CloudPlayerImpl(
     }
 
     override fun resetTitle() {
-        playerServiceStub.sendResetTitle(
+        playerAdventureServiceStub.sendResetTitle(
             SendResetTitleRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
                 .build()
@@ -103,7 +105,7 @@ class CloudPlayerImpl(
     }
 
     override fun showBossBar(bar: BossBar) {
-        playerServiceStub.sendBossBar(
+        playerAdventureServiceStub.sendBossBar(
             SendBossBarRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
                 .setBossBar(
@@ -122,7 +124,7 @@ class CloudPlayerImpl(
     }
 
     override fun hideBossBar(bar: BossBar) {
-        playerServiceStub.sendBossBarRemove(
+        playerAdventureServiceStub.sendBossBarRemove(
             SendBossBarHideRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
                 .setBossBar(
@@ -141,7 +143,7 @@ class CloudPlayerImpl(
     }
 
     override fun playSound(sound: Sound) {
-        playerServiceStub.sendPlaySound(
+        playerAdventureServiceStub.sendPlaySound(
             SendPlaySoundRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
                 .setSound(AdventureSound.newBuilder().setSound(sound.name().asString()).build())
@@ -150,7 +152,7 @@ class CloudPlayerImpl(
     }
 
     override fun playSound(sound: Sound, x: Double, y: Double, z: Double) {
-        playerServiceStub.sendPlaySoundToCoordinates(
+        playerAdventureServiceStub.sendPlaySoundToCoordinates(
             SendPlaySoundToCoordinatesRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
                 .setSound(AdventureSound.newBuilder().setSound(sound.name().asString()).build())
@@ -169,7 +171,7 @@ class CloudPlayerImpl(
         val sound = stop.sound()?.let { AdventureSound.newBuilder().setSound(it.asString()).build() }
         val source = stop.source()?.toString()
 
-        playerServiceStub.sendStopSound(
+        playerAdventureServiceStub.sendStopSound(
             SendStopSoundRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
                 .setSound(sound)
@@ -192,7 +194,7 @@ class CloudPlayerImpl(
             bookBuilder.addPages(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(page)).build())
         }
 
-        playerServiceStub.sendOpenBook(
+        playerAdventureServiceStub.sendOpenBook(
             SendOpenBookRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
                 .setBook(bookBuilder.build())
