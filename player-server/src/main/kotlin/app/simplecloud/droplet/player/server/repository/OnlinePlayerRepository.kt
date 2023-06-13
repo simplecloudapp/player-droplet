@@ -2,7 +2,7 @@ package app.simplecloud.droplet.player.server.repository
 
 import app.simplecloud.droplet.player.proto.CloudPlayerConfiguration
 import app.simplecloud.droplet.player.proto.PlayerConnectionConfiguration
-import app.simplecloud.droplet.player.server.ONLINE_PLAYERS_KEY
+import app.simplecloud.droplet.player.server.redis.RedisKeyNames
 import redis.clients.jedis.JedisPool
 import java.util.*
 
@@ -14,20 +14,20 @@ class OnlinePlayerRepository(
     override fun save(player: CloudPlayerConfiguration) {
         playerUniqueIdRepository.save(player.name, player.uniqueId)
         jedisPool.resource.use { jedis ->
-            jedis.hset("$ONLINE_PLAYERS_KEY/${player.uniqueId}", mapFromCloudPlayer(player))
+            jedis.hset("${RedisKeyNames.ONLINE_PLAYERS_KEY}/${player.uniqueId}", mapFromCloudPlayer(player))
         }
     }
 
     override fun updateDisplayName(uniqueId: UUID, displayName: String) {
         jedisPool.resource.use { jedis ->
-            jedis.hset("$ONLINE_PLAYERS_KEY/$uniqueId", "displayName", displayName)
+            jedis.hset("${RedisKeyNames.ONLINE_PLAYERS_KEY}/$uniqueId", "displayName", displayName)
         }
     }
 
     override fun delete(player: CloudPlayerConfiguration) {
         playerUniqueIdRepository.delete(player.name)
         jedisPool.resource.use { jedis ->
-            jedis.del("$ONLINE_PLAYERS_KEY/${player.uniqueId}")
+            jedis.del("${RedisKeyNames.ONLINE_PLAYERS_KEY}/${player.uniqueId}")
         }
     }
 
@@ -42,7 +42,7 @@ class OnlinePlayerRepository(
 
     override fun findByUniqueId(uniqueId: String): CloudPlayerConfiguration? {
         return jedisPool.resource.use { jedis ->
-            val player = jedis.hgetAll("$ONLINE_PLAYERS_KEY/$uniqueId")
+            val player = jedis.hgetAll("${RedisKeyNames.ONLINE_PLAYERS_KEY}/$uniqueId")
             if (player.isEmpty()) return null
             mapRedisHashToCloudPlayer(player)
         }
@@ -50,7 +50,7 @@ class OnlinePlayerRepository(
 
     override fun findAll(): List<CloudPlayerConfiguration> {
         return jedisPool.resource.use { jedis ->
-            jedis.keys("$ONLINE_PLAYERS_KEY/*").map { key ->
+            jedis.keys("${RedisKeyNames.ONLINE_PLAYERS_KEY}/*").map { key ->
                 mapRedisHashToCloudPlayer(jedis.hgetAll(key))
             }
         }
@@ -58,7 +58,7 @@ class OnlinePlayerRepository(
 
     override fun count(): Int {
         return jedisPool.resource.use { jedis ->
-            jedis.keys("$ONLINE_PLAYERS_KEY/*").size
+            jedis.keys("${RedisKeyNames.ONLINE_PLAYERS_KEY}/*").size
         }
     }
 
