@@ -7,6 +7,8 @@ import app.simplecloud.droplet.player.server.redis.RedisFactory
 import app.simplecloud.droplet.player.server.repository.OfflinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.PlayerUniqueIdRepository
+import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
+import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqFactory
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import org.apache.logging.log4j.LogManager
@@ -19,6 +21,7 @@ class PlayerServer {
     private val server = createGrpcServerFromEnv()
     private val jedisPool = RedisFactory.createFromEnv()
     private val datastore = MorphiaDatastoreFactory.createFromEnv()
+    private val publisher = RabbitMqFactory.createPublisher(RabbitMqChannelNames.all())
 
     private val playerUniqueIdRepository = PlayerUniqueIdRepository(jedisPool)
     private val onlinePlayerRepository = OnlinePlayerRepository(jedisPool, playerUniqueIdRepository)
@@ -42,7 +45,15 @@ class PlayerServer {
     private fun createGrpcServerFromEnv(): Server {
         val port = System.getenv("GRPC_PORT")?.toInt() ?: 5816
         return ServerBuilder.forPort(port)
-            .addService(PlayerService(onlinePlayerRepository, offlinePlayerRepository, playerLoginHandler, playerLogoutHandler))
+            .addService(
+                PlayerService(
+                    publisher,
+                    onlinePlayerRepository,
+                    offlinePlayerRepository,
+                    playerLoginHandler,
+                    playerLogoutHandler
+                )
+            )
             .build()
     }
 
