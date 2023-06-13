@@ -40,7 +40,7 @@ class PlayerLoginHandler(
     private fun createPlayer(request: CloudPlayerLoginRequest): CloudPlayerConfiguration {
         val offlinePlayer = offlinePlayerRepository.findByUniqueId(request.uniqueId)?: createOfflinePlayer(request)
         val cloudPlayerConfiguration = CloudPlayerConfiguration.newBuilder()
-            .mergeFrom(offlinePlayer.toConfiguration())
+            .mergeFrom(offlinePlayer.toConfiguration().toByteArray())
             .setConnectedProxyName("proxy")
             .build()
 
