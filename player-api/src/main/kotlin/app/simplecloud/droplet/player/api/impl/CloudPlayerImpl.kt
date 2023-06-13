@@ -31,6 +31,10 @@ class CloudPlayerImpl(
         return true
     }
 
+    override fun getOnlineTime(): Long {
+        return this.configuration.onlineTime + getSessionTime()
+    }
+
     override fun sendMessage(message: Component, boundChatType: ChatType.Bound) {
         playerServiceStub.sendMessage(
             SendMessageRequest.newBuilder()
