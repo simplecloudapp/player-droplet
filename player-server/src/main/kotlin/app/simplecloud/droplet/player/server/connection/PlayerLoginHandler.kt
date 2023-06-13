@@ -19,8 +19,8 @@ class PlayerLoginHandler(
      * @return true if player is successfully logged in, false otherwise
      */
     fun handleLogin(request: CloudPlayerLoginRequest): Boolean {
-        LOGGER.info("Player {} is loggin in...", request.uniqueId)
-        if (checkIfPlayerIsAlreadyLoggedIn(request.name)) {
+        LOGGER.info("Player {} is logging in...", request.uniqueId)
+        if (checkIfPlayerIsAlreadyLoggedIn(request.uniqueId)) {
             return false
         }
 
