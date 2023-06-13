@@ -5,6 +5,13 @@ package app.simplecloud.droplet.player.proto;
 option java_package = "app.simplecloud.droplet.player.proto";
 option java_multiple_files = true;
 
+import "google/protobuf/any.proto";
+
+message MessageBody {
+  string type = 1;
+  google.protobuf.Any messageData = 2;
+}
+
 message PlayerConnectionConfiguration {
   string clientLanguage = 1;
   int32 numericalClientVersion = 2;
