@@ -19,7 +19,7 @@ allprojects {
     }
 
     kotlin {
-        jvmToolchain(16)
+        jvmToolchain(17)
     }
 }
 
@@ -29,6 +29,6 @@ subprojects {
     }
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "16"
+        kotlinOptions.jvmTarget = "17"
     }
 }
