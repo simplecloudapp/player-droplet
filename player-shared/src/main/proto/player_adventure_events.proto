@@ -5,7 +5,7 @@ package app.simplecloud.droplet.player.proto;
 option java_package = "app.simplecloud.droplet.player.proto";
 option java_multiple_files = true;
 
-import "user_droplet_api.proto";
+import "player_droplet_api.proto";
 
 message SendMessageEvent {
   string uniqueId = 1;
