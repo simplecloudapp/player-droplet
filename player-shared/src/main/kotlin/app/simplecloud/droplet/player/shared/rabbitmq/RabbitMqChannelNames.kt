@@ -5,4 +5,8 @@ object RabbitMqChannelNames {
     const val CHANNEL_PREFIX = "droplet.player"
     const val ADVENTURE = "$CHANNEL_PREFIX/adventure"
 
+    fun all(): List<String> {
+        return listOf(ADVENTURE)
+    }
+
 }

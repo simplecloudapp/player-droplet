@@ -5,6 +5,14 @@ import com.rabbitmq.client.ConnectionFactory
 
 object RabbitMqFactory {
 
+    fun createPublisher(queues: List<String>): RabbitMqPublisher {
+        return RabbitMqPublisher(queues)
+    }
+
+    fun createConsumer(queues: List<String>): RabbitMqConsumer {
+        return RabbitMqConsumer(queues)
+    }
+
     fun createConnectionFromEnv(): Connection {
         val host = System.getenv("RABBITMQ_HOST")?: "127.0.0.1"
         val username = System.getenv("RABBITMQ_USERNAME")?: "user"

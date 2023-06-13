@@ -17,7 +17,7 @@ class RabbitMqPublisher(
         }
     }
 
-    fun send(queueName: String, message: Message) {
+    fun publish(queueName: String, message: Message) {
         val messageBody = MessageBody.newBuilder()
             .setType(message.descriptorForType.fullName)
             .setMessageData(Any.pack(message))
