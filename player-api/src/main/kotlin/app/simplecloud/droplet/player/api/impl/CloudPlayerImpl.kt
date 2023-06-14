@@ -4,8 +4,9 @@ import app.simplecloud.droplet.player.api.CloudPlayer
 import app.simplecloud.droplet.player.proto.*
 import app.simplecloud.droplet.player.proto.PlayerAdventureServiceGrpc.PlayerAdventureServiceFutureStub
 import app.simplecloud.droplet.player.proto.PlayerServiceGrpc.PlayerServiceFutureStub
+import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.bossbar.BossBar
-import net.kyori.adventure.chat.ChatType
+import net.kyori.adventure.identity.Identity
 import net.kyori.adventure.inventory.Book
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.sound.SoundStop
@@ -37,11 +38,20 @@ class CloudPlayerImpl(
         return this.configuration.onlineTime + getSessionTime()
     }
 
-    override fun sendMessage(message: Component, boundChatType: ChatType.Bound) {
+//    override fun sendMessage(message: Component, boundChatType: ChatType.Bound) {
+//        playerAdventureServiceStub.sendMessage(
+//            SendMessageRequest.newBuilder()
+//                .setUniqueId(getUniqueId().toString())
+//                .setMessage(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(message)).build())
+//                .build()
+//        )
+//    }
+
+    override fun sendMessage(source: Identity, message: Component, type: MessageType) {
         playerAdventureServiceStub.sendMessage(
             SendMessageRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
-                .setMessage(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(message)).build())
+                .setMessage(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(message.asComponent())).build())
                 .build()
         )
     }
