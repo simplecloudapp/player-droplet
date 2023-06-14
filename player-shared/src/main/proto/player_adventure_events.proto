@@ -74,7 +74,7 @@ message SendTitlePartComponentEvent {
 
 message SendTitlePartTimesEvent {
   string uniqueId = 1;
-  int32 fadeIn = 2;
-  int32 stay = 3;
-  int32 fadeOut = 4;
+  int64 fadeIn = 2;
+  int64 stay = 3;
+  int64 fadeOut = 4;
 }
