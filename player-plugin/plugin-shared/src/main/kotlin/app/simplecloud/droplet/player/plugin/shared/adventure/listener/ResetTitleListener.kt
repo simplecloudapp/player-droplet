@@ -8,7 +8,7 @@ class ResetTitleListener(
     private val audienceRepository: AudienceRepository,
 ) : RabbitMqListener<SendResetTitleEvent> {
     override fun handle(message: SendResetTitleEvent) {
-        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)
+        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)?: return
         audience.resetTitle()
     }
 }

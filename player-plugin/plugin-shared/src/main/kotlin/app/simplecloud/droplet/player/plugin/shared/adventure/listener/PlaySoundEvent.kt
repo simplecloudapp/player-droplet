@@ -14,7 +14,7 @@ class PlaySoundEvent(
         audience.playSound(
             Sound.sound(
                 Key.key(message.sound.sound),
-                Sound.Source.valueOf(message.sound.sound),
+                Sound.Source.valueOf(message.sound.source),
                 message.sound.volume,
                 message.sound.pitch
             )
