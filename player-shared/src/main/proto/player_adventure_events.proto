@@ -11,3 +11,70 @@ message SendMessageEvent {
   string uniqueId = 1;
   AdventureComponent message = 2;
 }
+
+
+message SendActionbarEvent {
+  string uniqueId = 1;
+  AdventureComponent message = 2;
+}
+
+message SendPlayerListHeaderAndFooterEvent{
+  string uniqueId = 1;
+  AdventureComponent header = 2;
+  AdventureComponent footer = 3;
+}
+
+message SendOpenBookEvent {
+  string uniqueId = 1;
+  AdventureBook book = 2;
+}
+
+message SendPlaySoundEvent {
+  string uniqueId = 1;
+  AdventureSound sound = 2;
+}
+
+
+message SendPlaySoundToCoordinatesEvent {
+  string uniqueId = 1;
+  AdventureSound sound = 2;
+  double x = 3;
+  double y = 4;
+  double z = 5;
+}
+
+message SendStopSoundEvent {
+  string uniqueId = 1;
+  optional AdventureSound sound = 2;
+  optional string source = 3;
+}
+
+message SendClearTitleEvent {
+  string uniqueId = 1;
+}
+
+message SendResetTitleEvent {
+  string uniqueId = 1;
+}
+
+message SendBossBarEvent {
+  string uniqueId = 1;
+  AdventureBossBar bossBar = 2;
+}
+
+message SendBossBarHideEvent {
+  string uniqueId = 1;
+  AdventureBossBar bossBar = 2;
+}
+
+message SendTitlePartComponentEvent {
+  string uniqueId = 1;
+  AdventureComponent component = 2;
+}
+
+message SendTitlePartTimesEvent {
+  string uniqueId = 1;
+  int32 fadeIn = 2;
+  int32 stay = 3;
+  int32 fadeOut = 4;
+}
