@@ -15,7 +15,7 @@ class OnlinePlayerRepository(
     override fun save(player: CloudPlayerConfiguration) {
         playerUniqueIdRepository.save(player.name, player.uniqueId)
         jedisPool.resource.use { jedis ->
-            jedis.hset("${RedisKeyNames.ONLINE_PLAYERS_KEY}/${player.uniqueId}", mapFromCloudPlayer(player))
+            jedis.hset("${RedisKeyNames.ONLINE_PLAYERS_KEY}:${player.uniqueId}", mapFromCloudPlayer(player))
         }
     }
 
@@ -28,7 +28,7 @@ class OnlinePlayerRepository(
     override fun delete(player: CloudPlayerConfiguration) {
         playerUniqueIdRepository.delete(player.name)
         jedisPool.resource.use { jedis ->
-            jedis.del("${RedisKeyNames.ONLINE_PLAYERS_KEY}/${player.uniqueId}")
+            jedis.del("${RedisKeyNames.ONLINE_PLAYERS_KEY}:${player.uniqueId}")
         }
     }
 
@@ -43,7 +43,7 @@ class OnlinePlayerRepository(
 
     override fun findByUniqueId(uniqueId: String): CloudPlayerConfiguration? {
         return jedisPool.resource.use { jedis ->
-            val player = jedis.hgetAll("${RedisKeyNames.ONLINE_PLAYERS_KEY}/$uniqueId")
+            val player = jedis.hgetAll("${RedisKeyNames.ONLINE_PLAYERS_KEY}:$uniqueId")
             if (player.isEmpty()) return null
             mapRedisHashToCloudPlayer(player)
         }
@@ -51,7 +51,7 @@ class OnlinePlayerRepository(
 
     override fun findAll(): List<CloudPlayerConfiguration> {
         return jedisPool.resource.use { jedis ->
-            jedis.keys("${RedisKeyNames.ONLINE_PLAYERS_KEY}/*").map { key ->
+            jedis.keys("${RedisKeyNames.ONLINE_PLAYERS_KEY}:*").map { key ->
                 mapRedisHashToCloudPlayer(jedis.hgetAll(key))
             }
         }
@@ -59,7 +59,7 @@ class OnlinePlayerRepository(
 
     override fun count(): Int {
         return jedisPool.resource.use { jedis ->
-            jedis.keys("${RedisKeyNames.ONLINE_PLAYERS_KEY}/*").size
+            jedis.keys("${RedisKeyNames.ONLINE_PLAYERS_KEY}:*").size
         }
     }
 

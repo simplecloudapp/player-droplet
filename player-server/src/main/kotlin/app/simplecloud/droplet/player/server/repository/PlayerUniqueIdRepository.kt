@@ -14,19 +14,19 @@ class PlayerUniqueIdRepository(
 
     fun save(name: String, uniqueId: String) {
         jedisPool.resource.use { jedis ->
-            jedis.set("${RedisKeyNames.PLAYER_UNIQUE_IDS_KEY}/$name", uniqueId)
+            jedis.set("${RedisKeyNames.PLAYER_UNIQUE_IDS_KEY}:$name", uniqueId)
         }
     }
 
     fun delete(name: String) {
         jedisPool.resource.use { jedis ->
-            jedis.del("${RedisKeyNames.PLAYER_UNIQUE_IDS_KEY}/$name")
+            jedis.del("${RedisKeyNames.PLAYER_UNIQUE_IDS_KEY}:$name")
         }
     }
 
     fun findByName(name: String): UUID? {
         return jedisPool.resource.use { jedis ->
-            val uniqueId = jedis.get("${RedisKeyNames.PLAYER_UNIQUE_IDS_KEY}/$name") ?: return null
+            val uniqueId = jedis.get("${RedisKeyNames.PLAYER_UNIQUE_IDS_KEY}:$name") ?: return null
             UUID.fromString(uniqueId)
         }
     }
