@@ -98,8 +98,8 @@ class CloudPlayerImpl(
 
 
         if (part.toString() == "TitlePart.SUBTITLE") {
-            playerAdventureServiceStub.sendTitlePartTitle(
-                SendTitlePartTitleRequest.newBuilder()
+            playerAdventureServiceStub.sendTitlePartSubTitle(
+                SendTitlePartSubTitleRequest.newBuilder()
                     .setUniqueId(getUniqueId().toString())
                     .setComponent(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(value as Component)).build())
                     .build()
