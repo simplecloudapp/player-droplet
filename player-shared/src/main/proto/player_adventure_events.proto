@@ -67,7 +67,12 @@ message SendBossBarHideEvent {
   AdventureBossBar bossBar = 2;
 }
 
-message SendTitlePartComponentEvent {
+message SendTitlePartTitleEvent {
+  string uniqueId = 1;
+  AdventureComponent component = 2;
+}
+
+message SendTitlePartSubTitleEvent {
   string uniqueId = 1;
   AdventureComponent component = 2;
 }

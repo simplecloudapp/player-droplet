@@ -85,14 +85,23 @@ class CloudPlayerImpl(
                     .setFadeOut(value.fadeOut().toMillis())
                     .build()
             )
-        } else {
-            val component = value as Component
-            playerAdventureServiceStub.sendTitlePartComponent(
-                SendTitlePartComponentRequest.newBuilder()
+        }
+
+        if (part.toString() == "TitlePart.TITLE") {
+            playerAdventureServiceStub.sendTitlePartTitle(
+                SendTitlePartTitleRequest.newBuilder()
                     .setUniqueId(getUniqueId().toString())
-                    .setComponent(
-                        AdventureComponent.newBuilder().setJson(componentSerializer.serialize(component)).build()
-                    )
+                    .setComponent(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(value as Component)).build())
+                    .build()
+            )
+        }
+
+
+        if (part.toString() == "TitlePart.SUBTITLE") {
+            playerAdventureServiceStub.sendTitlePartTitle(
+                SendTitlePartTitleRequest.newBuilder()
+                    .setUniqueId(getUniqueId().toString())
+                    .setComponent(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(value as Component)).build())
                     .build()
             )
         }
