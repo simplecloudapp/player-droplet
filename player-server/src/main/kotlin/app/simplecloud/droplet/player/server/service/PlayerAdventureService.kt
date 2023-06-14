@@ -192,8 +192,11 @@ class PlayerAdventureService(
         if (playerIsOnline(request.uniqueId)) {
             publisher.publish(
                 RabbitMqChannelNames.ADVENTURE,
-                SendTitlePartSubTitleResponse.newBuilder().mergeFrom(request.toByteArray()).build()
+                SendTitlePartSubTitleEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
+
+            LOGGER.info("SendTitlePartSubTitle")
+
             responseObserver.onNext(SendTitlePartSubTitleResponse.newBuilder().build())
             responseObserver.onCompleted()
         } else {
@@ -208,8 +211,11 @@ class PlayerAdventureService(
         if (playerIsOnline(request.uniqueId)) {
             publisher.publish(
                 RabbitMqChannelNames.ADVENTURE,
-                SendTitlePartTitleResponse.newBuilder().mergeFrom(request.toByteArray()).build()
+                SendTitlePartTitleEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
+
+            LOGGER.info("SendTitlePartTitle")
+
             responseObserver.onNext(SendTitlePartTitleResponse.newBuilder().build())
             responseObserver.onCompleted()
         } else {
@@ -226,6 +232,9 @@ class PlayerAdventureService(
                 RabbitMqChannelNames.ADVENTURE,
                 SendTitlePartTimesEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
+
+            LOGGER.info("SendTitlePartTimes")
+
             responseObserver.onNext(SendTitlePartTimesResponse.newBuilder().build())
             responseObserver.onCompleted()
         } else {
