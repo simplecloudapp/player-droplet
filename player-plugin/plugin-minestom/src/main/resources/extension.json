@@ -1,5 +1,5 @@
 {
   "entrypoint": "app.simplecloud.droplet.player.plugin.minestom.PlayerMinestomPlugin",
-  "name": "SimpleCloud-Player",
-  "version": "1.0"
+  "name": "SimpleCloudPlayer",
+  "version": "1.0.0"
 }
