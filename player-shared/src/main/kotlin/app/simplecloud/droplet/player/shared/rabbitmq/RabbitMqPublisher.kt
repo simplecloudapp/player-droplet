@@ -22,7 +22,7 @@ class RabbitMqPublisher(
             .setType(message.descriptorForType.fullName)
             .setMessageData(Any.pack(message))
             .build()
-        channel.basicPublish("", queueName, null, messageBody.toByteArray())
+        channel.basicPublish(RabbitMqChannelNames.CHANNEL_PREFIX, queueName, null, messageBody.toByteArray())
     }
 
 }
