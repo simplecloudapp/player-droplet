@@ -16,7 +16,7 @@ class RabbitMqConsumer(
 
     fun start() {
         channel.exchangeDeclare(RabbitMqChannelNames.CHANNEL_PREFIX, "fanout", true)
-        queues.forEach {queueName ->
+        queues.forEach { queueName ->
             thread {
                 val deliverCallback: (String?, Delivery) -> Unit = { consumerTag: String?, delivery: Delivery ->
                     println("Received message from $queueName ${delivery.envelope.deliveryTag}")
@@ -36,7 +36,7 @@ class RabbitMqConsumer(
                     }
                 }
 
-                    channel.basicConsume(queueName, false, deliverCallback) { _: String? ->  }
+                channel.basicConsume(queueName, false, deliverCallback) { _: String? -> }
             }
         }
     }
@@ -45,7 +45,12 @@ class RabbitMqConsumer(
         listen(queueName, dataType, null, listener)
     }
 
-    fun <T : Message> listen(queueName: String, dataType: Class<T>, filter: ((T) -> Boolean)?, listener: RabbitMqListener<T>) {
+    fun <T : Message> listen(
+        queueName: String,
+        dataType: Class<T>,
+        filter: ((T) -> Boolean)?,
+        listener: RabbitMqListener<T>
+    ) {
         val key = MessageListenerKey(queueName, dataType.name)
         listeners[key] = MessageListenerValue<T>(dataType, listener, filter)
         channel.queueDeclare(queueName, false, false, false, null)
@@ -57,7 +62,7 @@ class RabbitMqConsumer(
         val dataType: String
     )
 
-    data class MessageListenerValue<T: Message>(
+    data class MessageListenerValue<T : Message>(
         val dataType: Class<out Message>,
         val listener: RabbitMqListener<T>,
         val filter: RabbitMqFilter<T>? = null
