@@ -80,9 +80,9 @@ class CloudPlayerImpl(
             playerAdventureServiceStub.sendTitlePartTimes(
                 SendTitlePartTimesRequest.newBuilder()
                     .setUniqueId(getUniqueId().toString())
-                    .setFadeIn(value.fadeIn().toMillis().toInt())
-                    .setStay(value.stay().toMillis().toInt())
-                    .setFadeOut(value.fadeOut().toMillis().toInt())
+                    .setFadeIn(value.fadeIn().toMillis())
+                    .setStay(value.stay().toMillis())
+                    .setFadeOut(value.fadeOut().toMillis())
                     .build()
             )
         } else {
@@ -156,7 +156,12 @@ class CloudPlayerImpl(
         playerAdventureServiceStub.sendPlaySound(
             SendPlaySoundRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
-                .setSound(AdventureSound.newBuilder().setSound(sound.name().asString()).build())
+                .setSound(AdventureSound.newBuilder()
+                    .setSound(sound.name().asString())
+                    .setVolume(sound.volume())
+                    .setPitch(sound.pitch())
+                    .setSource(sound.source().name)
+                    .build())
                 .build()
         )
     }
@@ -165,7 +170,12 @@ class CloudPlayerImpl(
         playerAdventureServiceStub.sendPlaySoundToCoordinates(
             SendPlaySoundToCoordinatesRequest.newBuilder()
                 .setUniqueId(getUniqueId().toString())
-                .setSound(AdventureSound.newBuilder().setSound(sound.name().asString()).build())
+                .setSound(AdventureSound.newBuilder()
+                    .setSound(sound.name().asString())
+                    .setVolume(sound.volume())
+                    .setPitch(sound.pitch())
+                    .setSource(sound.source().name)
+                    .build())
                 .setX(x)
                 .setY(y)
                 .setZ(z)

@@ -17,6 +17,9 @@ message AdventureBook {
 
 message AdventureSound {
   string sound = 1;
+  string source = 2;
+  float volume = 3;
+  float pitch = 4;
 }
 
 message AdventureBossBar {
