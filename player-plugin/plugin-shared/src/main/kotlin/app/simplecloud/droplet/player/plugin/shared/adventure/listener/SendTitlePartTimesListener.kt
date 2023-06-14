@@ -1,6 +1,6 @@
-package app.simplecloud.droplet.player.plugin.shared.listener
+package app.simplecloud.droplet.player.plugin.shared.adventure.listener
 
-import app.simplecloud.droplet.player.plugin.shared.repository.AudienceRepository
+import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
 import app.simplecloud.droplet.player.proto.SendTitlePartTimesEvent
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import net.kyori.adventure.title.Title
@@ -11,7 +11,7 @@ class SendTitlePartTimesListener(
     private val audienceRepository: AudienceRepository,
 ) : RabbitMqListener<SendTitlePartTimesEvent> {
     override fun handle(message: SendTitlePartTimesEvent) {
-        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)
+        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)?: return
         audience.sendTitlePart(
             TitlePart.TIMES,
             Title.Times.times(

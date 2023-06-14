@@ -1,17 +1,17 @@
-package app.simplecloud.droplet.player.plugin.shared.listener
+package app.simplecloud.droplet.player.plugin.shared.adventure.listener
 
-import app.simplecloud.droplet.player.plugin.shared.repository.AudienceRepository
-import app.simplecloud.droplet.player.proto.SendBossBarEvent
+import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
+import app.simplecloud.droplet.player.proto.SendBossBarHideEvent
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 
-class ShowBossBarListener(
+class HideBossBarListener(
     private val audienceRepository: AudienceRepository,
     private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson(),
-) : RabbitMqListener<SendBossBarEvent> {
-    override fun handle(message: SendBossBarEvent) {
-        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)
+) : RabbitMqListener<SendBossBarHideEvent> {
+    override fun handle(message: SendBossBarHideEvent) {
+        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)?: return
         val bossBar = BossBar.bossBar(
             componentSerializer.deserialize(message.bossBar.title.json),
             message.bossBar.progress,
@@ -19,6 +19,6 @@ class ShowBossBarListener(
             BossBar.Overlay.valueOf(message.bossBar.overlay),
         )
         bossBar.addFlags(BossBar.Flag.values().filter { message.bossBar.flagsList.contains(it.name) }.toSet())
-        audience.showBossBar(bossBar)
+        audience.hideBossBar(bossBar)
     }
 }

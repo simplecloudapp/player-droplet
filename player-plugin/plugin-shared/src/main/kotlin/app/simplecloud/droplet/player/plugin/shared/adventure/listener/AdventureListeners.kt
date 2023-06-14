@@ -1,6 +1,6 @@
-package app.simplecloud.droplet.player.plugin.shared.listener
+package app.simplecloud.droplet.player.plugin.shared.adventure.listener
 
-import app.simplecloud.droplet.player.plugin.shared.repository.AudienceRepository
+import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
 import app.simplecloud.droplet.player.proto.*
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import com.google.protobuf.Message

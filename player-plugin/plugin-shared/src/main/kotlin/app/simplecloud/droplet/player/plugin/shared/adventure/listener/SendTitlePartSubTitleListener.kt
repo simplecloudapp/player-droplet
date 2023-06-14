@@ -1,6 +1,6 @@
-package app.simplecloud.droplet.player.plugin.shared.listener
+package app.simplecloud.droplet.player.plugin.shared.adventure.listener
 
-import app.simplecloud.droplet.player.plugin.shared.repository.AudienceRepository
+import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
 import app.simplecloud.droplet.player.proto.SendTitlePartSubTitleEvent
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
@@ -11,7 +11,7 @@ class SendTitlePartSubTitleListener(
     private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson(),
 ) : RabbitMqListener<SendTitlePartSubTitleEvent> {
     override fun handle(message: SendTitlePartSubTitleEvent) {
-        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)
+        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)?: return
         audience.sendTitlePart(TitlePart.SUBTITLE, componentSerializer.deserialize(message.component.json))
     }
 }

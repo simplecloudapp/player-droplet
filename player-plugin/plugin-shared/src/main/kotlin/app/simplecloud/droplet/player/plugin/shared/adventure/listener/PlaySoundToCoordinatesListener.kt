@@ -1,6 +1,6 @@
-package app.simplecloud.droplet.player.plugin.shared.listener
+package app.simplecloud.droplet.player.plugin.shared.adventure.listener
 
-import app.simplecloud.droplet.player.plugin.shared.repository.AudienceRepository
+import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
 import app.simplecloud.droplet.player.proto.SendPlaySoundToCoordinatesEvent
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import net.kyori.adventure.key.Key
@@ -10,7 +10,7 @@ class PlaySoundToCoordinatesListener(
     private val audienceRepository: AudienceRepository,
 ) : RabbitMqListener<SendPlaySoundToCoordinatesEvent> {
     override fun handle(message: SendPlaySoundToCoordinatesEvent) {
-        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)
+        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)?: return
         audience.playSound(
             Sound.sound(
                 Key.key(message.sound.sound),
