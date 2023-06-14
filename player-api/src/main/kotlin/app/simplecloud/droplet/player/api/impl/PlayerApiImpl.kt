@@ -12,11 +12,13 @@ import java.util.concurrent.CompletableFuture
 
 open class PlayerApiImpl : PlayerApi {
 
+    private val managedChannel = createManagedChannelFromEnv()
+
     protected val playerServiceStub: PlayerServiceGrpc.PlayerServiceFutureStub =
-        PlayerServiceGrpc.newFutureStub(createManagedChannelFromEnv())
+        PlayerServiceGrpc.newFutureStub(managedChannel)
 
     protected val playerServiceAdventureStub: PlayerAdventureServiceGrpc.PlayerAdventureServiceFutureStub =
-        PlayerAdventureServiceGrpc.newFutureStub(createManagedChannelFromEnv())
+        PlayerAdventureServiceGrpc.newFutureStub(managedChannel)
 
     override fun getOfflinePlayer(name: String): CompletableFuture<OfflineCloudPlayer> {
         return playerServiceStub.getOfflineCloudPlayerByName(
@@ -96,7 +98,7 @@ open class PlayerApiImpl : PlayerApi {
     }
 
     private fun createManagedChannelFromEnv(): ManagedChannel {
-        val host = System.getenv("PLAYER_DROPLET_HOST") ?: "localhost"
+        val host = System.getenv("PLAYER_DROPLET_HOST") ?: "127.0.0.1"
         val port = System.getenv("PLAYER_DROPLET_PORT")?.toInt() ?: 5816
         return ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
     }

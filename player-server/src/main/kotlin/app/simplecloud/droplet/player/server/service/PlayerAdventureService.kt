@@ -8,6 +8,7 @@ import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqPublisher
 import io.grpc.stub.StreamObserver
+import org.apache.logging.log4j.LogManager
 
 class PlayerAdventureService(
     private val publisher: RabbitMqPublisher,
@@ -17,14 +18,20 @@ class PlayerAdventureService(
     override fun sendMessage(request: SendMessageRequest, responseObserver: StreamObserver<SendMessageResponse>) {
         val cloudPlayer = onlinePlayerRepository.findByUniqueId(request.uniqueId)
         if (cloudPlayer == null) {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} not found"))
+            LOGGER.warn("CloudPlayer with uniqueId ${request.uniqueId} is not online")
+            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
             return
         }
 
-        publisher.publish(RabbitMqChannelNames.ADVENTURE, SendMessageEvent.newBuilder().mergeFrom(request).build())
+        publisher.publish(RabbitMqChannelNames.ADVENTURE, SendMessageEvent.newBuilder().mergeFrom(request.toByteArray()).build())
+        LOGGER.info("Sent message to ${cloudPlayer.name}: ${request.message}")
 
         responseObserver.onNext(SendMessageResponse.newBuilder().build())
         responseObserver.onCompleted()
+    }
+
+    companion object {
+        private val LOGGER = LogManager.getLogger(PlayerAdventureService::class.java)
     }
 
 }
