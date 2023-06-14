@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     kotlin("jvm") version "1.8.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -30,5 +32,9 @@ subprojects {
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "17"
+    }
+
+    tasks.named("shadowJar", ShadowJar::class) {
+        mergeServiceFiles()
     }
 }

@@ -4,14 +4,43 @@ plugins {
     id("com.google.protobuf") version "0.8.19"
 }
 
+val protobufVersion = "3.16.3"
+val grpcVersion = "1.55.1"
+val amqpVersion = "5.17.0"
+val gsonVersion = "2.10.1"
+
 dependencies {
-    api("com.google.protobuf:protobuf-java:3.16.3")
-    api("io.grpc:grpc-stub:1.55.1")
-    api("io.grpc:grpc-protobuf:1.55.1")
-    api("io.grpc:grpc-netty-shaded:1.55.1")
-    api("com.rabbitmq:amqp-client:5.17.0")
-    api("com.google.code.gson:gson:2.10.1")
+    api("com.google.protobuf:protobuf-java:$protobufVersion")
+    api("io.grpc:grpc-stub:$grpcVersion")
+    api("io.grpc:grpc-protobuf:$grpcVersion")
+    api("io.grpc:grpc-netty-shaded:$grpcVersion")
+    api("com.rabbitmq:amqp-client:$amqpVersion")
+    api("com.google.code.gson:gson:$gsonVersion")
     api("javax.annotation:javax.annotation-api:1.3.2")
+}
+
+tasks {
+    shadowJar {
+        dependencies {
+            relocate("com.google.protobuf", "app.simplecloud.simplecloud.api.external.protobuf") {
+                include(dependency("com.google.protobuf:protobuf-java"))
+            }
+
+            relocate("io.grpc", "app.simplecloud.simplecloud.api.external.grpc") {
+                include(dependency("io.grpc:grpc-stub"))
+                include(dependency("io.grpc:grpc-protobuf"))
+                include(dependency("io.grpc:grpc-netty-shaded"))
+            }
+
+            relocate("com.rabbitmq", "app.simplecloud.simplecloud.api.external.rabbitmq") {
+                include(dependency("com.rabbitmq:amqp-client"))
+            }
+
+            relocate("com.google.gson", "app.simplecloud.simplecloud.api.external.gson") {
+                include(dependency("com.google.code.gson:gson"))
+            }
+        }
+    }
 }
 
 protobuf {
