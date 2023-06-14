@@ -26,6 +26,10 @@ object RabbitMqFactory {
         connectionFactory.host = host
         connectionFactory.username = username
         connectionFactory.password = password
+        connectionFactory.virtualHost = "/"
+        connectionFactory.channelRpcTimeout = 0
+        connectionFactory.networkRecoveryInterval = 10000
+        connectionFactory.isAutomaticRecoveryEnabled = true
 
         return connectionFactory.newConnection()
     }

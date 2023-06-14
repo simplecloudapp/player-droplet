@@ -15,30 +15,41 @@ class RabbitMqConsumer(
     private val listeners = mutableMapOf<MessageListenerKey, MessageListenerValue<out Message>>()
 
     fun start() {
+        channel.exchangeDeclare(RabbitMqChannelNames.CHANNEL_PREFIX, "fanout", true)
         queues.forEach {queueName ->
             thread {
                 val deliverCallback: (String?, Delivery) -> Unit = { consumerTag: String?, delivery: Delivery ->
+                    println("Received message from $queueName ${delivery.envelope.deliveryTag}")
                     val message = MessageBody.parseFrom(delivery.body)
                     val dataType = message.type
                     val listener = listeners[MessageListenerKey(queueName, dataType)]
+
                     listener?.let {
                         val messageData = message.messageData.unpack(it.dataType)
-                        println(" [x] Data $dataType'")
-                        it.handle(messageData)
-                    }
+                        if (!it.canHandle(messageData)) {
+                            channel.basicNack(delivery.envelope.deliveryTag, false, true)
+                            return@let
+                        }
 
+                        it.handle(messageData)
+                        channel.basicAck(delivery.envelope.deliveryTag, false)
+                    }
                 }
 
-                channel.basicConsume(queueName, true, deliverCallback) { _: String? -> }
+                    channel.basicConsume(queueName, false, deliverCallback) { _: String? ->  }
             }
         }
     }
 
     fun <T : Message> listen(queueName: String, dataType: Class<T>, listener: RabbitMqListener<T>) {
-        val key = MessageListenerKey(queueName, dataType.name)
-        listeners[key] = MessageListenerValue(dataType, listener)
-        channel.queueDeclare(queueName, false, false, false, null)
+        listen(queueName, dataType, null, listener)
+    }
 
+    fun <T : Message> listen(queueName: String, dataType: Class<T>, filter: ((T) -> Boolean)?, listener: RabbitMqListener<T>) {
+        val key = MessageListenerKey(queueName, dataType.name)
+        listeners[key] = MessageListenerValue<T>(dataType, listener, filter)
+        channel.queueDeclare(queueName, false, false, false, null)
+        channel.queueBind(queueName, RabbitMqChannelNames.CHANNEL_PREFIX, "")
     }
 
     data class MessageListenerKey(
@@ -48,11 +59,16 @@ class RabbitMqConsumer(
 
     data class MessageListenerValue<T: Message>(
         val dataType: Class<out Message>,
-        val listener: RabbitMqListener<T>
+        val listener: RabbitMqListener<T>,
+        val filter: RabbitMqFilter<T>? = null
     ) {
 
         fun handle(message: Message) {
             listener.handle(message as T)
+        }
+
+        fun canHandle(message: Message): Boolean {
+            return filter?.filter(message as T) ?: true
         }
 
     }
