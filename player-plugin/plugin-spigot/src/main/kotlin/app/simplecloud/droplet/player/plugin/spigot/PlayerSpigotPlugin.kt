@@ -5,9 +5,11 @@ import app.simplecloud.droplet.player.api.PlayerApiSingleton
 import app.simplecloud.droplet.player.plugin.shared.OnlinePlayerChecker
 import app.simplecloud.droplet.player.plugin.shared.PlayerInternalApi
 import app.simplecloud.droplet.player.plugin.shared.adventure.listener.AdventureListeners
+import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
+
 
 class PlayerSpigotPlugin : JavaPlugin() {
 
@@ -15,13 +17,22 @@ class PlayerSpigotPlugin : JavaPlugin() {
         OnlinePlayerChecker { Bukkit.getPlayer(UUID.fromString(it)) != null }
     )
 
-    override fun onEnable() {
-        PlayerApiSingleton.init(playerApi)
-        Bukkit.getServicesManager().register(PlayerApi::class.java, playerApi, this, org.bukkit.plugin.ServicePriority.Normal)
+    lateinit var adventure: BukkitAudiences
 
-//        AdventureListeners.allWithClasses(VelocityAudienceRepository(proxyServer)).forEach {
-//            playerApi.registerRabbitMqListener(it.first, it.second)
-//        }
+    override fun onEnable() {
+        this.adventure = BukkitAudiences.create(this);
+        PlayerApiSingleton.init(playerApi)
+        Bukkit.getServicesManager()
+            .register(PlayerApi::class.java, playerApi, this, org.bukkit.plugin.ServicePriority.Normal)
+
+
+        AdventureListeners.allWithClasses(SpigotAudienceRepository(adventure)).forEach {
+            playerApi.registerRabbitMqListener(it.first, it.second)
+        }
+    }
+
+    override fun onDisable() {
+        adventure.close()
     }
 
 }
