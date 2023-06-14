@@ -4,17 +4,13 @@ import app.simplecloud.droplet.player.proto.MessageBody
 import com.google.protobuf.Any
 import com.google.protobuf.Message
 
-class RabbitMqPublisher(
-    private val queues: List<String>
-) {
+class RabbitMqPublisher {
 
     private val connection = RabbitMqFactory.createConnectionFromEnv()
     private val channel = connection.createChannel()
 
     fun start() {
-        queues.forEach {queueName ->
-            channel.queueDeclare(queueName, false, false, false, null)
-        }
+        channel.exchangeDeclare(RabbitMqChannelNames.CHANNEL_PREFIX, "fanout", true)
     }
 
     fun publish(queueName: String, message: Message) {

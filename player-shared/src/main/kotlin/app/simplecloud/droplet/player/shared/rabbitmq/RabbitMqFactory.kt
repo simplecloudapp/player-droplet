@@ -5,12 +5,12 @@ import com.rabbitmq.client.ConnectionFactory
 
 object RabbitMqFactory {
 
-    fun createPublisher(queues: List<String>): RabbitMqPublisher {
-        return RabbitMqPublisher(queues)
+    fun createPublisher(): RabbitMqPublisher {
+        return RabbitMqPublisher()
     }
 
-    fun createConsumer(queues: List<String>): RabbitMqConsumer {
-        return RabbitMqConsumer(queues)
+    fun createConsumer(): RabbitMqConsumer {
+        return RabbitMqConsumer()
     }
 
     fun createConnectionFromEnv(): Connection {

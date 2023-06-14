@@ -9,7 +9,6 @@ import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.PlayerUniqueIdRepository
 import app.simplecloud.droplet.player.server.service.PlayerAdventureService
 import app.simplecloud.droplet.player.server.service.PlayerService
-import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqFactory
 import io.grpc.Server
 import io.grpc.ServerBuilder
@@ -22,7 +21,7 @@ class PlayerServer {
 
     private val jedisPool = RedisFactory.createFromEnv()
     private val datastore = MorphiaDatastoreFactory.createFromEnv()
-    private val publisher = RabbitMqFactory.createPublisher(RabbitMqChannelNames.all())
+    private val publisher = RabbitMqFactory.createPublisher()
 
     private val playerUniqueIdRepository = PlayerUniqueIdRepository(jedisPool)
     private val onlinePlayerRepository = OnlinePlayerRepository(jedisPool, playerUniqueIdRepository)
@@ -35,6 +34,7 @@ class PlayerServer {
     fun start() {
         logger.info("Starting Player server...")
         startGrpcServer()
+        publisher.start()
     }
 
     private fun startGrpcServer() {
