@@ -38,7 +38,7 @@ class PlayerLogoutHandler(
     }
 
     companion object {
-        private val LOGGER = LogManager.getLogger(PlayerLoginHandler::class.java)
+        private val LOGGER = LogManager.getLogger(PlayerLogoutHandler::class.java)
     }
 
 }
