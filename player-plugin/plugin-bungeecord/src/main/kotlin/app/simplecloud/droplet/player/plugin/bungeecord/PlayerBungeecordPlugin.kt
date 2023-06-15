@@ -9,6 +9,7 @@ import app.simplecloud.droplet.player.plugin.shared.OnlinePlayerChecker
 import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
 import app.simplecloud.droplet.player.proto.CloudPlayerKickEvent
 import app.simplecloud.droplet.player.proto.ConnectCloudPlayerEvent
+import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import net.md_5.bungee.api.plugin.Plugin
 
 class PlayerBungeecordPlugin : Plugin() {
@@ -23,11 +24,17 @@ class PlayerBungeecordPlugin : Plugin() {
         proxy.pluginManager.registerListener(this, PlayerDisconnectListener(playerApi))
 
         playerApi.registerRabbitMqListener(
-                CloudPlayerKickEvent::class.java, CloudPlayerKickListener((this.proxy)
-        ))
+            RabbitMqChannelNames.CONNECTION,
+            CloudPlayerKickEvent::class.java, CloudPlayerKickListener(
+                (this.proxy)
+            )
+        )
         playerApi.registerRabbitMqListener(
-                ConnectCloudPlayerEvent::class.java, CloudPlayerConnectListener((this.proxy)
-        ))
+            RabbitMqChannelNames.CONNECTION,
+            ConnectCloudPlayerEvent::class.java, CloudPlayerConnectListener(
+                (this.proxy)
+            )
+        )
 
     }
 

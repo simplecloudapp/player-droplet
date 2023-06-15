@@ -9,6 +9,7 @@ import app.simplecloud.droplet.player.plugin.velocity.listener.PlayerConnectionL
 import app.simplecloud.droplet.player.plugin.velocity.listener.PlayerDisconnectListener
 import app.simplecloud.droplet.player.proto.CloudPlayerKickEvent
 import app.simplecloud.droplet.player.proto.ConnectCloudPlayerEvent
+import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import com.google.inject.Inject
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
@@ -28,9 +29,11 @@ class PlayerVelocityPlugin @Inject constructor(
         PlayerApiSingleton.init(playerApi)
 
         playerApi.registerRabbitMqListener(
+            RabbitMqChannelNames.CONNECTION,
                 CloudPlayerKickEvent::class.java, CloudPlayerKickListener((proxyServer)
         ))
         playerApi.registerRabbitMqListener(
+            RabbitMqChannelNames.CONNECTION,
                 ConnectCloudPlayerEvent::class.java, CloudPlayerConnectListener((proxyServer)
         ))
 

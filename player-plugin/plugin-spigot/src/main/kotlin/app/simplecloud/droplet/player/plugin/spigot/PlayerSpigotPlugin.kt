@@ -5,6 +5,7 @@ import app.simplecloud.droplet.player.api.PlayerApiSingleton
 import app.simplecloud.droplet.player.plugin.shared.OnlinePlayerChecker
 import app.simplecloud.droplet.player.plugin.shared.PlayerInternalApi
 import app.simplecloud.droplet.player.plugin.shared.adventure.listener.AdventureListeners
+import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -28,7 +29,7 @@ class PlayerSpigotPlugin : JavaPlugin() {
 
 
         AdventureListeners.allWithClasses(SpigotAudienceRepository(adventure)).forEach {
-            playerApi.registerRabbitMqListener(it.first, it.second)
+            playerApi.registerRabbitMqListener(RabbitMqChannelNames.ADVENTURE, it.first, it.second)
         }
     }
 

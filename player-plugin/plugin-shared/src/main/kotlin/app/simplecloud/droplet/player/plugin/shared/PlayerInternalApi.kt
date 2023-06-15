@@ -1,7 +1,6 @@
 package app.simplecloud.droplet.player.plugin.shared
 
 import app.simplecloud.droplet.player.api.impl.PlayerApiImpl
-import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqFactory
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import com.google.protobuf.Message
@@ -12,7 +11,7 @@ open class PlayerInternalApi(
 
     val consumer = RabbitMqFactory.createConsumer()
 
-    fun <T: Message> registerRabbitMqListener(clazz: Class<out Message>, listener: RabbitMqListener<T>) {
+    fun <T: Message> registerRabbitMqListener(queueName: String, clazz: Class<out Message>, listener: RabbitMqListener<T>) {
         /*
         {
             val uniqueId = it.allFields.entries.find { it.key.name == "uniqueId" }?.value?.toString()?: return@listen true
@@ -20,11 +19,7 @@ open class PlayerInternalApi(
             onlinePlayerChecker.isOnline(uniqueId)
         }
          */
-        consumer.listen(RabbitMqChannelNames.ADVENTURE, clazz) {
-            listener.handle(it as T)
-        }
-
-        consumer.listen(RabbitMqChannelNames.CONNECTION, clazz) {
+        consumer.listen(queueName, clazz) {
             listener.handle(it as T)
         }
     }
