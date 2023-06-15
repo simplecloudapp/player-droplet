@@ -23,6 +23,10 @@ open class PlayerInternalApi(
         consumer.listen(RabbitMqChannelNames.ADVENTURE, clazz) {
             listener.handle(it as T)
         }
+
+        consumer.listen(RabbitMqChannelNames.CONNECTION, clazz) {
+            listener.handle(it as T)
+        }
     }
 
 }
