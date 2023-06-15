@@ -6,7 +6,7 @@ import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.DisconnectEvent
 
 class PlayerDisconnectListener(
-    val playerApi: PlayerProxyApi
+    private val playerApi: PlayerProxyApi
 ) {
 
     @Subscribe

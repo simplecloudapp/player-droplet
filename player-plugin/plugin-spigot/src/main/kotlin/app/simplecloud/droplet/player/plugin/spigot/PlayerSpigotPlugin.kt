@@ -17,10 +17,11 @@ class PlayerSpigotPlugin : JavaPlugin() {
         OnlinePlayerChecker { Bukkit.getPlayer(UUID.fromString(it)) != null }
     )
 
-    lateinit var adventure: BukkitAudiences
+    private val adventure by lazy {
+        BukkitAudiences.create(this)
+    }
 
     override fun onEnable() {
-        this.adventure = BukkitAudiences.create(this);
         PlayerApiSingleton.init(playerApi)
         Bukkit.getServicesManager()
             .register(PlayerApi::class.java, playerApi, this, org.bukkit.plugin.ServicePriority.Normal)

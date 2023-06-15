@@ -7,7 +7,7 @@ import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.PostLoginEvent
 
 class PlayerConnectionListener(
-    val playerApi: PlayerProxyApi
+    private val playerApi: PlayerProxyApi
 ) {
 
     @Subscribe

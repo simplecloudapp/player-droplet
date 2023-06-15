@@ -20,9 +20,9 @@ open class PlayerInternalApi(
             onlinePlayerChecker.isOnline(uniqueId)
         }
          */
-        consumer.listen(RabbitMqChannelNames.ADVENTURE, clazz, {
+        consumer.listen(RabbitMqChannelNames.ADVENTURE, clazz) {
             listener.handle(it as T)
-        })
+        }
     }
 
 }

@@ -8,9 +8,9 @@ import java.util.UUID
 class SpigotAudienceRepository(
     private val bukkitAudiences: BukkitAudiences
 ): AudienceRepository {
-    override fun getAudienceByUniqueId(uniqueId: String): Audience? {
+
+    override fun getAudienceByUniqueId(uniqueId: String): Audience {
         return bukkitAudiences.player(UUID.fromString(uniqueId))
     }
-
 
 }

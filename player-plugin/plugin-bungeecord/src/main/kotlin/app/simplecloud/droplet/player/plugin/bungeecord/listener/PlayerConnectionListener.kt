@@ -9,7 +9,7 @@ import net.md_5.bungee.event.EventHandler
 
 
 class PlayerConnectionListener(
-    val proxyApi: PlayerProxyApi
+    private val proxyApi: PlayerProxyApi
 ) : Listener {
 
     @EventHandler
