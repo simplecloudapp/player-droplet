@@ -50,6 +50,7 @@ class PlayerServer {
         return ServerBuilder.forPort(port)
             .addService(
                 PlayerService(
+                        publisher,
                     onlinePlayerRepository,
                     offlinePlayerRepository,
                     playerLoginHandler,

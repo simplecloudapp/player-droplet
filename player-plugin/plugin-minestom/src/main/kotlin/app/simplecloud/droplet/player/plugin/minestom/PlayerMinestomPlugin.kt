@@ -5,8 +5,6 @@ import app.simplecloud.droplet.player.plugin.shared.OnlinePlayerChecker
 import app.simplecloud.droplet.player.plugin.shared.PlayerInternalApi
 import app.simplecloud.droplet.player.plugin.shared.adventure.listener.AdventureListeners
 import net.minestom.server.MinecraftServer
-import net.minestom.server.entity.GameMode
-import net.minestom.server.event.player.PlayerLoginEvent
 import net.minestom.server.extensions.Extension
 import java.util.*
 
@@ -18,7 +16,6 @@ class PlayerMinestomPlugin : Extension() {
 
     override fun initialize() {
         PlayerApiSingleton.init(playerApi)
-        playerApi.consumer.start()
 
         AdventureListeners.allWithClasses(MinestomAudienceRepository()).forEach {
             playerApi.registerRabbitMqListener(it.first, it.second)

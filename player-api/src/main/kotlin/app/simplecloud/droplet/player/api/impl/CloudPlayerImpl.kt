@@ -30,6 +30,15 @@ class CloudPlayerImpl(
         return this.configuration.connectedProxyName
     }
 
+    override fun kick(reason: Component) {
+        playerServiceStub.kickCloudPlayer(
+                CloudPlayerKickRequest.newBuilder()
+                        .setUniqueId(getUniqueId().toString())
+                        .setReason(AdventureComponent.newBuilder().setJson(componentSerializer.serialize(reason)).build())
+                        .build()
+        )
+    }
+
     override fun isOnline(): Boolean {
         return true
     }

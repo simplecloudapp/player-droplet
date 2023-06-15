@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package app.simplecloud.droplet.player.proto;
+
+option java_package = "app.simplecloud.droplet.player.proto";
+option java_multiple_files = true;
+
+import "player_adventure_api.proto";
+
+
+message CloudPlayerKickEvent {
+    string uniqueId = 1;
+    AdventureComponent reason = 2;
+}
+
+message ConnectCloudPlayerEvent {
+    string uniqueId = 1;
+    string serverName = 2;
+}

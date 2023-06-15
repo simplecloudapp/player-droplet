@@ -247,7 +247,7 @@ class PlayerAdventureService(
         private val LOGGER = LogManager.getLogger(PlayerAdventureService::class.java)
     }
 
-    private final fun playerIsOnline(uniqueId: String): Boolean {
+    private fun playerIsOnline(uniqueId: String): Boolean {
         val cloudPlayer = onlinePlayerRepository.findByUniqueId(uniqueId)
         return if (cloudPlayer == null) {
             LOGGER.warn("CloudPlayer with uniqueId $uniqueId is not online")

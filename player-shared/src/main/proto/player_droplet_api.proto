@@ -6,6 +6,8 @@ option java_package = "app.simplecloud.droplet.player.proto";
 option java_multiple_files = true;
 
 import "google/protobuf/any.proto";
+import "player_adventure_api.proto";
+
 
 message MessageBody {
   string type = 1;
@@ -109,6 +111,15 @@ message CloudPlayerDisconnectResponse {
   bool success = 1;
 }
 
+message CloudPlayerKickRequest {
+  string uniqueId = 1;
+  AdventureComponent reason = 2;
+}
+
+message CloudPlayerKickResponse {
+  bool success = 1;
+}
+
 service PlayerService {
   rpc getOfflineCloudPlayerByUniqueId(GetCloudPlayerByUniqueIdRequest) returns (GetOfflineCloudPlayerResponse);
   rpc getOfflineCloudPlayerByName(GetCloudPlayerByNameRequest) returns (GetOfflineCloudPlayerResponse);
@@ -119,6 +130,7 @@ service PlayerService {
   rpc getOnlineStatus(GetOnlineStatusRequest) returns (GetOnlineStatusResponse);
 
   rpc connectCloudPlayerToServer(ConnectCloudPlayerRequest) returns (ConnectCloudPlayerResponse);
+  rpc kickCloudPlayer(CloudPlayerKickRequest) returns (CloudPlayerKickResponse);
 
   rpc loginCloudPlayer(CloudPlayerLoginRequest) returns (CloudPlayerLoginResponse);
   rpc disconnectCloudPlayer(CloudPlayerDisconnectRequest) returns (CloudPlayerDisconnectResponse);

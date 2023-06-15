@@ -5,18 +5,22 @@ import app.simplecloud.droplet.player.server.connection.PlayerLoginHandler
 import app.simplecloud.droplet.player.server.connection.PlayerLogoutHandler
 import app.simplecloud.droplet.player.server.repository.OfflinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
+import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
+import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqPublisher
 import io.grpc.stub.StreamObserver
+import org.apache.logging.log4j.LogManager
 
 class PlayerService(
-    private val onlinePlayerRepository: OnlinePlayerRepository,
-    private val offlinePlayerRepository: OfflinePlayerRepository,
-    private val playerLoginHandler: PlayerLoginHandler,
-    private val playerLogoutHandler: PlayerLogoutHandler
+        private val publisher: RabbitMqPublisher,
+        private val onlinePlayerRepository: OnlinePlayerRepository,
+        private val offlinePlayerRepository: OfflinePlayerRepository,
+        private val playerLoginHandler: PlayerLoginHandler,
+        private val playerLogoutHandler: PlayerLogoutHandler
 ) : PlayerServiceGrpc.PlayerServiceImplBase() {
 
     override fun getOfflineCloudPlayerByUniqueId(
-        request: GetCloudPlayerByUniqueIdRequest,
-        responseObserver: StreamObserver<GetOfflineCloudPlayerResponse>
+            request: GetCloudPlayerByUniqueIdRequest,
+            responseObserver: StreamObserver<GetOfflineCloudPlayerResponse>
     ) {
         val offlinePlayer = offlinePlayerRepository.findByUniqueId(request.uniqueId)
         if (offlinePlayer == null) {
@@ -25,16 +29,16 @@ class PlayerService(
         }
 
         responseObserver.onNext(
-            GetOfflineCloudPlayerResponse.newBuilder()
-                .setOfflineCloudPlayer(offlinePlayer.toConfiguration())
-                .build()
+                GetOfflineCloudPlayerResponse.newBuilder()
+                        .setOfflineCloudPlayer(offlinePlayer.toConfiguration())
+                        .build()
         )
         responseObserver.onCompleted()
     }
 
     override fun getOfflineCloudPlayerByName(
-        request: GetCloudPlayerByNameRequest,
-        responseObserver: StreamObserver<GetOfflineCloudPlayerResponse>
+            request: GetCloudPlayerByNameRequest,
+            responseObserver: StreamObserver<GetOfflineCloudPlayerResponse>
     ) {
         val offlinePlayer = offlinePlayerRepository.findByName(request.name)
         if (offlinePlayer == null) {
@@ -43,16 +47,16 @@ class PlayerService(
         }
 
         responseObserver.onNext(
-            GetOfflineCloudPlayerResponse.newBuilder()
-                .setOfflineCloudPlayer(offlinePlayer.toConfiguration())
-                .build()
+                GetOfflineCloudPlayerResponse.newBuilder()
+                        .setOfflineCloudPlayer(offlinePlayer.toConfiguration())
+                        .build()
         )
         responseObserver.onCompleted()
     }
 
     override fun getCloudPlayerByUniqueId(
-        request: GetCloudPlayerByUniqueIdRequest,
-        responseObserver: StreamObserver<GetCloudPlayerResponse>
+            request: GetCloudPlayerByUniqueIdRequest,
+            responseObserver: StreamObserver<GetCloudPlayerResponse>
     ) {
         val cloudPlayer = onlinePlayerRepository.findByUniqueId(request.uniqueId)
         if (cloudPlayer == null) {
@@ -61,16 +65,16 @@ class PlayerService(
         }
 
         responseObserver.onNext(
-            GetCloudPlayerResponse.newBuilder()
-                .setCloudPlayer(cloudPlayer)
-                .build()
+                GetCloudPlayerResponse.newBuilder()
+                        .setCloudPlayer(cloudPlayer)
+                        .build()
         )
         responseObserver.onCompleted()
     }
 
     override fun getCloudPlayerByName(
-        request: GetCloudPlayerByNameRequest,
-        responseObserver: StreamObserver<GetCloudPlayerResponse>
+            request: GetCloudPlayerByNameRequest,
+            responseObserver: StreamObserver<GetCloudPlayerResponse>
     ) {
         val cloudPlayer = onlinePlayerRepository.findByName(request.name)
         if (cloudPlayer == null) {
@@ -79,77 +83,123 @@ class PlayerService(
         }
 
         responseObserver.onNext(
-            GetCloudPlayerResponse.newBuilder()
-                .setCloudPlayer(cloudPlayer)
-                .build()
+                GetCloudPlayerResponse.newBuilder()
+                        .setCloudPlayer(cloudPlayer)
+                        .build()
         )
         responseObserver.onCompleted()
     }
 
     override fun getOnlineCloudPlayers(
-        request: GetOnlineCloudPlayersRequest,
-        responseObserver: StreamObserver<GetOnlineCloudPlayersResponse>
+            request: GetOnlineCloudPlayersRequest,
+            responseObserver: StreamObserver<GetOnlineCloudPlayersResponse>
     ) {
         responseObserver.onNext(
-            GetOnlineCloudPlayersResponse.newBuilder()
-                .addAllOnlineCloudPlayers(onlinePlayerRepository.findAll())
-                .build()
+                GetOnlineCloudPlayersResponse.newBuilder()
+                        .addAllOnlineCloudPlayers(onlinePlayerRepository.findAll())
+                        .build()
         )
         responseObserver.onCompleted()
     }
 
     override fun getOnlineCloudPlayerCount(
-        request: GetOnlineCloudPlayerCountRequest,
-        responseObserver: StreamObserver<GetOnlineCloudPlayerCountResponse>
+            request: GetOnlineCloudPlayerCountRequest,
+            responseObserver: StreamObserver<GetOnlineCloudPlayerCountResponse>
     ) {
         responseObserver.onNext(
-            GetOnlineCloudPlayerCountResponse.newBuilder()
-                .setCount(onlinePlayerRepository.count())
-                .build()
+                GetOnlineCloudPlayerCountResponse.newBuilder()
+                        .setCount(onlinePlayerRepository.count())
+                        .build()
         )
         responseObserver.onCompleted()
     }
 
     override fun getOnlineStatus(
-        request: GetOnlineStatusRequest,
-        responseObserver: StreamObserver<GetOnlineStatusResponse>
+            request: GetOnlineStatusRequest,
+            responseObserver: StreamObserver<GetOnlineStatusResponse>
     ) {
         val cloudPlayer = onlinePlayerRepository.findByUniqueId(request.uniqueId)
 
         responseObserver.onNext(
-            GetOnlineStatusResponse.newBuilder()
-                .setOnline(cloudPlayer != null)
-                .build()
+                GetOnlineStatusResponse.newBuilder()
+                        .setOnline(cloudPlayer != null)
+                        .build()
         )
         responseObserver.onCompleted()
     }
 
     override fun loginCloudPlayer(
-        request: CloudPlayerLoginRequest,
-        responseObserver: StreamObserver<CloudPlayerLoginResponse>
+            request: CloudPlayerLoginRequest,
+            responseObserver: StreamObserver<CloudPlayerLoginResponse>
     ) {
         val success = playerLoginHandler.handleLogin(request)
 
         responseObserver.onNext(
-            CloudPlayerLoginResponse.newBuilder()
-                .setSuccess(success)
-                .build()
+                CloudPlayerLoginResponse.newBuilder()
+                        .setSuccess(success)
+                        .build()
         )
         responseObserver.onCompleted()
     }
 
     override fun disconnectCloudPlayer(
-        request: CloudPlayerDisconnectRequest,
-        responseObserver: StreamObserver<CloudPlayerDisconnectResponse>
+            request: CloudPlayerDisconnectRequest,
+            responseObserver: StreamObserver<CloudPlayerDisconnectResponse>
     ) {
         val success = playerLogoutHandler.handleLogout(request)
 
         responseObserver.onNext(
-            CloudPlayerDisconnectResponse.newBuilder()
-                .setSuccess(success)
-                .build()
+                CloudPlayerDisconnectResponse.newBuilder()
+                        .setSuccess(success)
+                        .build()
         )
         responseObserver.onCompleted()
+    }
+
+    override fun kickCloudPlayer(
+            request: CloudPlayerKickRequest,
+            responseObserver: StreamObserver<CloudPlayerKickResponse>
+    ) {
+        if (playerIsOnline(request.uniqueId)) {
+            publisher.publish(
+                    RabbitMqChannelNames.CONNECTION,
+                    CloudPlayerKickEvent.newBuilder().mergeFrom(request.toByteArray()).build()
+            )
+            responseObserver.onNext(CloudPlayerKickResponse.newBuilder().setSuccess(true).build())
+            responseObserver.onCompleted()
+        } else {
+            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+        }
+    }
+
+    override fun connectCloudPlayerToServer(
+            request: ConnectCloudPlayerRequest,
+            responseObserver: StreamObserver<ConnectCloudPlayerResponse>
+    ) {
+        if (playerIsOnline(request.uniqueId)) {
+            publisher.publish(
+                    RabbitMqChannelNames.CONNECTION,
+                    ConnectCloudPlayerEvent.newBuilder().mergeFrom(request.toByteArray()).build()
+            )
+            responseObserver.onNext(ConnectCloudPlayerResponse.newBuilder().setResult(CloudPlayerConnectResult.SUCCESS).build())
+            responseObserver.onCompleted()
+        } else {
+            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+        }
+    }
+
+    companion object {
+        private val LOGGER = LogManager.getLogger(PlayerService::class.java)
+    }
+
+    private fun playerIsOnline(uniqueId: String): Boolean {
+        val cloudPlayer = onlinePlayerRepository.findByUniqueId(uniqueId)
+        return if (cloudPlayer == null) {
+            PlayerService.LOGGER.warn("CloudPlayer with uniqueId $uniqueId is not online")
+            false
+        } else {
+            true
+        }
     }
 
 }
