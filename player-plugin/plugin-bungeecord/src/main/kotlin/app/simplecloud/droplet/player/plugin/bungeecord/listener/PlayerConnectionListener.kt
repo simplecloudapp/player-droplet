@@ -27,7 +27,10 @@ class PlayerConnectionListener(
                         .build()
                 )
                 .build()
-        )
+        ).exceptionally {
+            event.player.disconnect("§cUnable to connect player!")
+            null
+        }
     }
 
 }
