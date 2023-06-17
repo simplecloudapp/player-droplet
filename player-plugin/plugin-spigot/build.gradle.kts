@@ -5,3 +5,13 @@ dependencies {
     api(project(":player-api"))
     api("net.kyori:adventure-platform-bukkit:4.3.0")
 }
+
+tasks {
+    shadowJar {
+        dependencies {
+
+            include(dependency("net.kyori:adventure-platform-bukkit"))
+
+        }
+    }
+}
