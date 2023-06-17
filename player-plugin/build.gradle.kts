@@ -19,6 +19,15 @@ subprojects {
     tasks {
         shadowJar {
             dependencies {
+
+                include(project(":player-shared"))
+                include(project(":player-api"))
+                include(project(":player-plugin:plugin-shared"))
+
+                include(dependency("net.kyori:adventure-api"))
+                include(dependency("net.kyori:adventure-text-serializer-gson"))
+                include(dependency("net.kyori:adventure-text-serializer-legacy"))
+
                 relocate("com.google.protobuf", "app.simplecloud.simplecloud.api.external.protobuf") {
                     include(dependency("com.google.protobuf:protobuf-java"))
                 }
@@ -40,6 +49,8 @@ subprojects {
                 relocate("com.google.gson", "app.simplecloud.simplecloud.api.external.gson") {
                     include(dependency("com.google.code.gson:gson"))
                 }
+
+
             }
         }
     }
