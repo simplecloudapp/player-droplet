@@ -1,26 +1,19 @@
 package app.simplecloud.droplet.player.plugin.shared.proxy
 
-import app.simplecloud.droplet.player.proto.CloudPlayerDisconnectRequest
-import app.simplecloud.droplet.player.proto.CloudPlayerLoginRequest
-import app.simplecloud.droplet.player.proto.PlayerServiceGrpc
+import app.simplecloud.droplet.player.proto.*
 import app.simplecloud.droplet.player.shared.future.toCompletable
+import java.util.concurrent.CompletableFuture
 
 class ProxyControllerImpl(
     private val playerServiceStub: PlayerServiceGrpc.PlayerServiceFutureStub
 ) : ProxyController {
 
-    override fun handleLogin(request: CloudPlayerLoginRequest) {
-        playerServiceStub.loginCloudPlayer(request).toCompletable().thenAccept {
-            println("handleLogin success: ${it.success}")
-        }.exceptionally {
-            println("handleLogin error")
-            it.printStackTrace()
-            null
-        }
+    override fun handleLogin(request: CloudPlayerLoginRequest): CompletableFuture<CloudPlayerLoginResponse> {
+        return playerServiceStub.loginCloudPlayer(request).toCompletable()
     }
 
-    override fun handleDisconnect(request: CloudPlayerDisconnectRequest) {
-        playerServiceStub.disconnectCloudPlayer(request)
+    override fun handleDisconnect(request: CloudPlayerDisconnectRequest): CompletableFuture<CloudPlayerDisconnectResponse> {
+        return playerServiceStub.disconnectCloudPlayer(request).toCompletable()
     }
 
 }
