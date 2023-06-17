@@ -19,29 +19,6 @@ dependencies {
     api("javax.annotation:javax.annotation-api:1.3.2")
 }
 
-tasks {
-    shadowJar {
-        dependencies {
-            relocate("com.google.protobuf", "app.simplecloud.simplecloud.api.external.protobuf") {
-                include(dependency("com.google.protobuf:protobuf-java"))
-            }
-
-            relocate("io.grpc", "app.simplecloud.simplecloud.api.external.grpc") {
-                include(dependency("io.grpc:grpc-stub"))
-                include(dependency("io.grpc:grpc-protobuf"))
-                include(dependency("io.grpc:grpc-netty-shaded"))
-            }
-
-            relocate("com.rabbitmq", "app.simplecloud.simplecloud.api.external.rabbitmq") {
-                include(dependency("com.rabbitmq:amqp-client"))
-            }
-
-            relocate("com.google.gson", "app.simplecloud.simplecloud.api.external.gson") {
-                include(dependency("com.google.code.gson:gson"))
-            }
-        }
-    }
-}
 
 protobuf {
     protoc {
