@@ -33,6 +33,11 @@ subprojects {
                 }
 
                 relocate("io.grpc", "app.simplecloud.simplecloud.api.external.grpc") {
+                    include(dependency("io.perfmark:perfmark-api"))
+                    include(dependency("io.grpc:grpc-protobuf-lite"))
+                    include(dependency("io.grpc:grpc-context"))
+                    include(dependency("io.grpc:grpc-api"))
+                    include(dependency("io.grpc:grpc-core"))
                     include(dependency("io.grpc:grpc-stub"))
                     include(dependency("io.grpc:grpc-protobuf"))
                     include(dependency("io.grpc:grpc-netty-shaded"))
