@@ -26,6 +26,7 @@ subprojects {
 
                 include(dependency("net.kyori:adventure-api"))
                 include(dependency("net.kyori:adventure-text-serializer-gson"))
+                include(dependency("net.kyori:adventure-text-serializer-json"))
                 include(dependency("net.kyori:adventure-text-serializer-legacy"))
 
                 relocate("com.google.protobuf", "app.simplecloud.simplecloud.api.external.protobuf") {

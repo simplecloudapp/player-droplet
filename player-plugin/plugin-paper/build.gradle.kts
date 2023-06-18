@@ -1,7 +1,6 @@
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
     api(project(":player-shared"))
     api(project(":player-plugin:plugin-shared"))
     api(project(":player-api"))
-    api("net.kyori:adventure-platform-bukkit:4.3.0")
 }
