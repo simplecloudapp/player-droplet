@@ -39,4 +39,4 @@ If you're interested in contributing to Player-Droplet, please follow these step
 
 ## License
 
-Player-Droplet is licensed under the MIT License. See the `[LICENSE](LICENSE)` file for more information.
+Player-Droplet is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
