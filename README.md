@@ -1,10 +1,10 @@
-# Player-Droplet
+# player-droplet
 
-Player-Droplet is a microserver designed to manage player connections and provide an API for other droplets or plugins such as Spigot, Minestom, Velocity, and BungeeCord, with Kyori Adventure support and the ability to scale in Kubernetes.
+player-droplet is a microserver designed to manage player connections and provide an API for other droplets or plugins such as Spigot, Minestom, Velocity, and BungeeCord, with Kyori Adventure support and the ability to scale in Kubernetes.
 
 ## Getting Started
 
-To get started with Player-Droplet, you can run it in Kubernetes or Docker using the provided image.
+To get started with player-droplet, you can run it in Kubernetes or Docker using the provided image.
 
 The server uses the following environment variables:
 
@@ -20,7 +20,7 @@ The server uses the following environment variables:
 | `RABBITMQ_USERNAME` | The username to use when connecting to RabbitMQ. | `user` |
 | `RABBITMQ_PASSWORD` | The password to use when connecting to RabbitMQ. | `bitnami` |
 
-To use the API, you'll need to install the Player-Droplet plugin on your platform. The plugin uses the following environment variables:
+To use the API, you'll need to install the v plugin on your platform. The plugin uses the following environment variables:
 
 | Variable Name | Description | Default Value |
 |---------------|-------------|---------------|
@@ -29,14 +29,14 @@ To use the API, you'll need to install the Player-Droplet plugin on your platfor
 
 ## Contributing
 
-If you're interested in contributing to Player-Droplet, please follow these steps:
+If you're interested in contributing to player-droplet, please follow these steps:
 
 1. Fork the repository.
-2. Create a new branch: `git checkout -b my-new-feature`
+2. Create a new branch: `git checkout -b feature/some-name`
 3. Make your changes and commit them: `git commit -am 'feat: some feature'`
-4. Push to the branch: `git push origin my-new-feature`
+4. Push to the branch: `git push origin feature/some-name`
 5. Submit a pull request.
 
 ## License
 
-Player-Droplet is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+player-droplet is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
