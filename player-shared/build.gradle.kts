@@ -1,11 +1,11 @@
 import com.google.protobuf.gradle.*
 
 plugins {
-    id("com.google.protobuf") version "0.8.19"
+    id("com.google.protobuf") version "0.9.4"
 }
 
-val protobufVersion = "3.16.3"
-val grpcVersion = "1.55.1"
+val protobufVersion = "3.25.5"
+val grpcVersion = "1.68.0"
 val amqpVersion = "5.17.0"
 val gsonVersion = "2.10.1"
 
@@ -23,7 +23,7 @@ dependencies {
 protobuf {
     protoc {
         // The artifact spec for the Protobuf Compiler
-        artifact = "com.google.protobuf:protoc:3.23.1"
+        artifact = "com.google.protobuf:protoc:3.25.5"
     }
     plugins {
         // Optional: an artifact spec for a protoc plugin, with "grpc" as
