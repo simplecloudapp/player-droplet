@@ -4,11 +4,12 @@ import app.simplecloud.droplet.player.proto.*
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqPublisher
+import app.simplecloud.pubsub.PubSubClient
 import io.grpc.stub.StreamObserver
 import org.apache.logging.log4j.LogManager
 
 class PlayerAdventureService(
-    private val publisher: RabbitMqPublisher,
+    private val pubSubClient: PubSubClient,
     private val onlinePlayerRepository: OnlinePlayerRepository,
 ) : PlayerAdventureServiceGrpc.PlayerAdventureServiceImplBase() {
 
@@ -20,7 +21,7 @@ class PlayerAdventureService(
             return
         }
 
-        publisher.publish(
+        pubSubClient.publish(
             RabbitMqChannelNames.ADVENTURE,
             SendMessageEvent.newBuilder().mergeFrom(request.toByteArray()).build()
         )
@@ -35,7 +36,7 @@ class PlayerAdventureService(
         responseObserver: StreamObserver<SendActionbarResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendActionbarEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -52,7 +53,7 @@ class PlayerAdventureService(
         responseObserver: StreamObserver<SendPlayerListHeaderAndFooterResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendPlayerListHeaderAndFooterEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -65,7 +66,7 @@ class PlayerAdventureService(
 
     override fun sendBossBar(request: SendBossBarRequest, responseObserver: StreamObserver<SendBossBarResponse>) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendBossBarEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -81,7 +82,7 @@ class PlayerAdventureService(
         responseObserver: StreamObserver<SendBossBarHideResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendBossBarHideEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -97,7 +98,7 @@ class PlayerAdventureService(
         responseObserver: StreamObserver<SendClearTitleResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendClearTitleEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -110,7 +111,7 @@ class PlayerAdventureService(
 
     override fun sendOpenBook(request: SendOpenBookRequest, responseObserver: StreamObserver<SendOpenBookResponse>) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendOpenBookEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -126,7 +127,7 @@ class PlayerAdventureService(
         responseObserver: StreamObserver<SendPlaySoundResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendPlaySoundEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -142,7 +143,7 @@ class PlayerAdventureService(
         responseObserver: StreamObserver<SendPlaySoundToCoordinatesResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendPlaySoundToCoordinatesEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -158,7 +159,7 @@ class PlayerAdventureService(
         responseObserver: StreamObserver<SendResetTitleResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendResetTitleEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -174,7 +175,7 @@ class PlayerAdventureService(
         responseObserver: StreamObserver<SendStopSoundResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendStopSoundEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -190,7 +191,7 @@ class PlayerAdventureService(
         responseObserver: StreamObserver<SendTitlePartSubTitleResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendTitlePartSubTitleEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -209,7 +210,7 @@ class PlayerAdventureService(
         responseObserver: StreamObserver<SendTitlePartTitleResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendTitlePartTitleEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -228,7 +229,7 @@ class PlayerAdventureService(
         responseObserver: StreamObserver<SendTitlePartTimesResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendTitlePartTimesEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )

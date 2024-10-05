@@ -9,7 +9,8 @@ import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.PlayerUniqueIdRepository
 import app.simplecloud.droplet.player.server.service.PlayerAdventureService
 import app.simplecloud.droplet.player.server.service.PlayerService
-import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqFactory
+import app.simplecloud.pubsub.PubSubClient
+import app.simplecloud.pubsub.PubSubService
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import org.apache.logging.log4j.LogManager
@@ -21,7 +22,7 @@ class PlayerServer {
 
     private val jedisPool = RedisFactory.createFromEnv()
     private val datastore = MorphiaDatastoreFactory.createFromEnv()
-    private val publisher = RabbitMqFactory.createPublisher()
+    private val pubSubClient = PubSubClient("localhost", System.getenv("GRPC_PORT")?.toInt() ?: 5717)
 
     private val playerUniqueIdRepository = PlayerUniqueIdRepository(jedisPool)
     private val onlinePlayerRepository = OnlinePlayerRepository(jedisPool, playerUniqueIdRepository)
@@ -34,7 +35,6 @@ class PlayerServer {
     fun start() {
         logger.info("Starting Player server...")
         startGrpcServer()
-        publisher.start()
     }
 
     private fun startGrpcServer() {
@@ -46,18 +46,19 @@ class PlayerServer {
     }
 
     private fun createGrpcServerFromEnv(): Server {
-        val port = System.getenv("GRPC_PORT")?.toInt() ?: 5816
+        val port = System.getenv("GRPC_PORT")?.toInt() ?: 5817
         return ServerBuilder.forPort(port)
             .addService(
                 PlayerService(
-                        publisher,
+                    pubSubClient,
                     onlinePlayerRepository,
                     offlinePlayerRepository,
                     playerLoginHandler,
                     playerLogoutHandler
                 )
             )
-            .addService(PlayerAdventureService(publisher, onlinePlayerRepository))
+            .addService(PlayerAdventureService(pubSubClient, onlinePlayerRepository))
+            .addService(PubSubService())
             .build()
     }
 

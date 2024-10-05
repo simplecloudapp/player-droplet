@@ -16,6 +16,11 @@ subprojects {
         }
     }
 
+    dependencies {
+        api("app.simplecloud:simplecloud-pubsub:1.0.3")
+        api("build.buf.gen:simplecloud_proto-specs_grpc_kotlin:1.4.1.1.20240606064605.c07118735783")
+    }
+
     tasks {
         compileJava {
             options.encoding = "UTF-8"
@@ -31,9 +36,14 @@ subprojects {
                 include(dependency("net.kyori:adventure-text-serializer-gson"))
                 include(dependency("net.kyori:adventure-text-serializer-json"))
                 include(dependency("net.kyori:adventure-text-serializer-legacy"))
+                include(dependency("build.buf.gen:simplecloud_proto-specs_grpc_kotlin"))
 
                 relocate("com.google.protobuf", "app.simplecloud.simplecloud.api.external.protobuf") {
                     include(dependency("com.google.protobuf:protobuf-java"))
+                }
+
+                relocate("app.simplecloud.pubsub", "app.simplecloud.simplecloud.api.external.pubsub") {
+                    include(dependency("app.simplecloud:simplecloud-pubsub"))
                 }
 
                 relocate("io.grpc", "app.simplecloud.simplecloud.api.external.grpc") {

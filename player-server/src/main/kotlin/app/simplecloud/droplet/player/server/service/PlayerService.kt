@@ -6,12 +6,12 @@ import app.simplecloud.droplet.player.server.connection.PlayerLogoutHandler
 import app.simplecloud.droplet.player.server.repository.OfflinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
-import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqPublisher
+import app.simplecloud.pubsub.PubSubClient
 import io.grpc.stub.StreamObserver
 import org.apache.logging.log4j.LogManager
 
 class PlayerService(
-        private val publisher: RabbitMqPublisher,
+        private val pubSubClient: PubSubClient,
         private val onlinePlayerRepository: OnlinePlayerRepository,
         private val offlinePlayerRepository: OfflinePlayerRepository,
         private val playerLoginHandler: PlayerLoginHandler,
@@ -161,7 +161,7 @@ class PlayerService(
             responseObserver: StreamObserver<CloudPlayerKickResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                     RabbitMqChannelNames.CONNECTION,
                     CloudPlayerKickEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
@@ -177,7 +177,7 @@ class PlayerService(
             responseObserver: StreamObserver<ConnectCloudPlayerResponse>
     ) {
         if (playerIsOnline(request.uniqueId)) {
-            publisher.publish(
+            pubSubClient.publish(
                     RabbitMqChannelNames.CONNECTION,
                     ConnectCloudPlayerEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
