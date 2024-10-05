@@ -23,13 +23,13 @@ class PlayerBungeecordPlugin : Plugin() {
         proxy.pluginManager.registerListener(this, PlayerConnectionListener(playerApi))
         proxy.pluginManager.registerListener(this, PlayerDisconnectListener(playerApi))
 
-        playerApi.registerRabbitMqListener(
+        playerApi.registerPubSubListener(
             RabbitMqChannelNames.CONNECTION,
             CloudPlayerKickEvent::class.java, CloudPlayerKickListener(
                 (this.proxy)
             )
         )
-        playerApi.registerRabbitMqListener(
+        playerApi.registerPubSubListener(
             RabbitMqChannelNames.CONNECTION,
             ConnectCloudPlayerEvent::class.java, CloudPlayerConnectListener(
                 (this.proxy)

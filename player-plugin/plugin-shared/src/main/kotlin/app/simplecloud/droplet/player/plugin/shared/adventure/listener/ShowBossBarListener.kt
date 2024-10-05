@@ -3,13 +3,14 @@ package app.simplecloud.droplet.player.plugin.shared.adventure.listener
 import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
 import app.simplecloud.droplet.player.proto.SendBossBarEvent
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
+import app.simplecloud.pubsub.PubSubListener
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 
 class ShowBossBarListener(
     private val audienceRepository: AudienceRepository,
     private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson(),
-) : RabbitMqListener<SendBossBarEvent> {
+) : PubSubListener<SendBossBarEvent> {
     override fun handle(message: SendBossBarEvent) {
         val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)?: return
         val bossBar = BossBar.bossBar(

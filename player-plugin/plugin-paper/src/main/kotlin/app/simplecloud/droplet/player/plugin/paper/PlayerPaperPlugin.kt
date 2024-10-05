@@ -23,7 +23,7 @@ class PlayerPaperPlugin : JavaPlugin() {
 
 
         AdventureListeners.allWithClasses(PaperAudienceRepository()).forEach {
-            playerApi.registerRabbitMqListener(RabbitMqChannelNames.ADVENTURE, it.first, it.second)
+            playerApi.registerPubSubListener(RabbitMqChannelNames.ADVENTURE, it.first, it.second)
         }
     }
 

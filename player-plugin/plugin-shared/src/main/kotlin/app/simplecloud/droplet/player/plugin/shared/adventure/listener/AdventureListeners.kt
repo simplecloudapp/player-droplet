@@ -3,15 +3,16 @@ package app.simplecloud.droplet.player.plugin.shared.adventure.listener
 import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
 import app.simplecloud.droplet.player.proto.*
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
+import app.simplecloud.pubsub.PubSubListener
 import com.google.protobuf.Message
 
 object AdventureListeners {
 
-    fun all(repository: AudienceRepository): List<RabbitMqListener<out Message>> {
+    fun all(repository: AudienceRepository): List<PubSubListener<out Message>> {
         return allWithClasses(repository).map { it.second }
     }
 
-    fun allWithClasses(repository: AudienceRepository): List<Pair<Class<out Message>, RabbitMqListener<out Message>>> {
+    fun allWithClasses(repository: AudienceRepository): List<Pair<Class<out Message>, PubSubListener<out Message>>> {
         return listOf(
             SendClearTitleEvent::class.java to ClearTitleListener(repository),
             SendBossBarHideEvent::class.java to HideBossBarListener(repository),

@@ -8,11 +8,16 @@ import com.velocitypowered.api.event.PostOrder
 import com.velocitypowered.api.event.ResultedEvent
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.LoginEvent
+import com.velocitypowered.api.event.connection.PostLoginEvent
+import com.velocitypowered.api.proxy.ProxyServer
+import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.title.TitlePart
 
 class PlayerConnectionListener(
     private val playerApi: PlayerProxyApi,
+    private val proxyServer: ProxyServer
 ) {
 
     @Subscribe(order = PostOrder.EARLY)
@@ -46,6 +51,21 @@ class PlayerConnectionListener(
                 continuation.resumeWithException(it)
                 null
             }
+
     }
 
+    @Subscribe(order = PostOrder.LAST)
+    fun onPostLogin(event: PostLoginEvent) {
+        val player = event.player
+        player.sendMessage(Component.text("Player: ${player.username}"))
+        playerApi.getOnlinePlayer(player.uniqueId).thenAccept {
+            it.sendMessage(Component.text("Player: ${it.getName()}"))
+            it.kick(Component.text("You are not allowed to join!"))
+        }
+        playerApi.getOnlinePlayers().thenAccept {
+            it.forEach {
+                println(it.getName())
+            }
+        }
+    }
 }

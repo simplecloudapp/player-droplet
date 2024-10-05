@@ -4,6 +4,7 @@ import app.simplecloud.droplet.player.api.impl.PlayerApiImpl
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqFactory
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import app.simplecloud.pubsub.PubSubClient
+import app.simplecloud.pubsub.PubSubListener
 import com.google.protobuf.Message
 
 open class PlayerInternalApi(
@@ -12,7 +13,7 @@ open class PlayerInternalApi(
 
     val pubSubClient = PubSubClient(System.getenv("PLAYER_DROPLET_HOST") ?: "127.0.0.1", System.getenv("PLAYER_DROPLET_PORT")?.toInt() ?: 5817)
 
-    fun <T: Message> registerRabbitMqListener(queueName: String, clazz: Class<out Message>, listener: RabbitMqListener<T>) {
+    fun <T: Message> registerPubSubListener(queueName: String, clazz: Class<out Message>, listener: PubSubListener<T>) {
         /*
         {
             val uniqueId = it.allFields.entries.find { it.key.name == "uniqueId" }?.value?.toString()?: return@listen true

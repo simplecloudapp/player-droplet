@@ -28,16 +28,16 @@ class PlayerVelocityPlugin @Inject constructor(
     fun onProxyInitialize(event: ProxyInitializeEvent) {
         PlayerApiSingleton.init(playerApi)
 
-        playerApi.registerRabbitMqListener(
+        playerApi.registerPubSubListener(
             RabbitMqChannelNames.CONNECTION,
                 CloudPlayerKickEvent::class.java, CloudPlayerKickListener((proxyServer)
         ))
-        playerApi.registerRabbitMqListener(
+        playerApi.registerPubSubListener(
             RabbitMqChannelNames.CONNECTION,
                 ConnectCloudPlayerEvent::class.java, CloudPlayerConnectListener((proxyServer)
         ))
 
-        proxyServer.eventManager.register(this, PlayerConnectionListener(playerApi))
+        proxyServer.eventManager.register(this, PlayerConnectionListener(playerApi, proxyServer))
         proxyServer.eventManager.register(this, PlayerDisconnectListener(playerApi))
     }
 
