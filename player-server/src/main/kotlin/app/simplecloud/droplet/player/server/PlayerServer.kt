@@ -14,6 +14,7 @@ import app.simplecloud.pubsub.PubSubService
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import org.apache.logging.log4j.LogManager
+import java.net.InetAddress
 import kotlin.concurrent.thread
 
 class PlayerServer {
@@ -22,7 +23,7 @@ class PlayerServer {
 
     private val jedisPool = RedisFactory.createFromEnv()
     private val datastore = MorphiaDatastoreFactory.createFromEnv()
-    private val pubSubClient = PubSubClient("127.0.0.1", System.getenv("GRPC_PORT")?.toInt() ?: 5826)
+    private val pubSubClient = PubSubClient(InetAddress.getLocalHost().hostAddress, System.getenv("GRPC_PORT")?.toInt() ?: 5826)
 
     private val playerUniqueIdRepository = PlayerUniqueIdRepository(jedisPool)
     private val onlinePlayerRepository = OnlinePlayerRepository(jedisPool, playerUniqueIdRepository)

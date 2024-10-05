@@ -99,7 +99,7 @@ open class PlayerApiImpl : PlayerApi {
 
     private fun createManagedChannelFromEnv(): ManagedChannel {
         val host = System.getenv("PLAYER_DROPLET_HOST") ?: "127.0.0.1"
-        val port = System.getenv("PLAYER_DROPLET_PORT")?.toInt() ?: 5817
+        val port = System.getenv("PLAYER_DROPLET_PORT")?.toInt() ?: 5826
         return ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
     }
 
