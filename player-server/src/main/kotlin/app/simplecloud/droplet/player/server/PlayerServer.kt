@@ -22,7 +22,7 @@ class PlayerServer {
 
     private val jedisPool = RedisFactory.createFromEnv()
     private val datastore = MorphiaDatastoreFactory.createFromEnv()
-    private val pubSubClient = PubSubClient("127.0.0.1", System.getenv("GRPC_PORT")?.toInt() ?: 5717)
+    lateinit var pubSubClient: PubSubClient
 
     private val playerUniqueIdRepository = PlayerUniqueIdRepository(jedisPool)
     private val onlinePlayerRepository = OnlinePlayerRepository(jedisPool, playerUniqueIdRepository)
@@ -35,6 +35,7 @@ class PlayerServer {
     fun start() {
         logger.info("Starting Player server...")
         startGrpcServer()
+        pubSubClient = PubSubClient("127.0.0.1", System.getenv("GRPC_PORT")?.toInt() ?: 5717)
     }
 
     private fun startGrpcServer() {
