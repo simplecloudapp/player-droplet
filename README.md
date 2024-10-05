@@ -10,7 +10,7 @@ The server uses the following environment variables:
 
 | Variable Name | Description | Default Value |
 |---------------|-------------|---------------|
-| `GRPC_PORT` | The port the gRPC server should listen on. | `5817`        |
+| `GRPC_PORT` | The port the gRPC server should listen on. | `5826`        |
 | `MONGO_CONNECTION_STRING` | The connection string for the MongoDB instance. | (required)    |
 | `MONGO_DATABASE` | The name of the MongoDB database to use. | `players`     |
 | `REDIS_HOST` | The hostname or IP address of the Redis instance. | `127.0.0.1`   |
@@ -25,7 +25,7 @@ To use the API, you'll need to install the plugin on your platform. The plugin u
 | Variable Name | Description | Default Value                                   |
 |---------------|-------------|-------------------------------------------------|
 | `PLAYER_DROPLET_HOST` | The hostname or IP address of the Player-Droplet server. | `127.0.0.1`                                     |
-| `PLAYER_DROPLET_PORT` | The port number for the gRPC server on the Player-Droplet server. | `5817` (should match `GRPC_PORT` on the server) |
+| `PLAYER_DROPLET_PORT` | The port number for the gRPC server on the Player-Droplet server. | `5826` (should match `GRPC_PORT` on the server) |
 
 ## Contributing
 

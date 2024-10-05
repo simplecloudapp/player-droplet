@@ -60,7 +60,6 @@ class PlayerConnectionListener(
         player.sendMessage(Component.text("Player: ${player.username}"))
         playerApi.getOnlinePlayer(player.uniqueId).thenAccept {
             it.sendMessage(Component.text("Player: ${it.getName()}"))
-            it.kick(Component.text("You are not allowed to join!"))
         }
         playerApi.getOnlinePlayers().thenAccept {
             it.forEach {
