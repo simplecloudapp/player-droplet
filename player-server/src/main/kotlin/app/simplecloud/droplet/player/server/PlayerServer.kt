@@ -34,12 +34,12 @@ class PlayerServer {
     private val server = createGrpcServerFromEnv()
 
     fun start() {
-        logger.info("Starting Player server on ${InetAddress.getLocalHost().hostAddress} with port ${System.getenv("GRPC_PORT")}")
+        logger.info("Starting Player server...")
         startGrpcServer()
     }
 
     private fun startGrpcServer() {
-        logger.info("Starting gRPC server...")
+        logger.info("Starting gRPC server on ${InetAddress.getLocalHost().hostAddress} with port ${System.getenv("GRPC_PORT")}")
         thread {
             server.start()
             server.awaitTermination()
