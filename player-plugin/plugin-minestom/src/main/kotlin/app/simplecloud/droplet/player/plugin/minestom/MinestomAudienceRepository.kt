@@ -8,7 +8,7 @@ import java.util.UUID
 class MinestomAudienceRepository: AudienceRepository {
 
     override fun getAudienceByUniqueId(uniqueId: String): Audience? {
-        return MinecraftServer.getConnectionManager().getPlayer(UUID.fromString(uniqueId))
+        return MinecraftServer.getConnectionManager().getOnlinePlayerByUuid(UUID.fromString(uniqueId))
     }
 
 }

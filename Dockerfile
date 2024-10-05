@@ -1,4 +1,4 @@
-FROM gradle:8.2-jdk17 AS build
+FROM gradle:jdk21 AS build
 
 WORKDIR /home/gradle/
 
@@ -6,7 +6,7 @@ COPY --chown=gradle:gradle . .
 
 RUN gradle shadowJar --no-daemon
 
-FROM openjdk:17.0.1-jdk-slim
+FROM openjdk:21-jdk-slim
 
 ENV GRPC_PORT=5817
 ENV MONGO_CONNECTION_STRING=mongodb://localhost:27017

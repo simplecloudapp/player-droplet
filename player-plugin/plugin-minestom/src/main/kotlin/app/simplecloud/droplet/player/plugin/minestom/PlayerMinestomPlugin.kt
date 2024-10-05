@@ -7,14 +7,13 @@ import app.simplecloud.droplet.player.plugin.shared.adventure.listener.Adventure
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import net.minestom.server.MinecraftServer
 import net.minestom.server.entity.GameMode
-import net.minestom.server.event.player.PlayerLoginEvent
 import net.minestom.server.extensions.Extension
 import java.util.*
 
 class PlayerMinestomPlugin : Extension() {
 
     private val playerApi = PlayerInternalApi(
-        OnlinePlayerChecker { MinecraftServer.getConnectionManager().getPlayer(UUID.fromString(it)) != null }
+        OnlinePlayerChecker { MinecraftServer.getConnectionManager().getOnlinePlayerByUuid(UUID.fromString(it)) != null }
     )
 
     override fun initialize() {

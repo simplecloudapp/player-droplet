@@ -11,7 +11,7 @@ include("player-plugin:plugin-bungeecord")
 findProject(":player-plugin:plugin-bungeecord")?.name = "plugin-bungeecord"
 include("player-plugin:plugin-spigot")
 findProject(":player-plugin:plugin-spigot")?.name = "plugin-spigot"
-include("player-plugin:plugin-minestom")
-findProject(":player-plugin:plugin-minestom")?.name = "plugin-minestom"
+//include("player-plugin:plugin-minestom")
+//findProject(":player-plugin:plugin-minestom")?.name = "plugin-minestom"
 include("player-plugin:plugin-paper")
 findProject(":player-plugin:plugin-paper")?.name = "plugin-paper"
