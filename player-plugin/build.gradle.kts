@@ -17,7 +17,7 @@ subprojects {
     }
 
     dependencies {
-        api("app.simplecloud:simplecloud-pubsub:1.0.3")
+        api("app.simplecloud:simplecloud-pubsub:1.0.5")
         api("build.buf.gen:simplecloud_proto-specs_grpc_java:1.4.1.1.20240606064605.c07118735783")
         api("build.buf.gen:simplecloud_proto-specs_protocolbuffers_java:28.2.0.1.20241001163139.58018cb317ed")
     }
