@@ -23,7 +23,7 @@ class PlayerServer {
 
     private val jedisPool = RedisFactory.createFromEnv()
     private val datastore = MorphiaDatastoreFactory.createFromEnv()
-    private val pubSubClient = PubSubClient(System.getenv("GRPC_HOST") ?: "127.0.0.1", System.getenv("GRPC_PORT")?.toInt() ?: 5826)
+    private val pubSubClient = PubSubClient(System.getenv("GRPC_HOST") ?: "127.0.0.1", System.getenv("GRPC_PUB_SUB_PORT")?.toInt() ?: 5827)
     private val playerUniqueIdRepository = PlayerUniqueIdRepository(jedisPool)
     private val onlinePlayerRepository = OnlinePlayerRepository(jedisPool, playerUniqueIdRepository)
     private val offlinePlayerRepository = OfflinePlayerRepository(datastore)
@@ -32,9 +32,12 @@ class PlayerServer {
 
     private val server = createGrpcServerFromEnv()
 
+    private val pubSubServer = createPubSubGrpcServerFromEnv()
+
     fun start() {
         logger.info("Starting Player server...")
         startGrpcServer()
+        startPubSubGrpcServer()
     }
 
     private fun startGrpcServer() {
@@ -45,8 +48,33 @@ class PlayerServer {
         }
     }
 
+    private fun startPubSubGrpcServer() {
+        logger.info("Starting PubSub gRPC server on ${InetAddress.getLocalHost().hostAddress} with port ${System.getenv("GRPC_PUB_SUB_PORT")}")
+        thread {
+            pubSubServer.start()
+            pubSubServer.awaitTermination()
+        }
+    }
+
     private fun createGrpcServerFromEnv(): Server {
         val port = System.getenv("GRPC_PORT")?.toInt() ?: 5826
+        return ServerBuilder.forPort(port)
+            .addService(
+                PlayerService(
+                    pubSubClient,
+                    onlinePlayerRepository,
+                    offlinePlayerRepository,
+                    playerLoginHandler,
+                    playerLogoutHandler
+                )
+            )
+            .addService(PlayerAdventureService(pubSubClient, onlinePlayerRepository))
+            .addService(PubSubService())
+            .build()
+    }
+
+    private fun createPubSubGrpcServerFromEnv(): Server {
+        val port = System.getenv("GRPC_PUB_SUB_PORT")?.toInt() ?: 5827
         return ServerBuilder.forPort(port)
             .addService(
                 PlayerService(

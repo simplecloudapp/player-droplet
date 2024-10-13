@@ -11,7 +11,7 @@ open class PlayerInternalApi(
     private val onlinePlayerChecker: OnlinePlayerChecker
 ) : PlayerApiImpl() {
 
-    val pubSubClient = PubSubClient(System.getenv("PLAYER_DROPLET_HOST") ?: "127.0.0.1", System.getenv("PLAYER_DROPLET_PORT")?.toInt() ?: 5826)
+    val pubSubClient = PubSubClient(System.getenv("PLAYER_DROPLET_HOST") ?: "127.0.0.1", System.getenv("PLAYER_PUBSUB_DROPLET_PORT")?.toInt() ?: 5827)
 
     fun <T: Message> registerPubSubListener(queueName: String, clazz: Class<out Message>, listener: PubSubListener<T>) {
         /*
