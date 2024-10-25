@@ -14,7 +14,9 @@ dependencies {
     implementation("org.jooq:jooq-kotlin:3.19.3")
     implementation("org.jooq:jooq-meta:3.19.3")
     implementation("org.jooq:jooq-meta-extensions:3.19.3")
+    implementation("org.jooq:jooq-postgres-extensions:3.19.14")
     jooqCodegen("org.jooq:jooq-meta-extensions:3.19.3")
+
 
     implementation("redis.clients:jedis:4.4.1")
     implementation("dev.morphia.morphia:morphia-core:2.3.4")
