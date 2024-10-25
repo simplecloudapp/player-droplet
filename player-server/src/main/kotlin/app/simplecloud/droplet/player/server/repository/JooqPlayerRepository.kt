@@ -30,20 +30,32 @@ class JooqPlayerRepository(
                 player.uniqueId,
                 player.name,
                 player.displayName,
-                LocalDateTime.ofEpochSecond(player.firstLogin, 0, ZoneOffset.UTC),
-                LocalDateTime.ofEpochSecond(player.lastLogin, 0, ZoneOffset.UTC),
+                LocalDateTime.ofEpochSecond(player.firstLogin/1000, 0, ZoneOffset.UTC),
+                LocalDateTime.ofEpochSecond(player.lastLogin/1000, 0, ZoneOffset.UTC),
                 player.onlineTime
             )
             .onDuplicateKeyUpdate()
             .set(OFFLINE_PLAYERS.NAME, player.name)
             .set(OFFLINE_PLAYERS.DISPLAY_NAME, player.displayName)
-            .set(OFFLINE_PLAYERS.FIRST_LOGIN, LocalDateTime.ofEpochSecond(player.firstLogin, 0, ZoneOffset.UTC))
-            .set(OFFLINE_PLAYERS.LAST_LOGIN, LocalDateTime.ofEpochSecond(player.lastLogin, 0, ZoneOffset.UTC))
+            .set(OFFLINE_PLAYERS.FIRST_LOGIN, LocalDateTime.ofEpochSecond(player.firstLogin/1000, 0, ZoneOffset.UTC))
+            .set(OFFLINE_PLAYERS.LAST_LOGIN, LocalDateTime.ofEpochSecond(player.lastLogin/1000, 0, ZoneOffset.UTC))
             .set(OFFLINE_PLAYERS.ONLINE_TIME, player.onlineTime)
             .execute()
 
         saveConnection(player)
 
+    }
+
+    fun findConnectionByUniqueId(uniqueId: UUID): PlayerConnectionEntity? {
+        val fetchOneInto = datbase.context.selectFrom(PLAYER_CONNECTION)
+            .where(PLAYER_CONNECTION.UNIQUE_ID.eq(uniqueId.toString()))
+            .fetchOneInto(PlayerConnectionRecord::class.java)
+
+        if (fetchOneInto == null) {
+            return null
+        }
+
+        return mapPlayerConnectionsRecordToEntity(fetchOneInto)
     }
 
     private fun saveConnection(connection: OfflinePlayerEntity) {
@@ -133,8 +145,8 @@ class JooqPlayerRepository(
             record.uniqueId!!,
             record.name!!,
             record.displayName,
-            record.firstLogin!!.toEpochSecond(ZoneOffset.UTC),
-            record.lastLogin!!.toEpochSecond(ZoneOffset.UTC),
+            record.firstLogin!!.toEpochSecond(ZoneOffset.UTC)*1000,
+            record.lastLogin!!.toEpochSecond(ZoneOffset.UTC)*1000,
             record.onlineTime!!,
             mapPlayerConnectionsRecordToEntity(lastPlayerConnection.first())
         )

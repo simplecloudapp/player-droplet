@@ -1,6 +1,7 @@
 package app.simplecloud.droplet.player.server.service
 
 import app.simplecloud.droplet.player.proto.*
+import app.simplecloud.droplet.player.server.connection.PlayerConnectionHandler
 import app.simplecloud.droplet.player.server.connection.PlayerLoginHandler
 import app.simplecloud.droplet.player.server.connection.PlayerLogoutHandler
 import app.simplecloud.droplet.player.server.repository.OfflinePlayerRepository
@@ -14,8 +15,7 @@ class PlayerService(
         private val pubSubClient: PubSubClient,
         private val onlinePlayerRepository: OnlinePlayerRepository,
         private val offlinePlayerRepository: OfflinePlayerRepository,
-        private val playerLoginHandler: PlayerLoginHandler,
-        private val playerLogoutHandler: PlayerLogoutHandler
+        private val playerConnectionHandler: PlayerConnectionHandler
 ) : PlayerServiceGrpc.PlayerServiceImplBase() {
 
     override fun getOfflineCloudPlayerByUniqueId(
@@ -132,7 +132,7 @@ class PlayerService(
             request: CloudPlayerLoginRequest,
             responseObserver: StreamObserver<CloudPlayerLoginResponse>
     ) {
-        val success = playerLoginHandler.handleLogin(request)
+        val success = playerConnectionHandler.handleLogin(request)
 
         responseObserver.onNext(
                 CloudPlayerLoginResponse.newBuilder()
@@ -146,7 +146,7 @@ class PlayerService(
             request: CloudPlayerDisconnectRequest,
             responseObserver: StreamObserver<CloudPlayerDisconnectResponse>
     ) {
-        val success = playerLogoutHandler.handleLogout(request)
+        val success = playerConnectionHandler.handleLogout(request)
 
         responseObserver.onNext(
                 CloudPlayerDisconnectResponse.newBuilder()

@@ -41,6 +41,17 @@ data class PlayerConnectionEntity(
                 configuration.online
             )
         }
+
+        fun fromRecord(record: PlayerConnectionRecord): PlayerConnectionEntity {
+            return PlayerConnectionEntity(
+                record.clientLanguage!!,
+                record.numericalClientVersion!!,
+                record.onlineMode!!,
+                record.lastServer!!,
+                record.online!!
+            )
+        }
+
     }
 
 }

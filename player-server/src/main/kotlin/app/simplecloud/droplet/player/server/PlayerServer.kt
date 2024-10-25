@@ -1,6 +1,7 @@
 package app.simplecloud.droplet.player.server
 
 import app.simplecloud.droplet.player.proto.SendMessageEvent
+import app.simplecloud.droplet.player.server.connection.PlayerConnectionHandler
 import app.simplecloud.droplet.player.server.connection.PlayerLoginHandler
 import app.simplecloud.droplet.player.server.connection.PlayerLogoutHandler
 import app.simplecloud.droplet.player.server.database.DatabaseFactory
@@ -32,6 +33,7 @@ class PlayerServer {
     private val pubSubClient = PubSubClient(System.getenv("GRPC_HOST") ?: "127.0.0.1", System.getenv("GRPC_PUB_SUB_PORT")?.toInt() ?: 5827)
     private val playerUniqueIdRepository = PlayerUniqueIdRepository(jedisPool)
     private val onlinePlayerRepository = OnlinePlayerRepository(jedisPool, playerUniqueIdRepository)
+    private val playerConnectionHandler = PlayerConnectionHandler(jooqPlayerRepository)
     private val offlinePlayerRepository = OfflinePlayerRepository(datastore)
     private val playerLoginHandler = PlayerLoginHandler(jooqPlayerRepository, onlinePlayerRepository)
     private val playerLogoutHandler = PlayerLogoutHandler(jooqPlayerRepository, onlinePlayerRepository)
@@ -70,8 +72,7 @@ class PlayerServer {
                     pubSubClient,
                     onlinePlayerRepository,
                     offlinePlayerRepository,
-                    playerLoginHandler,
-                    playerLogoutHandler
+                    playerConnectionHandler
                 )
             )
             .addService(PlayerAdventureService(pubSubClient, onlinePlayerRepository))
@@ -82,16 +83,6 @@ class PlayerServer {
     private fun createPubSubGrpcServerFromEnv(): Server {
         val port = System.getenv("GRPC_PUB_SUB_PORT")?.toInt() ?: 5827
         return ServerBuilder.forPort(port)
-            .addService(
-                PlayerService(
-                    pubSubClient,
-                    onlinePlayerRepository,
-                    offlinePlayerRepository,
-                    playerLoginHandler,
-                    playerLogoutHandler
-                )
-            )
-            .addService(PlayerAdventureService(pubSubClient, onlinePlayerRepository))
             .addService(PubSubService())
             .build()
     }
