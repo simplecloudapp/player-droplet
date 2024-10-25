@@ -4,6 +4,7 @@ import app.simplecloud.droplet.player.server.database.Database
 import app.simplecloud.droplet.player.server.entity.OfflinePlayerEntity
 import app.simplecloud.droplet.player.server.entity.PlayerConnectionEntity
 import app.simplecloud.droplet.player.shared.db.tables.OfflinePlayers
+import app.simplecloud.droplet.player.shared.db.tables.PlayerConnection
 import app.simplecloud.droplet.player.shared.db.tables.records.OfflinePlayersRecord
 import app.simplecloud.droplet.player.shared.db.tables.records.PlayerConnectionRecord
 import app.simplecloud.droplet.player.shared.db.tables.references.OFFLINE_PLAYERS
@@ -17,6 +18,15 @@ class JooqPlayerRepository(
     override fun save(player: OfflinePlayerEntity) {
         datbase.context.insertInto(OfflinePlayers.OFFLINE_PLAYERS)
             .set(player.toRecord())
+            .execute()
+
+        saveConnection(player.lastPlayerConnection)
+
+    }
+
+    fun saveConnection(connection: PlayerConnectionEntity) {
+        datbase.context.insertInto(PLAYER_CONNECTION)
+            .set(connection.toRecord())
             .execute()
     }
 

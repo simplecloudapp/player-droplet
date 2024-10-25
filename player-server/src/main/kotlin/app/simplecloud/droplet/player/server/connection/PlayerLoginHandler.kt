@@ -59,7 +59,9 @@ class PlayerLoginHandler(
             0,
             PlayerConnectionEntity.fromConfiguration(request.playerConnection)
         )
+
         offlinePlayerRepository.save(offlinePlayerEntity)
+        offlinePlayerRepository.saveConnection(PlayerConnectionEntity.fromConfiguration(request.playerConnection))
         return offlinePlayerEntity
     }
 
