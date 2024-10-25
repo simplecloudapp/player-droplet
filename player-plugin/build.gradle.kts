@@ -50,25 +50,17 @@ subprojects {
                 include(dependency("build.buf.gen:simplecloud_proto-specs_protocolbuffers_java"))
                 include(dependency("build.buf.gen:simplecloud_proto-specs_protocolbuffers_kotlin"))
                 include(dependency("app.simplecloud:simplecloud-pubsub"))
-
-
-                relocate("com.google.protobuf", "app.simplecloud.simplecloud.api.external.protobuf") {
-                    include(dependency("com.google.protobuf:protobuf-java"))
-                    include(dependency("com.google.protobuf:protobuf-kotlin"))
-                }
-
-
-                relocate("io.grpc", "app.simplecloud.simplecloud.api.external.grpc") {
-                    include(dependency("io.perfmark:perfmark-api"))
-                    include(dependency("io.grpc:grpc-protobuf-lite"))
-                    include(dependency("io.grpc:grpc-context"))
-                    include(dependency("io.grpc:grpc-api"))
-                    include(dependency("io.grpc:grpc-core"))
-                    include(dependency("io.grpc:grpc-stub"))
-                    include(dependency("io.grpc:grpc-protobuf"))
-                    include(dependency("io.grpc:grpc-netty-shaded"))
-                    include(dependency("io.grpc:grpc-kotlin-stub"))
-                }
+                include(dependency("io.perfmark:perfmark-api"))
+                include(dependency("io.grpc:grpc-protobuf-lite"))
+                include(dependency("io.grpc:grpc-context"))
+                include(dependency("io.grpc:grpc-api"))
+                include(dependency("io.grpc:grpc-core"))
+                include(dependency("io.grpc:grpc-stub"))
+                include(dependency("io.grpc:grpc-protobuf"))
+                include(dependency("io.grpc:grpc-netty-shaded"))
+                include(dependency("io.grpc:grpc-kotlin-stub"))
+                include(dependency("com.google.protobuf:protobuf-java"))
+                include(dependency("com.google.protobuf:protobuf-kotlin"))
 
 
                 relocate("com.rabbitmq", "app.simplecloud.simplecloud.api.external.rabbitmq") {

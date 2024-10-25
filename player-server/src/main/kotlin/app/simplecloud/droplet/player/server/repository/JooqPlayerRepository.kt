@@ -27,13 +27,16 @@ class JooqPlayerRepository(
             .execute()
     }
 
-    override fun findByName(name: String): OfflinePlayerEntity {
+    override fun findByName(name: String): OfflinePlayerEntity? {
         val fetchOneInto = datbase.context.selectFrom(OfflinePlayers.OFFLINE_PLAYERS)
             .where(OfflinePlayers.OFFLINE_PLAYERS.NAME.eq(name))
             .fetchOneInto(OFFLINE_PLAYERS)
 
+        if (fetchOneInto == null) {
+            return null
+        }
 
-        return mapOfflinePlayersRecordToEntity(fetchOneInto!!)
+        return mapOfflinePlayersRecordToEntity(fetchOneInto)
     }
 
     override fun findByUniqueId(uniqueId: UUID): OfflinePlayerEntity? {
@@ -44,7 +47,12 @@ class JooqPlayerRepository(
         val fetchOneInto = datbase.context.selectFrom(OfflinePlayers.OFFLINE_PLAYERS)
             .where(OfflinePlayers.OFFLINE_PLAYERS.UNIQUE_ID.eq(uniqueId))
             .fetchOneInto(OFFLINE_PLAYERS)
-        return mapOfflinePlayersRecordToEntity(fetchOneInto!!)
+
+        if  (fetchOneInto == null) {
+            return null
+        }
+
+        return mapOfflinePlayersRecordToEntity(fetchOneInto)
     }
 
     override fun findAll(): List<OfflinePlayerEntity> {
