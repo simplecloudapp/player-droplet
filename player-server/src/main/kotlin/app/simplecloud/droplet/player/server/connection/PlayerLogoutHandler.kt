@@ -3,12 +3,13 @@ package app.simplecloud.droplet.player.server.connection
 import app.simplecloud.droplet.player.proto.CloudPlayerDisconnectRequest
 import app.simplecloud.droplet.player.server.entity.OfflinePlayerEntity
 import app.simplecloud.droplet.player.server.entity.PlayerConnectionEntity
+import app.simplecloud.droplet.player.server.repository.JooqPlayerRepository
 import app.simplecloud.droplet.player.server.repository.OfflinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import org.apache.logging.log4j.LogManager
 
 class PlayerLogoutHandler(
-    private val offlinePlayerRepository: OfflinePlayerRepository,
+    private val offlinePlayerRepository: JooqPlayerRepository,
     private val onlinePlayerRepository: OnlinePlayerRepository
 ) {
 

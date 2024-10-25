@@ -17,8 +17,8 @@ subprojects {
     }
 
     dependencies {
-        implementation("app.simplecloud:simplecloud-pubsub:1.0.5")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+        api("app.simplecloud:simplecloud-pubsub:1.0.5")
+        api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 
 
         api("io.grpc:grpc-kotlin-stub:1.4.1")
@@ -38,14 +38,18 @@ subprojects {
                 include(project(":player-api"))
                 include(project(":player-plugin:plugin-shared"))
 
+                include(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
+                include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core"))
+
                 include(dependency("net.kyori:adventure-api"))
                 include(dependency("net.kyori:adventure-text-serializer-gson"))
                 include(dependency("net.kyori:adventure-text-serializer-json"))
                 include(dependency("net.kyori:adventure-text-serializer-legacy"))
                 include(dependency("build.buf.gen:simplecloud_proto-specs_grpc_kotlin"))
+                include(dependency("build.buf.gen:simplecloud_proto-specs_grpc_java"))
                 include(dependency("build.buf.gen:simplecloud_proto-specs_protocolbuffers_java"))
                 include(dependency("build.buf.gen:simplecloud_proto-specs_protocolbuffers_kotlin"))
-                include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core"))
+                include(dependency("app.simplecloud:simplecloud-pubsub"))
 
 
                 relocate("com.google.protobuf", "app.simplecloud.simplecloud.api.external.protobuf") {
@@ -53,9 +57,6 @@ subprojects {
                     include(dependency("com.google.protobuf:protobuf-kotlin"))
                 }
 
-                relocate("app.simplecloud.pubsub", "app.simplecloud.simplecloud.api.external.pubsub") {
-                    include(dependency("app.simplecloud:simplecloud-pubsub"))
-                }
 
                 relocate("io.grpc", "app.simplecloud.simplecloud.api.external.grpc") {
                     include(dependency("io.perfmark:perfmark-api"))
@@ -67,14 +68,6 @@ subprojects {
                     include(dependency("io.grpc:grpc-protobuf"))
                     include(dependency("io.grpc:grpc-netty-shaded"))
                     include(dependency("io.grpc:grpc-kotlin-stub"))
-                }
-
-                relocate("kotlin", "app.simplecloud.simplecloud.api.external.kotlin") {
-                    include(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
-                }
-
-                relocate("org.jetbrains.kotlinx", "app.simplecloud.simplecloud.api.external.kotlinx") {
-                    include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core"))
                 }
 
 

@@ -11,7 +11,6 @@ class SendMessageListener(
     private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson(),
 ) : PubSubListener<SendMessageEvent> {
     override fun handle(message: SendMessageEvent) {
-        println("SendMessageListener: ${message.message.json}")
         val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)?: return
         audience.sendMessage(componentSerializer.deserialize(message.message.json))
     }

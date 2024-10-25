@@ -10,9 +10,11 @@ import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.LoginEvent
 import com.velocitypowered.api.event.connection.PostLoginEvent
 import com.velocitypowered.api.proxy.ProxyServer
+import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.TitlePart
 
 class PlayerConnectionListener(
@@ -60,11 +62,14 @@ class PlayerConnectionListener(
         player.sendMessage(Component.text("Player: ${player.username}"))
         playerApi.getOnlinePlayer(player.uniqueId).thenAccept {
             it.sendMessage(Component.text("Player: ${it.getName()}"))
-        }
-        playerApi.getOnlinePlayers().thenAccept {
-            it.forEach {
-                println(it.getName())
-            }
+
+            it.playSound(Sound.sound(Key.key("minecraft:entity.experience_orb.pickup"), Sound.Source.MASTER, 1.0f, 1.0f))
+            it.showTitle(Title.title(
+                Component.text("Welcome to the server!"),
+                Component.text("Enjoy your stay!")
+            ))
+            it.sendActionBar(Component.text("Welcome to the server!"))
+            it.sendPlayerListFooter(Component.text("Welcome to the server!"))
         }
     }
 }

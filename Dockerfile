@@ -14,6 +14,7 @@ ENV MONGO_DATABASE=admin
 ENV REDIS_HOST=localhost
 ENV REDIS_PORT=6379
 ENV REDIS_PASSWORD=redis
+ENV DATABASE_URL=jdbc:postgresql://localhost:5432/postgres
 
 EXPOSE 5826
 
