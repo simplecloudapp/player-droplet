@@ -22,6 +22,10 @@ dependencies {
     implementation("build.buf.gen:simplecloud_proto-specs_grpc_kotlin:1.4.1.1.20240606064605.c07118735783")
 }
 
+tasks.named("compileKotlin") {
+    dependsOn(tasks.jooqCodegen)
+}
+
 tasks {
     named<ShadowJar>("shadowJar") {
         archiveFileName.set("player-server.jar")
