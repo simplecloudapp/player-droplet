@@ -52,6 +52,7 @@ class JooqPlayerRepository(
             PLAYER_CONNECTION.UNIQUE_ID,
             PLAYER_CONNECTION.NUMERICAL_CLIENT_VERSION,
             PLAYER_CONNECTION.ONLINE_MODE,
+            PLAYER_CONNECTION.CLIENT_LANGUAGE,
             PLAYER_CONNECTION.LAST_SERVER,
             PLAYER_CONNECTION.ONLINE
         )
@@ -59,11 +60,13 @@ class JooqPlayerRepository(
                 connection.uniqueId,
                 connection.lastPlayerConnection.numericalClientVersion,
                 connection.lastPlayerConnection.onlineMode,
+                connection.lastPlayerConnection.clientLanguage,
                 connection.lastPlayerConnection.lastServer,
                 connection.lastPlayerConnection.online
             )
             .onDuplicateKeyUpdate()
             .set(PLAYER_CONNECTION.NUMERICAL_CLIENT_VERSION, connection.lastPlayerConnection.numericalClientVersion)
+            .set(PLAYER_CONNECTION.CLIENT_LANGUAGE, connection.lastPlayerConnection.clientLanguage)
             .set(PLAYER_CONNECTION.ONLINE_MODE, connection.lastPlayerConnection.onlineMode)
             .set(PLAYER_CONNECTION.LAST_SERVER, connection.lastPlayerConnection.lastServer)
             .set(PLAYER_CONNECTION.ONLINE, connection.lastPlayerConnection.online)

@@ -18,6 +18,8 @@ message PlayerConnectionConfiguration {
   string clientLanguage = 1;
   int32 numericalClientVersion = 2;
   bool onlineMode = 3;
+  string lastServerName = 4;
+  bool online = 5;
 }
 
 message OfflineCloudPlayerConfiguration {

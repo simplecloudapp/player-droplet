@@ -36,7 +36,9 @@ data class PlayerConnectionEntity(
             return PlayerConnectionEntity(
                 configuration.clientLanguage,
                 configuration.numericalClientVersion,
-                configuration.onlineMode
+                configuration.onlineMode,
+                configuration.lastServerName,
+                configuration.online
             )
         }
     }

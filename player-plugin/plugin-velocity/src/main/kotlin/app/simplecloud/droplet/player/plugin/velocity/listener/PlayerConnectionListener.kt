@@ -36,6 +36,10 @@ class PlayerConnectionListener(
                         .setNumericalClientVersion(player.protocolVersion.protocol)
                         .setClientLanguage(player.effectiveLocale?.language ?: "en")
                         .setOnlineMode(player.isOnlineMode)
+                        .setOnline(true)
+                        .setLastServerName(
+                            if (player.currentServer == null || player.currentServer.isEmpty) "lobby" else player.currentServer.get().serverInfo.name
+                        )
                         .build()
                 )
                 .build()
