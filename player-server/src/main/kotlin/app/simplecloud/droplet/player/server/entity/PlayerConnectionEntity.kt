@@ -21,16 +21,6 @@ data class PlayerConnectionEntity(
             .build()
     }
 
-    fun toRecord(): PlayerConnectionRecord {
-        return PlayerConnectionRecord().apply {
-            this.clientLanguage = clientLanguage
-            this.numericalClientVersion = numericalClientVersion
-            this.onlineMode = onlineMode
-            this.lastServer = lastServer
-            this.online = online
-        }
-    }
-
     companion object {
         fun fromConfiguration(configuration: PlayerConnectionConfiguration): PlayerConnectionEntity {
             return PlayerConnectionEntity(

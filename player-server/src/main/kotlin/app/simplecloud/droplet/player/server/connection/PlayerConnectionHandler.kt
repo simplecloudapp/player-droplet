@@ -20,7 +20,7 @@ class PlayerConnectionHandler(
 
     private fun createPlayer(request: CloudPlayerLoginRequest) {
         val offlinePlayer = jooqPlayerRepository.findByUniqueId(request.uniqueId) ?: createOfflinePlayer(request)
-        jooqPlayerRepository.save(offlinePlayer.copy(lastLogin = System.currentTimeMillis(), lastPlayerConnection = offlinePlayer.lastPlayerConnection.copy(online = true)))
+        jooqPlayerRepository.save(offlinePlayer.copy(lastLogin = System.currentTimeMillis(), lastPlayerConnection = offlinePlayer.lastPlayerConnection.copy(online = true, clientLanguage = request.playerConnection.clientLanguage)))
     }
 
     fun handleLogout(request: CloudPlayerDisconnectRequest): Boolean {

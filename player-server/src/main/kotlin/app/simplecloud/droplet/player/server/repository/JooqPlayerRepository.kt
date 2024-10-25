@@ -155,7 +155,7 @@ class JooqPlayerRepository(
 
     private fun mapPlayerConnectionsRecordToEntity(record: PlayerConnectionRecord): PlayerConnectionEntity {
         return PlayerConnectionEntity(
-            record.uniqueId!!,
+            record.clientLanguage!!,
             record.numericalClientVersion!!,
             record.onlineMode!!,
             record.lastServer!!,
