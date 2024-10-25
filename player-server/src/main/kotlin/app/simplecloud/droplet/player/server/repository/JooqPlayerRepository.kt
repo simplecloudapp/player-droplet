@@ -17,13 +17,28 @@ class JooqPlayerRepository(
     private val datbase: Database
 ) : PlayerRepository<OfflinePlayerEntity> {
     override fun save(player: OfflinePlayerEntity) {
-        datbase.context.insertInto(OfflinePlayers.OFFLINE_PLAYERS, OFFLINE_PLAYERS.UNIQUE_ID, OFFLINE_PLAYERS.NAME, OFFLINE_PLAYERS.DISPLAY_NAME, OFFLINE_PLAYERS.FIRST_LOGIN, OFFLINE_PLAYERS.LAST_LOGIN, OFFLINE_PLAYERS.ONLINE_TIME)
-            .values(player.uniqueId, player.name, player.displayName, LocalDateTime.ofEpochSecond(player.firstLogin, 0, ZoneOffset.of("UTC+1")), LocalDateTime.ofEpochSecond(player.lastLogin, 0, ZoneOffset.of("UTC+1")), player.onlineTime)
+        datbase.context.insertInto(
+            OfflinePlayers.OFFLINE_PLAYERS,
+            OFFLINE_PLAYERS.UNIQUE_ID,
+            OFFLINE_PLAYERS.NAME,
+            OFFLINE_PLAYERS.DISPLAY_NAME,
+            OFFLINE_PLAYERS.FIRST_LOGIN,
+            OFFLINE_PLAYERS.LAST_LOGIN,
+            OFFLINE_PLAYERS.ONLINE_TIME
+        )
+            .values(
+                player.uniqueId,
+                player.name,
+                player.displayName,
+                LocalDateTime.ofEpochSecond(player.firstLogin, 0, ZoneOffset.UTC),
+                LocalDateTime.ofEpochSecond(player.lastLogin, 0, ZoneOffset.UTC),
+                player.onlineTime
+            )
             .onDuplicateKeyUpdate()
             .set(OFFLINE_PLAYERS.NAME, player.name)
             .set(OFFLINE_PLAYERS.DISPLAY_NAME, player.displayName)
-            .set(OFFLINE_PLAYERS.FIRST_LOGIN, LocalDateTime.ofEpochSecond(player.firstLogin, 0, ZoneOffset.of("UTC+1")))
-            .set(OFFLINE_PLAYERS.LAST_LOGIN, LocalDateTime.ofEpochSecond(player.lastLogin, 0, ZoneOffset.of("UTC+1")))
+            .set(OFFLINE_PLAYERS.FIRST_LOGIN, LocalDateTime.ofEpochSecond(player.firstLogin, 0, ZoneOffset.UTC))
+            .set(OFFLINE_PLAYERS.LAST_LOGIN, LocalDateTime.ofEpochSecond(player.lastLogin, 0, ZoneOffset.UTC))
             .set(OFFLINE_PLAYERS.ONLINE_TIME, player.onlineTime)
             .execute()
 
@@ -31,9 +46,22 @@ class JooqPlayerRepository(
 
     }
 
-    fun saveConnection(connection: OfflinePlayerEntity) {
-        datbase.context.insertInto(PlayerConnection.PLAYER_CONNECTION, PLAYER_CONNECTION.UNIQUE_ID, PLAYER_CONNECTION.NUMERICAL_CLIENT_VERSION, PLAYER_CONNECTION.ONLINE_MODE, PLAYER_CONNECTION.LAST_SERVER, PLAYER_CONNECTION.ONLINE)
-            .values(connection.uniqueId, connection.lastPlayerConnection.numericalClientVersion, connection.lastPlayerConnection.onlineMode, connection.lastPlayerConnection.lastServer, connection.lastPlayerConnection.online)
+    private fun saveConnection(connection: OfflinePlayerEntity) {
+        datbase.context.insertInto(
+            PlayerConnection.PLAYER_CONNECTION,
+            PLAYER_CONNECTION.UNIQUE_ID,
+            PLAYER_CONNECTION.NUMERICAL_CLIENT_VERSION,
+            PLAYER_CONNECTION.ONLINE_MODE,
+            PLAYER_CONNECTION.LAST_SERVER,
+            PLAYER_CONNECTION.ONLINE
+        )
+            .values(
+                connection.uniqueId,
+                connection.lastPlayerConnection.numericalClientVersion,
+                connection.lastPlayerConnection.onlineMode,
+                connection.lastPlayerConnection.lastServer,
+                connection.lastPlayerConnection.online
+            )
             .onDuplicateKeyUpdate()
             .set(PLAYER_CONNECTION.NUMERICAL_CLIENT_VERSION, connection.lastPlayerConnection.numericalClientVersion)
             .set(PLAYER_CONNECTION.ONLINE_MODE, connection.lastPlayerConnection.onlineMode)
@@ -70,7 +98,7 @@ class JooqPlayerRepository(
             .where(OfflinePlayers.OFFLINE_PLAYERS.UNIQUE_ID.eq(uniqueId))
             .fetchOneInto(OFFLINE_PLAYERS)
 
-        if  (fetchOneInto == null) {
+        if (fetchOneInto == null) {
             return null
         }
 
@@ -102,8 +130,8 @@ class JooqPlayerRepository(
             record.uniqueId!!,
             record.name!!,
             record.displayName,
-            record.firstLogin!!.toEpochSecond(ZoneOffset.of("UTC+1")),
-            record.lastLogin!!.toEpochSecond(ZoneOffset.of("UTC+1")),
+            record.firstLogin!!.toEpochSecond(ZoneOffset.UTC),
+            record.lastLogin!!.toEpochSecond(ZoneOffset.UTC),
             record.onlineTime!!,
             mapPlayerConnectionsRecordToEntity(lastPlayerConnection.first())
         )
