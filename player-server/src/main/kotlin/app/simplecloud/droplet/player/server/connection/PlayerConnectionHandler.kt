@@ -2,7 +2,6 @@ package app.simplecloud.droplet.player.server.connection
 
 import app.simplecloud.droplet.player.proto.CloudPlayerDisconnectRequest
 import app.simplecloud.droplet.player.proto.CloudPlayerLoginRequest
-import app.simplecloud.droplet.player.proto.OfflineCloudPlayerConfiguration
 import app.simplecloud.droplet.player.server.entity.OfflinePlayerEntity
 import app.simplecloud.droplet.player.server.entity.PlayerConnectionEntity
 import app.simplecloud.droplet.player.server.repository.JooqPlayerRepository
@@ -19,14 +18,9 @@ class PlayerConnectionHandler(
         return true
     }
 
-    private fun createPlayer(request: CloudPlayerLoginRequest): OfflineCloudPlayerConfiguration {
+    private fun createPlayer(request: CloudPlayerLoginRequest) {
         val offlinePlayer = jooqPlayerRepository.findByUniqueId(request.uniqueId) ?: createOfflinePlayer(request)
-        val cloudPlayerConfiguration = OfflineCloudPlayerConfiguration.newBuilder()
-            .mergeFrom(offlinePlayer.toConfiguration().toByteArray())
-            .build()
-
-        jooqPlayerRepository.save(OfflinePlayerEntity.fromConfiguration(cloudPlayerConfiguration))
-        return cloudPlayerConfiguration
+        jooqPlayerRepository.save(offlinePlayer.copy(lastLogin = System.currentTimeMillis(), lastPlayerConnection = offlinePlayer.lastPlayerConnection.copy(online = true)))
     }
 
     fun handleLogout(request: CloudPlayerDisconnectRequest): Boolean {
