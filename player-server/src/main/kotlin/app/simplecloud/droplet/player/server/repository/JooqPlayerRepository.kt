@@ -1,5 +1,6 @@
 package app.simplecloud.droplet.player.server.repository
 
+import app.simplecloud.droplet.player.server.connection.PlayerConnectionHandler
 import app.simplecloud.droplet.player.server.database.Database
 import app.simplecloud.droplet.player.server.entity.OfflinePlayerEntity
 import app.simplecloud.droplet.player.server.entity.PlayerConnectionEntity
@@ -137,7 +138,7 @@ class JooqPlayerRepository(
     }
 
     private fun mapOfflinePlayersRecordToEntity(record: OfflinePlayersRecord): OfflinePlayerEntity {
-        val lastPlayerConnection = datbase.context.select(PLAYER_CONNECTION)
+        val lastPlayerConnection = datbase.context.selectFrom(PlayerConnection.PLAYER_CONNECTION)
             .where(PLAYER_CONNECTION.UNIQUE_ID.eq(record.uniqueId))
             .fetchInto(PlayerConnectionRecord::class.java)
 
