@@ -29,7 +29,7 @@ class PlayerConnectionListener(
         val player = event.player
         playerApi.proxyController.handleLogin(
             CloudPlayerLoginRequest.newBuilder()
-                .setName(player.username)
+                .setName(player.username.lowercase())
                 .setUniqueId(player.uniqueId.toString())
                 .setPlayerConnection(
                     PlayerConnectionConfiguration.newBuilder()
@@ -58,22 +58,5 @@ class PlayerConnectionListener(
                 null
             }
 
-    }
-
-    @Subscribe(order = PostOrder.LAST)
-    fun onPostLogin(event: PostLoginEvent) {
-        val player = event.player
-        player.sendMessage(Component.text("Player: ${player.username}"))
-        playerApi.getOnlinePlayer(player.uniqueId).thenAccept {
-            it.sendMessage(Component.text("Player: ${it.getName()}"))
-
-            it.playSound(Sound.sound(Key.key("minecraft:entity.experience_orb.pickup"), Sound.Source.MASTER, 1.0f, 1.0f))
-            it.showTitle(Title.title(
-                Component.text("Welcome to the server!"),
-                Component.text("Enjoy your stay!")
-            ))
-            it.sendActionBar(Component.text("Welcome to the server!"))
-            it.sendPlayerListFooter(Component.text("Welcome to the server!"))
-        }
     }
 }

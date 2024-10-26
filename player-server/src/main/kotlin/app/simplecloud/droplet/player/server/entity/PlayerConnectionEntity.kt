@@ -17,6 +17,8 @@ data class PlayerConnectionEntity(
         return PlayerConnectionConfiguration.newBuilder()
             .setClientLanguage(clientLanguage)
             .setNumericalClientVersion(numericalClientVersion)
+            .setLastServerName(lastServer)
+            .setOnline(online)
             .setOnlineMode(onlineMode)
             .build()
     }
