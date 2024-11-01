@@ -1,16 +1,17 @@
 package app.simplecloud.droplet.player.server.service
 
-import app.simplecloud.droplet.player.proto.*
+import app.simplecloud.droplet.player.server.repository.JooqPlayerRepository
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqPublisher
 import app.simplecloud.pubsub.PubSubClient
+import build.buf.gen.simplecloud.droplet.player.v1.*
 import io.grpc.stub.StreamObserver
 import org.apache.logging.log4j.LogManager
 
 class PlayerAdventureService(
     private val pubSubClient: PubSubClient,
-    private val onlinePlayerRepository: OnlinePlayerRepository,
+    private val onlinePlayerRepository: JooqPlayerRepository,
 ) : PlayerAdventureServiceGrpc.PlayerAdventureServiceImplBase() {
 
     override fun sendMessage(request: SendMessageRequest, responseObserver: StreamObserver<SendMessageResponse>) {
@@ -249,8 +250,8 @@ class PlayerAdventureService(
     }
 
     private fun playerIsOnline(uniqueId: String): Boolean {
-        val cloudPlayer = onlinePlayerRepository.findByUniqueId(uniqueId)
-        return if (cloudPlayer == null) {
+        val cloudPlayer = onlinePlayerRepository.findByUniqueId(uniqueId)!!.lastPlayerConnection.online
+        return if (!cloudPlayer) {
             LOGGER.warn("CloudPlayer with uniqueId $uniqueId is not online")
             false
         } else {

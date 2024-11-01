@@ -1,9 +1,7 @@
 package app.simplecloud.droplet.player.api.impl
 
 import app.simplecloud.droplet.player.api.CloudPlayer
-import app.simplecloud.droplet.player.proto.*
-import app.simplecloud.droplet.player.proto.PlayerAdventureServiceGrpc.PlayerAdventureServiceFutureStub
-import app.simplecloud.droplet.player.proto.PlayerServiceGrpc.PlayerServiceFutureStub
+import build.buf.gen.simplecloud.droplet.player.v1.*
 import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.identity.Identity
@@ -16,8 +14,8 @@ import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.TitlePart
 
 class CloudPlayerImpl(
-    private val playerServiceStub: PlayerServiceFutureStub,
-    private val playerAdventureServiceStub: PlayerAdventureServiceFutureStub,
+    private val playerServiceStub: PlayerServiceGrpc.PlayerServiceFutureStub,
+    private val playerAdventureServiceStub: PlayerAdventureServiceGrpc.PlayerAdventureServiceFutureStub,
     private val configuration: CloudPlayerConfiguration,
     private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson(),
 ) : OfflineCloudPlayerImpl(OfflineCloudPlayerConfiguration.parseFrom(configuration.toByteArray())), CloudPlayer {

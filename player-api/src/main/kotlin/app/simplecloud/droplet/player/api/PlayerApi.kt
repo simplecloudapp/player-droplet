@@ -1,6 +1,6 @@
 package app.simplecloud.droplet.player.api
 
-import app.simplecloud.droplet.player.proto.CloudPlayerConnectResult
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerConnectResult
 import java.util.*
 import java.util.concurrent.CompletableFuture
 

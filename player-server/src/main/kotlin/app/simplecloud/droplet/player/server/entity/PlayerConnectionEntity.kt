@@ -1,7 +1,7 @@
 package app.simplecloud.droplet.player.server.entity
 
-import app.simplecloud.droplet.player.proto.PlayerConnectionConfiguration
 import app.simplecloud.droplet.player.shared.db.tables.records.PlayerConnectionRecord
+import build.buf.gen.simplecloud.droplet.player.v1.PlayerConnectionConfiguration
 import dev.morphia.annotations.Entity
 
 @Entity

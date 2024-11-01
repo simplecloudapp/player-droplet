@@ -1,12 +1,12 @@
 package app.simplecloud.droplet.player.server.connection
 
-import app.simplecloud.droplet.player.proto.CloudPlayerConfiguration
-import app.simplecloud.droplet.player.proto.CloudPlayerLoginRequest
+
 import app.simplecloud.droplet.player.server.entity.OfflinePlayerEntity
 import app.simplecloud.droplet.player.server.entity.PlayerConnectionEntity
 import app.simplecloud.droplet.player.server.repository.JooqPlayerRepository
 import app.simplecloud.droplet.player.server.repository.OfflinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
+import build.buf.gen.simplecloud.droplet.player.v1.*
 import org.apache.logging.log4j.LogManager
 
 class PlayerLoginHandler(

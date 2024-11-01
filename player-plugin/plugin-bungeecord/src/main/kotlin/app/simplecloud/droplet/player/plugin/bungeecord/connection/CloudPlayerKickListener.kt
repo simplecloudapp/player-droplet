@@ -1,8 +1,8 @@
 package app.simplecloud.droplet.player.plugin.bungeecord.connection
 
-import app.simplecloud.droplet.player.proto.CloudPlayerKickEvent
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import app.simplecloud.pubsub.PubSubListener
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerKickEvent
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.md_5.bungee.api.ProxyServer

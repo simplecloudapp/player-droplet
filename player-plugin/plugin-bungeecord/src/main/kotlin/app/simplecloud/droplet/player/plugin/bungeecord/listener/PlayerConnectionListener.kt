@@ -1,8 +1,8 @@
 package app.simplecloud.droplet.player.plugin.bungeecord.listener
 
 import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
-import app.simplecloud.droplet.player.proto.CloudPlayerLoginRequest
-import app.simplecloud.droplet.player.proto.PlayerConnectionConfiguration
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerLoginRequest
+import build.buf.gen.simplecloud.droplet.player.v1.PlayerConnectionConfiguration
 import net.md_5.bungee.api.event.PostLoginEvent
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
@@ -24,6 +24,10 @@ class PlayerConnectionListener(
                         .setOnlineMode(player.pendingConnection.isOnlineMode)
                         .setNumericalClientVersion(player.pendingConnection.version)
                         .setClientLanguage(player.locale.language)
+                        .setOnline(true)
+                        .setLastServerName(
+                            if (player.server == null) "lobby" else player.server.info.name
+                        )
                         .build()
                 )
                 .build()

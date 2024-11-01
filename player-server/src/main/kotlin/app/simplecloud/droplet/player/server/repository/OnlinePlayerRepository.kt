@@ -1,8 +1,7 @@
 package app.simplecloud.droplet.player.server.repository
 
-import app.simplecloud.droplet.player.proto.CloudPlayerConfiguration
-import app.simplecloud.droplet.player.proto.PlayerConnectionConfiguration
 import app.simplecloud.droplet.player.server.redis.RedisKeyNames
+import build.buf.gen.simplecloud.droplet.player.v1.*
 import com.google.gson.GsonBuilder
 import redis.clients.jedis.JedisPool
 import java.util.*

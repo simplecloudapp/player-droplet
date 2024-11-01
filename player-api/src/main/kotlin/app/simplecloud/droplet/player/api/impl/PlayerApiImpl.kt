@@ -3,8 +3,8 @@ package app.simplecloud.droplet.player.api.impl
 import app.simplecloud.droplet.player.api.CloudPlayer
 import app.simplecloud.droplet.player.api.OfflineCloudPlayer
 import app.simplecloud.droplet.player.api.PlayerApi
-import app.simplecloud.droplet.player.proto.*
 import app.simplecloud.droplet.player.shared.future.toCompletable
+import build.buf.gen.simplecloud.droplet.player.v1.*
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import java.util.*

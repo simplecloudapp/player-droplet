@@ -1,8 +1,9 @@
 package app.simplecloud.droplet.player.plugin.velocity.listener
 
 import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
-import app.simplecloud.droplet.player.proto.CloudPlayerLoginRequest
-import app.simplecloud.droplet.player.proto.PlayerConnectionConfiguration
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerLoginRequest
+import build.buf.gen.simplecloud.droplet.player.v1.PlayerConnectionConfiguration
+
 import com.velocitypowered.api.event.Continuation
 import com.velocitypowered.api.event.PostOrder
 import com.velocitypowered.api.event.ResultedEvent

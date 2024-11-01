@@ -15,13 +15,15 @@ dependencies {
     implementation("org.jooq:jooq-meta:3.19.3")
     implementation("org.jooq:jooq-meta-extensions:3.19.3")
     implementation("org.jooq:jooq-postgres-extensions:3.19.14")
+
+    implementation("build.buf.gen:simplecloud_proto-specs_grpc_kotlin:1.4.1.1.20241101164312.996264265378")
+
     jooqCodegen("org.jooq:jooq-meta-extensions:3.19.3")
 
 
     implementation("redis.clients:jedis:4.4.1")
     implementation("dev.morphia.morphia:morphia-core:2.3.4")
     implementation("app.simplecloud:simplecloud-pubsub:1.0.5")
-    implementation("build.buf.gen:simplecloud_proto-specs_grpc_kotlin:1.4.1.1.20240606064605.c07118735783")
 }
 
 tasks.named("compileKotlin") {

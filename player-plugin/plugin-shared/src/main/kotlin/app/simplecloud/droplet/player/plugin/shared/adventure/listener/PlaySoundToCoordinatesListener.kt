@@ -1,9 +1,9 @@
 package app.simplecloud.droplet.player.plugin.shared.adventure.listener
 
 import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
-import app.simplecloud.droplet.player.proto.SendPlaySoundToCoordinatesEvent
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import app.simplecloud.pubsub.PubSubListener
+import build.buf.gen.simplecloud.droplet.player.v1.SendPlaySoundToCoordinatesEvent
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 

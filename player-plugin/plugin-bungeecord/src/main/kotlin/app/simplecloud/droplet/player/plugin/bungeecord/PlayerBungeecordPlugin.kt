@@ -7,9 +7,9 @@ import app.simplecloud.droplet.player.plugin.bungeecord.listener.PlayerConnectio
 import app.simplecloud.droplet.player.plugin.bungeecord.listener.PlayerDisconnectListener
 import app.simplecloud.droplet.player.plugin.shared.OnlinePlayerChecker
 import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
-import app.simplecloud.droplet.player.proto.CloudPlayerKickEvent
-import app.simplecloud.droplet.player.proto.ConnectCloudPlayerEvent
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerKickEvent
+import build.buf.gen.simplecloud.droplet.player.v1.ConnectCloudPlayerEvent
 import net.md_5.bungee.api.plugin.Plugin
 
 class PlayerBungeecordPlugin : Plugin() {

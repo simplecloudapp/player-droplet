@@ -72,10 +72,11 @@ class PlayerServer {
                     pubSubClient,
                     onlinePlayerRepository,
                     offlinePlayerRepository,
+                    jooqPlayerRepository,
                     playerConnectionHandler
                 )
             )
-            .addService(PlayerAdventureService(pubSubClient, onlinePlayerRepository))
+            .addService(PlayerAdventureService(pubSubClient, jooqPlayerRepository))
             .addService(PubSubService())
             .build()
     }

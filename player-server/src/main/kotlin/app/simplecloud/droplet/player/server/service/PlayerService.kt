@@ -1,13 +1,15 @@
 package app.simplecloud.droplet.player.server.service
 
-import app.simplecloud.droplet.player.proto.*
 import app.simplecloud.droplet.player.server.connection.PlayerConnectionHandler
 import app.simplecloud.droplet.player.server.connection.PlayerLoginHandler
 import app.simplecloud.droplet.player.server.connection.PlayerLogoutHandler
+import app.simplecloud.droplet.player.server.repository.JooqPlayerRepository
 import app.simplecloud.droplet.player.server.repository.OfflinePlayerRepository
 import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import app.simplecloud.pubsub.PubSubClient
+import build.buf.gen.simplecloud.droplet.player.v1.GetCloudPlayerByUniqueIdRequest
+import build.buf.gen.simplecloud.droplet.player.v1.*
 import io.grpc.stub.StreamObserver
 import org.apache.logging.log4j.LogManager
 
@@ -15,12 +17,13 @@ class PlayerService(
         private val pubSubClient: PubSubClient,
         private val onlinePlayerRepository: OnlinePlayerRepository,
         private val offlinePlayerRepository: OfflinePlayerRepository,
+        private val jooqPlayerRepository: JooqPlayerRepository,
         private val playerConnectionHandler: PlayerConnectionHandler
 ) : PlayerServiceGrpc.PlayerServiceImplBase() {
 
     override fun getOfflineCloudPlayerByUniqueId(
-            request: GetCloudPlayerByUniqueIdRequest,
-            responseObserver: StreamObserver<GetOfflineCloudPlayerResponse>
+        request: GetCloudPlayerByUniqueIdRequest,
+        responseObserver: StreamObserver<GetOfflineCloudPlayerResponse>
     ) {
         val offlinePlayer = offlinePlayerRepository.findByUniqueId(request.uniqueId)
         if (offlinePlayer == null) {
@@ -58,7 +61,7 @@ class PlayerService(
             request: GetCloudPlayerByUniqueIdRequest,
             responseObserver: StreamObserver<GetCloudPlayerResponse>
     ) {
-        val cloudPlayer = onlinePlayerRepository.findByUniqueId(request.uniqueId)
+        val cloudPlayer = jooqPlayerRepository.findByUniqueId(request.uniqueId)
         if (cloudPlayer == null) {
             responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} not found"))
             return
@@ -66,7 +69,7 @@ class PlayerService(
 
         responseObserver.onNext(
                 GetCloudPlayerResponse.newBuilder()
-                        .setCloudPlayer(cloudPlayer)
+                        .setCloudPlayer(cloudPlayer.toCloudPlayerConfiguration())
                         .build()
         )
         responseObserver.onCompleted()
@@ -76,7 +79,7 @@ class PlayerService(
             request: GetCloudPlayerByNameRequest,
             responseObserver: StreamObserver<GetCloudPlayerResponse>
     ) {
-        val cloudPlayer = onlinePlayerRepository.findByName(request.name)
+        val cloudPlayer = jooqPlayerRepository.findByName(request.name)
         if (cloudPlayer == null) {
             responseObserver.onError(IllegalArgumentException("CloudPlayer with name ${request.name} not found"))
             return
@@ -84,7 +87,7 @@ class PlayerService(
 
         responseObserver.onNext(
                 GetCloudPlayerResponse.newBuilder()
-                        .setCloudPlayer(cloudPlayer)
+                        .setCloudPlayer(cloudPlayer.toCloudPlayerConfiguration())
                         .build()
         )
         responseObserver.onCompleted()
@@ -96,7 +99,7 @@ class PlayerService(
     ) {
         responseObserver.onNext(
                 GetOnlineCloudPlayersResponse.newBuilder()
-                        .addAllOnlineCloudPlayers(onlinePlayerRepository.findAll())
+                        .addAllOnlineCloudPlayers(jooqPlayerRepository.findAll().map { it.toCloudPlayerConfiguration() })
                         .build()
         )
         responseObserver.onCompleted()
@@ -108,7 +111,7 @@ class PlayerService(
     ) {
         responseObserver.onNext(
                 GetOnlineCloudPlayerCountResponse.newBuilder()
-                        .setCount(onlinePlayerRepository.count())
+                        .setCount(jooqPlayerRepository.count())
                         .build()
         )
         responseObserver.onCompleted()
@@ -118,11 +121,11 @@ class PlayerService(
             request: GetOnlineStatusRequest,
             responseObserver: StreamObserver<GetOnlineStatusResponse>
     ) {
-        val cloudPlayer = onlinePlayerRepository.findByUniqueId(request.uniqueId)
+        val cloudPlayer = jooqPlayerRepository.findByUniqueId(request.uniqueId)
 
         responseObserver.onNext(
                 GetOnlineStatusResponse.newBuilder()
-                        .setOnline(cloudPlayer != null)
+                        .setOnline(cloudPlayer!!.lastPlayerConnection.online)
                         .build()
         )
         responseObserver.onCompleted()
@@ -194,7 +197,7 @@ class PlayerService(
 
     private fun playerIsOnline(uniqueId: String): Boolean {
         val cloudPlayer = onlinePlayerRepository.findByUniqueId(uniqueId)
-        return if (cloudPlayer == null) {
+        return if (!jooqPlayerRepository.findByUniqueId(uniqueId)!!.lastPlayerConnection.online) {
             PlayerService.LOGGER.warn("CloudPlayer with uniqueId $uniqueId is not online")
             false
         } else {

@@ -17,6 +17,7 @@ dependencies {
     api("com.rabbitmq:amqp-client:$amqpVersion")
     api("com.google.code.gson:gson:$gsonVersion")
     api("javax.annotation:javax.annotation-api:1.3.2")
+    api("build.buf.gen:simplecloud_proto-specs_grpc_kotlin:1.4.1.1.20241101164312.996264265378")
 }
 
 

@@ -1,8 +1,9 @@
 package app.simplecloud.droplet.player.server.entity
 
-import app.simplecloud.droplet.player.proto.OfflineCloudPlayerConfiguration
 import app.simplecloud.droplet.player.server.repository.JooqPlayerRepository
 import app.simplecloud.droplet.player.shared.db.tables.records.OfflinePlayersRecord
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerConfiguration
+import build.buf.gen.simplecloud.droplet.player.v1.OfflineCloudPlayerConfiguration
 import dev.morphia.annotations.*
 import java.time.ZoneOffset
 import java.util.*
@@ -40,6 +41,19 @@ data class OfflinePlayerEntity(
             .setLastLogin(lastLogin)
             .setOnlineTime(onlineTime)
             .setPlayerConnection(lastPlayerConnection.toConfiguration())
+            .build()
+    }
+
+    fun toCloudPlayerConfiguration(): CloudPlayerConfiguration {
+        return CloudPlayerConfiguration.newBuilder()
+            .setUniqueId(uniqueId)
+            .setName(name)
+            .setDisplayName(displayName ?: name)
+            .setFirstLogin(firstLogin)
+            .setLastLogin(lastLogin)
+            .setOnlineTime(onlineTime)
+            .setPlayerConnection(lastPlayerConnection.toConfiguration())
+            .setConnectedServerName(lastPlayerConnection.lastServer)
             .build()
     }
 

@@ -1,6 +1,6 @@
 package app.simplecloud.droplet.player.plugin.shared.proxy
 
-import app.simplecloud.droplet.player.proto.*
+import build.buf.gen.simplecloud.droplet.player.v1.*
 import app.simplecloud.droplet.player.shared.future.toCompletable
 import java.util.concurrent.CompletableFuture
 

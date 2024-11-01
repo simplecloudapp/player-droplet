@@ -22,8 +22,8 @@ subprojects {
 
 
         api("io.grpc:grpc-kotlin-stub:1.4.1")
-        api("build.buf.gen:simplecloud_proto-specs_grpc_java:1.4.1.1.20240606064605.c07118735783")
-        api("build.buf.gen:simplecloud_proto-specs_protocolbuffers_java:28.2.0.1.20241001163139.58018cb317ed")
+        api("build.buf.gen:simplecloud_proto-specs_grpc_java:1.4.1.1.20241101164312.996264265378")
+        api("build.buf.gen:simplecloud_proto-specs_protocolbuffers_java:28.3.0.1.20241101164312.996264265378")
         api("com.google.protobuf:protobuf-kotlin:3.15.2")
     }
 
