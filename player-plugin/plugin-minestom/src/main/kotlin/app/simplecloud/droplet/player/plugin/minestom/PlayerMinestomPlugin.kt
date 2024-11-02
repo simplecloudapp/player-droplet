@@ -6,7 +6,6 @@ import app.simplecloud.droplet.player.plugin.shared.PlayerInternalApi
 import app.simplecloud.droplet.player.plugin.shared.adventure.listener.AdventureListeners
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import net.minestom.server.MinecraftServer
-import net.minestom.server.entity.GameMode
 import net.minestom.server.extensions.Extension
 import java.util.*
 
@@ -20,7 +19,7 @@ class PlayerMinestomPlugin : Extension() {
         PlayerApiSingleton.init(playerApi)
 
         AdventureListeners.allWithClasses(MinestomAudienceRepository()).forEach {
-            playerApi.registerRabbitMqListener(RabbitMqChannelNames.ADVENTURE, it.first, it.second)
+            playerApi.registerPubSubListener(RabbitMqChannelNames.ADVENTURE, it.first, it.second)
         }
     }
 
