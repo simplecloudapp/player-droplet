@@ -53,4 +53,11 @@ interface PlayerApi {
      */
     fun isOnline(uniqueId: UUID): CompletableFuture<Boolean>
 
+    /**
+     * @param uniqueId the uniqueId of the player.
+     * @param serverName the name of the server.
+     * @returns a [CompletableFuture] with a boolean if the server was successfully updated.
+     */
+    fun updateServer(uniqueId: UUID, serverName: String): CompletableFuture<Boolean>
+
 }

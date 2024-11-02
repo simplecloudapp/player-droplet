@@ -94,6 +94,13 @@ class JooqPlayerRepository(
             .executeAsync()
     }
 
+    override suspend fun updateCurrentServer(uniqueId: UUID, serverName: String) {
+        datbase.context.update(PLAYER_CONNECTION)
+            .set(PLAYER_CONNECTION.LAST_SERVER, serverName)
+            .where(PLAYER_CONNECTION.UNIQUE_ID.eq(uniqueId.toString()))
+            .executeAsync()
+    }
+
     override suspend fun findByName(name: String): OfflinePlayerEntity? {
         return datbase.context.selectFrom(OfflinePlayers.OFFLINE_PLAYERS)
             .where(OfflinePlayers.OFFLINE_PLAYERS.NAME.eq(name))

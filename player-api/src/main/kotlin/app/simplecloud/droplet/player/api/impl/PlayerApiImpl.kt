@@ -97,6 +97,17 @@ open class PlayerApiImpl : PlayerApi {
         }
     }
 
+    override fun updateServer(uniqueId: UUID, serverName: String): CompletableFuture<Boolean> {
+        return playerServiceStub.updateCloudPlayerServer(
+            UpdateCloudPlayerServerRequest.newBuilder()
+                .setUniqueId(uniqueId.toString())
+                .setServerName(serverName)
+                .build()
+        ).toCompletable().thenApply {
+            it.success
+        }
+    }
+
     private fun createManagedChannelFromEnv(): ManagedChannel {
         val host = System.getenv("PLAYER_DROPLET_HOST") ?: "127.0.0.1"
         val port = System.getenv("PLAYER_DROPLET_PORT")?.toInt() ?: 5826

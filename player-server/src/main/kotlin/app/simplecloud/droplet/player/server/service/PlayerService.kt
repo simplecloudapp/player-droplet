@@ -7,6 +7,7 @@ import app.simplecloud.pubsub.PubSubClient
 import build.buf.gen.simplecloud.droplet.player.v1.*
 import io.grpc.stub.StreamObserver
 import org.apache.logging.log4j.LogManager
+import java.util.*
 
 class PlayerService(
     private val pubSubClient: PubSubClient,
@@ -110,6 +111,15 @@ class PlayerService(
             return ConnectCloudPlayerResponse.newBuilder().setResult(CloudPlayerConnectResult.SUCCESS).build()
         } else {
             throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
+        }
+    }
+
+    override suspend fun updateCloudPlayerServer(request: UpdateCloudPlayerServerRequest): UpdateCloudPlayerServerResponse {
+        if (playerIsOnline(request.uniqueId)) {
+            jooqPlayerRepository.updateCurrentServer(UUID.fromString(request.uniqueId), request.serverName)
+            return UpdateCloudPlayerServerResponse.newBuilder().setSuccess(true).build()
+        } else {
+            return UpdateCloudPlayerServerResponse.newBuilder().setSuccess(false).build()
         }
     }
 

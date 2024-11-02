@@ -8,6 +8,8 @@ interface PlayerRepository<T> {
 
     suspend fun updateDisplayName(uniqueId: UUID, displayName: String)
 
+    suspend fun updateCurrentServer(uniqueId: UUID, serverName: String)
+
     suspend fun delete(player: T)
 
     suspend fun findByName(name: String): T?
