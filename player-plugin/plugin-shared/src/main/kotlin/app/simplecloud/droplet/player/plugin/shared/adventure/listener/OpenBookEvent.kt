@@ -1,7 +1,6 @@
 package app.simplecloud.droplet.player.plugin.shared.adventure.listener
 
 import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
-import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import app.simplecloud.pubsub.PubSubListener
 import build.buf.gen.simplecloud.droplet.player.v1.SendOpenBookEvent
 import net.kyori.adventure.inventory.Book
@@ -12,7 +11,7 @@ class OpenBookEvent(
     private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson(),
 ) : PubSubListener<SendOpenBookEvent> {
     override fun handle(message: SendOpenBookEvent) {
-        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)?: return
+        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId) ?: return
         val book = Book.book(
             componentSerializer.deserialize(message.book.title.json),
             componentSerializer.deserialize(message.book.author.json),

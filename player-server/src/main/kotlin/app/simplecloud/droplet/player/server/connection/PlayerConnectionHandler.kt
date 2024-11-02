@@ -10,19 +10,19 @@ class PlayerConnectionHandler(
     private val jooqPlayerRepository: JooqPlayerRepository
 ) {
 
-    fun handleLogin(request: CloudPlayerLoginRequest): Boolean {
+    suspend fun handleLogin(request: CloudPlayerLoginRequest): Boolean {
         LOGGER.info("Player {} is logging in...", request.uniqueId)
 
         createPlayer(request)
         return true
     }
 
-    private fun createPlayer(request: CloudPlayerLoginRequest) {
+    private suspend fun createPlayer(request: CloudPlayerLoginRequest) {
         val offlinePlayer = jooqPlayerRepository.findByUniqueId(request.uniqueId) ?: createOfflinePlayer(request)
         jooqPlayerRepository.save(offlinePlayer.copy(lastLogin = System.currentTimeMillis(), lastPlayerConnection = offlinePlayer.lastPlayerConnection.copy(online = true, clientLanguage = request.playerConnection.clientLanguage)))
     }
 
-    fun handleLogout(request: CloudPlayerDisconnectRequest): Boolean {
+    suspend fun handleLogout(request: CloudPlayerDisconnectRequest): Boolean {
         val onlinePlayer = jooqPlayerRepository.findByUniqueId(request.uniqueId)
         if (onlinePlayer == null) {
             LOGGER.warn("Player {} is not logged in", request.uniqueId)
@@ -46,7 +46,7 @@ class PlayerConnectionHandler(
         return true
     }
 
-    private fun createOfflinePlayer(request: CloudPlayerLoginRequest): OfflinePlayerEntity {
+     private suspend fun createOfflinePlayer(request: CloudPlayerLoginRequest): OfflinePlayerEntity {
         val offlinePlayerEntity = OfflinePlayerEntity(
             request.uniqueId,
             request.name.lowercase(),

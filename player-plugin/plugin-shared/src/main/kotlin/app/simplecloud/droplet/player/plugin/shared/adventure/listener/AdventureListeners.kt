@@ -1,7 +1,6 @@
 package app.simplecloud.droplet.player.plugin.shared.adventure.listener
 
 import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
-import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import app.simplecloud.pubsub.PubSubListener
 import build.buf.gen.simplecloud.droplet.player.v1.*
 import com.google.protobuf.Message

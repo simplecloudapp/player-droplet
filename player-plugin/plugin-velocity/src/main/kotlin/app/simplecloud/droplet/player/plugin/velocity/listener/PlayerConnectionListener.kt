@@ -3,20 +3,14 @@ package app.simplecloud.droplet.player.plugin.velocity.listener
 import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
 import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerLoginRequest
 import build.buf.gen.simplecloud.droplet.player.v1.PlayerConnectionConfiguration
-
 import com.velocitypowered.api.event.Continuation
 import com.velocitypowered.api.event.PostOrder
 import com.velocitypowered.api.event.ResultedEvent
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.LoginEvent
-import com.velocitypowered.api.event.connection.PostLoginEvent
 import com.velocitypowered.api.proxy.ProxyServer
-import net.kyori.adventure.key.Key
-import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.title.Title
-import net.kyori.adventure.title.TitlePart
 
 class PlayerConnectionListener(
     private val playerApi: PlayerProxyApi,

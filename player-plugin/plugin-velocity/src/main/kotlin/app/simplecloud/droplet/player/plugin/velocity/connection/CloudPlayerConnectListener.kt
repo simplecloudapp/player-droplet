@@ -1,10 +1,9 @@
 package app.simplecloud.droplet.player.plugin.velocity.connection
 
-import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import app.simplecloud.pubsub.PubSubListener
 import build.buf.gen.simplecloud.droplet.player.v1.ConnectCloudPlayerEvent
 import com.velocitypowered.api.proxy.ProxyServer
-import java.util.UUID
+import java.util.*
 
 class CloudPlayerConnectListener(
         private val proxyServer: ProxyServer,

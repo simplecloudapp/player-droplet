@@ -4,20 +4,20 @@ import java.util.UUID
 
 interface PlayerRepository<T> {
 
-    fun save(player: T)
+    suspend fun save(player: T)
 
-    fun updateDisplayName(uniqueId: UUID, displayName: String)
+    suspend fun updateDisplayName(uniqueId: UUID, displayName: String)
 
-    fun delete(player: T)
+    suspend fun delete(player: T)
 
-    fun findByName(name: String): T?
+    suspend fun findByName(name: String): T?
 
-    fun findByUniqueId(uniqueId: UUID): T?
+    suspend fun findByUniqueId(uniqueId: UUID): T?
 
-    fun findByUniqueId(uniqueId: String): T?
+    suspend fun findByUniqueId(uniqueId: String): T?
 
-    fun findAll(): List<T>
+    suspend fun findAll(): List<T>
 
-    fun count(): Int
+    suspend fun count(): Int
 
 }

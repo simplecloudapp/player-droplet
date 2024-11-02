@@ -1,9 +1,7 @@
 package app.simplecloud.droplet.player.server.service
 
 import app.simplecloud.droplet.player.server.repository.JooqPlayerRepository
-import app.simplecloud.droplet.player.server.repository.OnlinePlayerRepository
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
-import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqPublisher
 import app.simplecloud.pubsub.PubSubClient
 import build.buf.gen.simplecloud.droplet.player.v1.*
 import io.grpc.stub.StreamObserver
@@ -12,14 +10,13 @@ import org.apache.logging.log4j.LogManager
 class PlayerAdventureService(
     private val pubSubClient: PubSubClient,
     private val onlinePlayerRepository: JooqPlayerRepository,
-) : PlayerAdventureServiceGrpc.PlayerAdventureServiceImplBase() {
+) : PlayerAdventureServiceGrpcKt.PlayerAdventureServiceCoroutineImplBase() {
 
-    override fun sendMessage(request: SendMessageRequest, responseObserver: StreamObserver<SendMessageResponse>) {
+    override suspend fun sendMessage(request: SendMessageRequest): SendMessageResponse {
         val cloudPlayer = onlinePlayerRepository.findByUniqueId(request.uniqueId)
         if (cloudPlayer == null) {
             LOGGER.warn("CloudPlayer with uniqueId ${request.uniqueId} is not online")
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
-            return
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
 
         pubSubClient.publish(
@@ -28,188 +25,145 @@ class PlayerAdventureService(
         )
         LOGGER.info("Sent message to ${cloudPlayer.name}: ${request.message}")
 
-        responseObserver.onNext(SendMessageResponse.newBuilder().build())
-        responseObserver.onCompleted()
+        return SendMessageResponse.newBuilder().build()
     }
 
-    override fun sendActionbar(
-        request: SendActionbarRequest,
-        responseObserver: StreamObserver<SendActionbarResponse>
-    ) {
+    override suspend fun sendActionbar(request: SendActionbarRequest): SendActionbarResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendActionbarEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
-            responseObserver.onNext(SendActionbarResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendActionbarResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
 
-    override fun sendPlayerListHeaderAndFooter(
-        request: SendPlayerListHeaderAndFooterRequest,
-        responseObserver: StreamObserver<SendPlayerListHeaderAndFooterResponse>
-    ) {
+    override suspend fun sendPlayerListHeaderAndFooter(request: SendPlayerListHeaderAndFooterRequest): SendPlayerListHeaderAndFooterResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendPlayerListHeaderAndFooterEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
-            responseObserver.onNext(SendPlayerListHeaderAndFooterResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendPlayerListHeaderAndFooterResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
-    override fun sendBossBar(request: SendBossBarRequest, responseObserver: StreamObserver<SendBossBarResponse>) {
+    override suspend fun sendBossBar(request: SendBossBarRequest): SendBossBarResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendBossBarEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
-            responseObserver.onNext(SendBossBarResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendBossBarResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
-    override fun sendBossBarRemove(
-        request: SendBossBarHideRequest,
-        responseObserver: StreamObserver<SendBossBarHideResponse>
-    ) {
+    override suspend fun sendBossBarRemove(request: SendBossBarHideRequest): SendBossBarHideResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendBossBarHideEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
-            responseObserver.onNext(SendBossBarHideResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendBossBarHideResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
-    override fun sendClearTitle(
-        request: SendClearTitleRequest,
-        responseObserver: StreamObserver<SendClearTitleResponse>
-    ) {
+    override suspend fun sendClearTitle(request: SendClearTitleRequest): SendClearTitleResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendClearTitleEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
-            responseObserver.onNext(SendClearTitleResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendClearTitleResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
-    override fun sendOpenBook(request: SendOpenBookRequest, responseObserver: StreamObserver<SendOpenBookResponse>) {
+    override suspend fun sendOpenBook(request: SendOpenBookRequest): SendOpenBookResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendOpenBookEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
-            responseObserver.onNext(SendOpenBookResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendOpenBookResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
-    override fun sendPlaySound(
-        request: SendPlaySoundRequest,
-        responseObserver: StreamObserver<SendPlaySoundResponse>
-    ) {
+    override suspend fun sendPlaySound(request: SendPlaySoundRequest): SendPlaySoundResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendPlaySoundEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
-            responseObserver.onNext(SendPlaySoundResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendPlaySoundResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
-    override fun sendPlaySoundToCoordinates(
-        request: SendPlaySoundToCoordinatesRequest,
-        responseObserver: StreamObserver<SendPlaySoundToCoordinatesResponse>
-    ) {
+    override suspend fun sendPlaySoundToCoordinates(request: SendPlaySoundToCoordinatesRequest): SendPlaySoundToCoordinatesResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendPlaySoundToCoordinatesEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
-            responseObserver.onNext(SendPlaySoundToCoordinatesResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendPlaySoundToCoordinatesResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
-    override fun sendResetTitle(
-        request: SendResetTitleRequest,
-        responseObserver: StreamObserver<SendResetTitleResponse>
-    ) {
+    override suspend fun sendResetTitle(request: SendResetTitleRequest): SendResetTitleResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendResetTitleEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
-            responseObserver.onNext(SendResetTitleResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendResetTitleResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
-    override fun sendStopSound(
-        request: SendStopSoundRequest,
-        responseObserver: StreamObserver<SendStopSoundResponse>
-    ) {
+    override suspend fun sendStopSound(request: SendStopSoundRequest): SendStopSoundResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendStopSoundEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
-            responseObserver.onNext(SendStopSoundResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendStopSoundResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
-    override fun sendTitlePartSubTitle(
-        request: SendTitlePartSubTitleRequest,
-        responseObserver: StreamObserver<SendTitlePartSubTitleResponse>
-    ) {
+    override suspend fun sendTitlePartSubTitle(request: SendTitlePartSubTitleRequest): SendTitlePartSubTitleResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
                 SendTitlePartSubTitleEvent.newBuilder().mergeFrom(request.toByteArray()).build()
             )
 
-            LOGGER.info("SendTitlePartSubTitle")
 
-            responseObserver.onNext(SendTitlePartSubTitleResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendTitlePartSubTitleResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
-    override fun sendTitlePartTitle(
-        request: SendTitlePartTitleRequest,
-        responseObserver: StreamObserver<SendTitlePartTitleResponse>
-    ) {
+    override suspend fun sendTitlePartTitle(request: SendTitlePartTitleRequest): SendTitlePartTitleResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
@@ -218,17 +172,13 @@ class PlayerAdventureService(
 
             LOGGER.info("SendTitlePartTitle")
 
-            responseObserver.onNext(SendTitlePartTitleResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendTitlePartTitleResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
-    override fun sendTitlePartTimes(
-        request: SendTitlePartTimesRequest,
-        responseObserver: StreamObserver<SendTitlePartTimesResponse>
-    ) {
+    override suspend fun sendTitlePartTimes(request: SendTitlePartTimesRequest): SendTitlePartTimesResponse {
         if (playerIsOnline(request.uniqueId)) {
             pubSubClient.publish(
                 RabbitMqChannelNames.ADVENTURE,
@@ -237,10 +187,9 @@ class PlayerAdventureService(
 
             LOGGER.info("SendTitlePartTimes")
 
-            responseObserver.onNext(SendTitlePartTimesResponse.newBuilder().build())
-            responseObserver.onCompleted()
+            return SendTitlePartTimesResponse.newBuilder().build()
         } else {
-            responseObserver.onError(IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online"))
+            throw IllegalArgumentException("CloudPlayer with uniqueId ${request.uniqueId} is not online")
         }
     }
 
@@ -249,7 +198,7 @@ class PlayerAdventureService(
         private val LOGGER = LogManager.getLogger(PlayerAdventureService::class.java)
     }
 
-    private fun playerIsOnline(uniqueId: String): Boolean {
+    private suspend fun playerIsOnline(uniqueId: String): Boolean {
         val cloudPlayer = onlinePlayerRepository.findByUniqueId(uniqueId)!!.lastPlayerConnection.online
         return if (!cloudPlayer) {
             LOGGER.warn("CloudPlayer with uniqueId $uniqueId is not online")

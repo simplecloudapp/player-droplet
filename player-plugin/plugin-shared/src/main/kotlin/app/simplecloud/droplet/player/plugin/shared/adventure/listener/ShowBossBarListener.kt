@@ -1,7 +1,6 @@
 package app.simplecloud.droplet.player.plugin.shared.adventure.listener
 
 import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
-import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqListener
 import app.simplecloud.pubsub.PubSubListener
 import build.buf.gen.simplecloud.droplet.player.v1.SendBossBarEvent
 import net.kyori.adventure.bossbar.BossBar
@@ -12,7 +11,7 @@ class ShowBossBarListener(
     private val componentSerializer: GsonComponentSerializer = GsonComponentSerializer.gson(),
 ) : PubSubListener<SendBossBarEvent> {
     override fun handle(message: SendBossBarEvent) {
-        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId)?: return
+        val audience = audienceRepository.getAudienceByUniqueId(message.uniqueId) ?: return
         val bossBar = BossBar.bossBar(
             componentSerializer.deserialize(message.bossBar.title.json),
             message.bossBar.progress,

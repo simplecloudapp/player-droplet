@@ -1,6 +1,5 @@
 package app.simplecloud.droplet.player.server.repository
 
-import app.simplecloud.droplet.player.server.connection.PlayerConnectionHandler
 import app.simplecloud.droplet.player.server.database.Database
 import app.simplecloud.droplet.player.server.entity.OfflinePlayerEntity
 import app.simplecloud.droplet.player.server.entity.PlayerConnectionEntity
@@ -10,6 +9,9 @@ import app.simplecloud.droplet.player.shared.db.tables.records.OfflinePlayersRec
 import app.simplecloud.droplet.player.shared.db.tables.records.PlayerConnectionRecord
 import app.simplecloud.droplet.player.shared.db.tables.references.OFFLINE_PLAYERS
 import app.simplecloud.droplet.player.shared.db.tables.references.PLAYER_CONNECTION
+import kotlinx.coroutines.flow.toCollection
+import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
@@ -17,7 +19,7 @@ import java.util.*
 class JooqPlayerRepository(
     private val datbase: Database
 ) : PlayerRepository<OfflinePlayerEntity> {
-    override fun save(player: OfflinePlayerEntity) {
+    override suspend fun save(player: OfflinePlayerEntity) {
         datbase.context.insertInto(
             OfflinePlayers.OFFLINE_PLAYERS,
             OFFLINE_PLAYERS.UNIQUE_ID,
@@ -31,32 +33,31 @@ class JooqPlayerRepository(
                 player.uniqueId,
                 player.name,
                 player.displayName,
-                LocalDateTime.ofEpochSecond(player.firstLogin/1000, 0, ZoneOffset.UTC),
-                LocalDateTime.ofEpochSecond(player.lastLogin/1000, 0, ZoneOffset.UTC),
+                LocalDateTime.ofEpochSecond(player.firstLogin / 1000, 0, ZoneOffset.UTC),
+                LocalDateTime.ofEpochSecond(player.lastLogin / 1000, 0, ZoneOffset.UTC),
                 player.onlineTime
             )
             .onDuplicateKeyUpdate()
             .set(OFFLINE_PLAYERS.NAME, player.name)
             .set(OFFLINE_PLAYERS.DISPLAY_NAME, player.displayName)
-            .set(OFFLINE_PLAYERS.FIRST_LOGIN, LocalDateTime.ofEpochSecond(player.firstLogin/1000, 0, ZoneOffset.UTC))
-            .set(OFFLINE_PLAYERS.LAST_LOGIN, LocalDateTime.ofEpochSecond(player.lastLogin/1000, 0, ZoneOffset.UTC))
+            .set(OFFLINE_PLAYERS.FIRST_LOGIN, LocalDateTime.ofEpochSecond(player.firstLogin / 1000, 0, ZoneOffset.UTC))
+            .set(OFFLINE_PLAYERS.LAST_LOGIN, LocalDateTime.ofEpochSecond(player.lastLogin / 1000, 0, ZoneOffset.UTC))
             .set(OFFLINE_PLAYERS.ONLINE_TIME, player.onlineTime)
-            .execute()
+            .executeAsync()
 
         saveConnection(player)
 
     }
 
-    fun findConnectionByUniqueId(uniqueId: UUID): PlayerConnectionEntity? {
-        val fetchOneInto = datbase.context.selectFrom(PLAYER_CONNECTION)
+    suspend fun findConnectionByUniqueId(uniqueId: UUID): PlayerConnectionEntity? {
+        return datbase.context.selectFrom(PLAYER_CONNECTION)
             .where(PLAYER_CONNECTION.UNIQUE_ID.eq(uniqueId.toString()))
-            .fetchOneInto(PlayerConnectionRecord::class.java)
+            .limit(1)
+            .awaitFirstOrNull()
+            ?.let {
+                mapPlayerConnectionsRecordToEntity(it)
+            }
 
-        if (fetchOneInto == null) {
-            return null
-        }
-
-        return mapPlayerConnectionsRecordToEntity(fetchOneInto)
     }
 
     private fun saveConnection(connection: OfflinePlayerEntity) {
@@ -83,58 +84,50 @@ class JooqPlayerRepository(
             .set(PLAYER_CONNECTION.ONLINE_MODE, connection.lastPlayerConnection.onlineMode)
             .set(PLAYER_CONNECTION.LAST_SERVER, connection.lastPlayerConnection.lastServer)
             .set(PLAYER_CONNECTION.ONLINE, connection.lastPlayerConnection.online)
-            .execute()
+            .executeAsync()
     }
 
-    override fun updateDisplayName(uniqueId: UUID, displayName: String) {
+    override suspend fun updateDisplayName(uniqueId: UUID, displayName: String) {
         datbase.context.update(OfflinePlayers.OFFLINE_PLAYERS)
             .set(OfflinePlayers.OFFLINE_PLAYERS.DISPLAY_NAME, displayName)
             .where(OfflinePlayers.OFFLINE_PLAYERS.UNIQUE_ID.eq(uniqueId.toString()))
-            .execute()
+            .executeAsync()
     }
 
-    override fun findByName(name: String): OfflinePlayerEntity? {
-        val fetchOneInto = datbase.context.selectFrom(OfflinePlayers.OFFLINE_PLAYERS)
+    override suspend fun findByName(name: String): OfflinePlayerEntity? {
+        return datbase.context.selectFrom(OfflinePlayers.OFFLINE_PLAYERS)
             .where(OfflinePlayers.OFFLINE_PLAYERS.NAME.eq(name))
-            .fetchOneInto(OFFLINE_PLAYERS)
-
-        if (fetchOneInto == null) {
-            return null
-        }
-
-        return mapOfflinePlayersRecordToEntity(fetchOneInto)
+            .awaitFirstOrNull()
+            ?.let { mapOfflinePlayersRecordToEntity(it) }
     }
 
-    override fun findByUniqueId(uniqueId: UUID): OfflinePlayerEntity? {
+    override suspend fun findByUniqueId(uniqueId: UUID): OfflinePlayerEntity? {
         return findByUniqueId(uniqueId.toString())
     }
 
-    override fun findByUniqueId(uniqueId: String): OfflinePlayerEntity? {
-        val fetchOneInto = datbase.context.selectFrom(OfflinePlayers.OFFLINE_PLAYERS)
+    override suspend fun findByUniqueId(uniqueId: String): OfflinePlayerEntity? {
+        return datbase.context.selectFrom(OfflinePlayers.OFFLINE_PLAYERS)
             .where(OfflinePlayers.OFFLINE_PLAYERS.UNIQUE_ID.eq(uniqueId))
-            .fetchOneInto(OFFLINE_PLAYERS)
+            .awaitFirstOrNull()
+            ?.let { mapOfflinePlayersRecordToEntity(it) }
 
-        if (fetchOneInto == null) {
-            return null
-        }
-
-        return mapOfflinePlayersRecordToEntity(fetchOneInto)
     }
 
-    override fun findAll(): List<OfflinePlayerEntity> {
+    override suspend fun findAll(): List<OfflinePlayerEntity> {
         val fetchInto = datbase.context.selectFrom(OfflinePlayers.OFFLINE_PLAYERS)
-            .fetchInto(OFFLINE_PLAYERS)
+            .asFlow()
+            .toCollection(mutableListOf())
         return fetchInto.map { mapOfflinePlayersRecordToEntity(it) }
     }
 
-    override fun count(): Int {
+    override suspend fun count(): Int {
         return datbase.context.fetchCount(OfflinePlayers.OFFLINE_PLAYERS)
     }
 
-    override fun delete(player: OfflinePlayerEntity) {
+    override suspend fun delete(player: OfflinePlayerEntity) {
         datbase.context.deleteFrom(OfflinePlayers.OFFLINE_PLAYERS)
             .where(OfflinePlayers.OFFLINE_PLAYERS.UNIQUE_ID.eq(player.uniqueId))
-            .execute()
+            .executeAsync()
     }
 
     private fun mapOfflinePlayersRecordToEntity(record: OfflinePlayersRecord): OfflinePlayerEntity {
@@ -146,8 +139,8 @@ class JooqPlayerRepository(
             record.uniqueId!!,
             record.name!!,
             record.displayName,
-            record.firstLogin!!.toEpochSecond(ZoneOffset.UTC)*1000,
-            record.lastLogin!!.toEpochSecond(ZoneOffset.UTC)*1000,
+            record.firstLogin!!.toEpochSecond(ZoneOffset.UTC) * 1000,
+            record.lastLogin!!.toEpochSecond(ZoneOffset.UTC) * 1000,
             record.onlineTime!!,
             mapPlayerConnectionsRecordToEntity(lastPlayerConnection.first())
         )

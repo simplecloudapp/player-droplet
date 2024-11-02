@@ -2,7 +2,6 @@ package app.simplecloud.droplet.player.plugin.velocity
 
 import app.simplecloud.droplet.player.api.PlayerApiSingleton
 import app.simplecloud.droplet.player.plugin.shared.OnlinePlayerChecker
-import app.simplecloud.droplet.player.plugin.shared.adventure.listener.AdventureListeners
 import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
 import app.simplecloud.droplet.player.plugin.velocity.connection.CloudPlayerConnectListener
 import app.simplecloud.droplet.player.plugin.velocity.connection.CloudPlayerKickListener

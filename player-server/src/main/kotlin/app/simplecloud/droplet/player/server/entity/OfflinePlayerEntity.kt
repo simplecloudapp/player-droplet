@@ -4,15 +4,13 @@ import app.simplecloud.droplet.player.server.repository.JooqPlayerRepository
 import app.simplecloud.droplet.player.shared.db.tables.records.OfflinePlayersRecord
 import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerConfiguration
 import build.buf.gen.simplecloud.droplet.player.v1.OfflineCloudPlayerConfiguration
-import dev.morphia.annotations.*
 import java.time.ZoneOffset
 import java.util.*
 
-@Entity("offline-players")
 data class OfflinePlayerEntity(
-    @Id
+
     val uniqueId: String = "",
-    @Indexed()
+
     val name: String = "",
     val displayName: String? = null,
     val firstLogin: Long = 0,
@@ -58,17 +56,6 @@ data class OfflinePlayerEntity(
     }
 
     companion object {
-        fun fromRecord(record: OfflinePlayersRecord, jooqPlayerRepository: JooqPlayerRepository): OfflinePlayerEntity {
-            return OfflinePlayerEntity(
-                record.uniqueId!!,
-                record.name!!,
-                record.displayName,
-                record.firstLogin!!.toEpochSecond(ZoneOffset.UTC) * 1000,
-                record.lastLogin!!.toEpochSecond(ZoneOffset.UTC) * 1000,
-                record.onlineTime!!,
-                jooqPlayerRepository.findConnectionByUniqueId(UUID.fromString(record.uniqueId)) ?: PlayerConnectionEntity()
-            )
-        }
 
         fun fromConfiguration(configuration: OfflineCloudPlayerConfiguration): OfflinePlayerEntity {
             return OfflinePlayerEntity(
