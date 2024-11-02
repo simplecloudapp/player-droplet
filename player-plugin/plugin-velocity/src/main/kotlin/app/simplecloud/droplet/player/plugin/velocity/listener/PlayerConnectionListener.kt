@@ -1,6 +1,7 @@
 package app.simplecloud.droplet.player.plugin.velocity.listener
 
 import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
+import app.simplecloud.droplet.player.plugin.velocity.PlayerVelocityPlugin
 import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerLoginRequest
 import build.buf.gen.simplecloud.droplet.player.v1.PlayerConnectionConfiguration
 import com.velocitypowered.api.event.Continuation
@@ -8,13 +9,18 @@ import com.velocitypowered.api.event.PostOrder
 import com.velocitypowered.api.event.ResultedEvent
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.LoginEvent
+import com.velocitypowered.api.event.connection.PostLoginEvent
+import com.velocitypowered.api.event.player.ServerConnectedEvent
 import com.velocitypowered.api.proxy.ProxyServer
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 
 class PlayerConnectionListener(
     private val playerApi: PlayerProxyApi,
-    private val proxyServer: ProxyServer
+    private val proxyServer: ProxyServer,
+    private val playerVelocityPlugin: PlayerVelocityPlugin
 ) {
 
     @Subscribe(order = PostOrder.EARLY)
@@ -54,4 +60,15 @@ class PlayerConnectionListener(
             }
 
     }
+
+
+    @Subscribe(order = PostOrder.LAST)
+    fun onServerSwitch(event: ServerConnectedEvent) {
+        val player = event.player
+        playerApi.updateServer(
+            player.uniqueId,
+            event.server.serverInfo.name
+        )
+    }
+
 }
