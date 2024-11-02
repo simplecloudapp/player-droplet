@@ -28,7 +28,6 @@ class PlayerVelocityPlugin @Inject constructor(
     fun onProxyInitialize(event: ProxyInitializeEvent) {
         PlayerApiSingleton.init(playerApi)
 
-
         playerApi.registerPubSubListener(
             RabbitMqChannelNames.CONNECTION,
                 CloudPlayerKickEvent::class.java, CloudPlayerKickListener((proxyServer)
@@ -38,7 +37,7 @@ class PlayerVelocityPlugin @Inject constructor(
                 ConnectCloudPlayerEvent::class.java, CloudPlayerConnectListener((proxyServer)
         ))
 
-        proxyServer.eventManager.register(this, PlayerConnectionListener(playerApi, proxyServer))
+        proxyServer.eventManager.register(this, PlayerConnectionListener(playerApi, proxyServer, this))
         proxyServer.eventManager.register(this, PlayerDisconnectListener(playerApi))
     }
 

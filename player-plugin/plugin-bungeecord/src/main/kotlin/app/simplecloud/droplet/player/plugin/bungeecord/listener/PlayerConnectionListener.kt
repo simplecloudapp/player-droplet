@@ -4,6 +4,8 @@ import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
 import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerLoginRequest
 import build.buf.gen.simplecloud.droplet.player.v1.PlayerConnectionConfiguration
 import net.md_5.bungee.api.event.PostLoginEvent
+import net.md_5.bungee.api.event.ServerConnectedEvent
+import net.md_5.bungee.api.event.ServerSwitchEvent
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
 
@@ -35,6 +37,15 @@ class PlayerConnectionListener(
             event.player.disconnect("§cUnable to connect player!")
             null
         }
+    }
+
+    @EventHandler
+    fun onServerChange(event: ServerConnectedEvent) {
+        val player = event.player
+        proxyApi.updateServer(
+            player.uniqueId,
+            event.server.info.name,
+        )
     }
 
 }
