@@ -53,7 +53,7 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
 
 adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 adventureGson = { module = "net.kyori:adventure-text-serializer-gson", version.ref = "adventure" }
-adventurePlatformSpigot = { module = "net.kyori:adventure-platform-spigot", version.ref = "adventurPlatform" }
+adventurePlatformSpigot = { module = "net.kyori:adventure-platform-bukkit", version.ref = "adventurPlatform" }
 adventurePlatformBungeecord = { module = "net.kyori:adventure-platform-bungeecord", version.ref = "adventurPlatform" }
 
 configurateYaml = { module = "org.spongepowered:configurate-yaml", version.ref = "configurate" }
