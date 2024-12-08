@@ -19,12 +19,12 @@ tasks.named("compileKotlin") {
 
 tasks {
     named<ShadowJar>("shadowJar") {
-        archiveFileName.set("player-server.jar")
+        archiveFileName.set("player-runtime.jar")
     }
 }
 
 application {
-    mainClass.set("app.simplecloud.droplet.player.server.launcher.LauncherKt")
+    mainClass.set("app.simplecloud.droplet.player.runtime.launcher.LauncherKt")
 }
 
 sourceSets {

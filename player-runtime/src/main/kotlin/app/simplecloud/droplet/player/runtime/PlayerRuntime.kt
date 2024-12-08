@@ -1,10 +1,10 @@
-package app.simplecloud.droplet.player.server
+package app.simplecloud.droplet.player.runtime
 
-import app.simplecloud.droplet.player.server.connection.PlayerConnectionHandler
-import app.simplecloud.droplet.player.server.database.DatabaseFactory
-import app.simplecloud.droplet.player.server.repository.JooqPlayerRepository
-import app.simplecloud.droplet.player.server.service.PlayerAdventureService
-import app.simplecloud.droplet.player.server.service.PlayerService
+import app.simplecloud.droplet.player.runtime.connection.PlayerConnectionHandler
+import app.simplecloud.droplet.player.runtime.database.DatabaseFactory
+import app.simplecloud.droplet.player.runtime.repository.JooqPlayerRepository
+import app.simplecloud.droplet.player.runtime.service.PlayerAdventureService
+import app.simplecloud.droplet.player.runtime.service.PlayerService
 import app.simplecloud.pubsub.PubSubClient
 import app.simplecloud.pubsub.PubSubService
 import io.grpc.Server
@@ -13,9 +13,9 @@ import org.apache.logging.log4j.LogManager
 import java.net.InetAddress
 import kotlin.concurrent.thread
 
-class PlayerServer {
+class PlayerRuntime {
 
-    private val logger = LogManager.getLogger(PlayerServer::class.java)
+    private val logger = LogManager.getLogger(PlayerRuntime::class.java)
 
     private val database = DatabaseFactory.createDatabase(System.getenv("DATABASE_URL") ?: "jdbc:sqlite:player.db")
     private val jooqPlayerRepository = JooqPlayerRepository(database)

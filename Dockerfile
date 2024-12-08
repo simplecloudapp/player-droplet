@@ -20,5 +20,5 @@ EXPOSE 5826
 
 WORKDIR /app
 
-COPY --from=build /home/gradle/player-server/build/libs/player-server.jar /app/server.jar
-ENTRYPOINT ["java", "-jar", "server.jar"]
+COPY --from=build /home/gradle/player-runtime/build/libs/player-runtime.jar /app/runtime.jar
+ENTRYPOINT ["java", "-jar", "runtime.jar"]

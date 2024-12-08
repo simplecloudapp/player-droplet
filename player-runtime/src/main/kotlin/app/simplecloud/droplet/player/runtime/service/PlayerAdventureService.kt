@@ -1,10 +1,9 @@
-package app.simplecloud.droplet.player.server.service
+package app.simplecloud.droplet.player.runtime.service
 
-import app.simplecloud.droplet.player.server.repository.JooqPlayerRepository
+import app.simplecloud.droplet.player.runtime.repository.JooqPlayerRepository
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import app.simplecloud.pubsub.PubSubClient
 import build.buf.gen.simplecloud.droplet.player.v1.*
-import io.grpc.stub.StreamObserver
 import org.apache.logging.log4j.LogManager
 
 class PlayerAdventureService(

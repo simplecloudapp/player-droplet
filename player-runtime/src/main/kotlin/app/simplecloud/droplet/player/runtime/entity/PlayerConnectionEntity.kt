@@ -1,4 +1,4 @@
-package app.simplecloud.droplet.player.server.entity
+package app.simplecloud.droplet.player.runtime.entity
 
 import app.simplecloud.droplet.player.shared.db.tables.records.PlayerConnectionRecord
 import build.buf.gen.simplecloud.droplet.player.v1.PlayerConnectionConfiguration

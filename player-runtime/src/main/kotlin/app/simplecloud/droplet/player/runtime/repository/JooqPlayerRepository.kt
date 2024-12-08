@@ -1,8 +1,8 @@
-package app.simplecloud.droplet.player.server.repository
+package app.simplecloud.droplet.player.runtime.repository
 
-import app.simplecloud.droplet.player.server.database.Database
-import app.simplecloud.droplet.player.server.entity.OfflinePlayerEntity
-import app.simplecloud.droplet.player.server.entity.PlayerConnectionEntity
+import app.simplecloud.droplet.player.runtime.database.Database
+import app.simplecloud.droplet.player.runtime.entity.OfflinePlayerEntity
+import app.simplecloud.droplet.player.runtime.entity.PlayerConnectionEntity
 import app.simplecloud.droplet.player.shared.db.tables.OfflinePlayers
 import app.simplecloud.droplet.player.shared.db.tables.PlayerConnection
 import app.simplecloud.droplet.player.shared.db.tables.records.OfflinePlayersRecord

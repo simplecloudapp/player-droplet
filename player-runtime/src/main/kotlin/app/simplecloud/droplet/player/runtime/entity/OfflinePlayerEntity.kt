@@ -1,11 +1,8 @@
-package app.simplecloud.droplet.player.server.entity
+package app.simplecloud.droplet.player.runtime.entity
 
-import app.simplecloud.droplet.player.server.repository.JooqPlayerRepository
 import app.simplecloud.droplet.player.shared.db.tables.records.OfflinePlayersRecord
 import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerConfiguration
 import build.buf.gen.simplecloud.droplet.player.v1.OfflineCloudPlayerConfiguration
-import java.time.ZoneOffset
-import java.util.*
 
 data class OfflinePlayerEntity(
 

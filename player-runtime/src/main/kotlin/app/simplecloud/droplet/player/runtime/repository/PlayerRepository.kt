@@ -1,4 +1,4 @@
-package app.simplecloud.droplet.player.server.repository
+package app.simplecloud.droplet.player.runtime.repository
 
 import java.util.UUID
 

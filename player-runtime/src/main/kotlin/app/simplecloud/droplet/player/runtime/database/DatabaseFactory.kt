@@ -1,4 +1,4 @@
-package app.simplecloud.droplet.player.server.database
+package app.simplecloud.droplet.player.runtime.database
 
 import org.jooq.impl.DSL
 
