@@ -17,8 +17,8 @@ subprojects {
     }
 
     dependencies {
-        api(rootProject.libs.kotlinCoroutines)
-        api(rootProject.libs.simpleCloudPubSub)
+        api(rootProject.libs.kotlin.coroutines)
+        api(rootProject.libs.simplecloud.pubsub)
         api(rootProject.libs.bundles.proto)
     }
 

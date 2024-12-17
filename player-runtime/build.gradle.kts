@@ -8,8 +8,8 @@ plugins {
 dependencies {
     api(project(":player-shared"))
     api(rootProject.libs.bundles.jooq)
-    api(rootProject.libs.sqliteJdbc)
-    jooqCodegen(rootProject.libs.jooqMetaExtensions)
+    api(rootProject.libs.sqlite.jdbc)
+    jooqCodegen(rootProject.libs.jooq.meta.extensions)
     implementation(rootProject.libs.bundles.log4j)
 }
 

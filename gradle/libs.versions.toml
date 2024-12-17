@@ -1,93 +1,91 @@
 [versions]
 kotlin = "2.0.20"
-kotlinCoroutines = "1.9.0"
+kotlin-coroutines = "1.9.0"
 shadow = "8.3.3"
 log4j = "2.20.0"
 protobuf = "3.25.2"
 grpc = "1.61.0"
-grpcKotlin = "1.4.1"
-simpleCloudProtoSpecs = "1.4.1.1.20241101164312.996264265378"
-simpleCloudPubSub = "1.0.5"
+grpc-kotlin = "1.4.1"
+simplecloud-droplet-api = "0.0.1-dev.7e049d6"
+simplecloud-pubsub = "1.0.5"
 jooq = "3.19.3"
 configurate = "4.1.2"
-sqliteJdbc = "3.44.1.0"
-gsonVersion = "2.10.1"
+sqlite-jdbc = "3.44.1.0"
+gson-version = "2.10.1"
 adventure = "4.14.0"
-adventurPlatform = "4.3.4"
+adventur-platform = "4.3.4"
 velocity = "3.1.1"
 paper = "1.20-R0.1-SNAPSHOT"
 spigot = "1.20-R0.1-SNAPSHOT"
 bungeecord = "1.20-R0.1-SNAPSHOT"
 
 [libraries]
-kotlinJvm = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
-kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlinCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinCoroutines" }
+kotlin-jvm = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
 
-log4jCore = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
-log4jApi = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
-log4jSlf4j = { module = "org.apache.logging.log4j:log4j-slf4j-impl", version.ref = "log4j" }
+log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
+log4j-slf4j = { module = "org.apache.logging.log4j:log4j-slf4j-impl", version.ref = "log4j" }
 
-protobufKotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf" }
+protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf" }
 
-grpcStub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
-grpcKotlinStub = { module = "io.grpc:grpc-kotlin-stub", version.ref = "grpcKotlin" }
-grpcProtobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
-grpcNettyShaded = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
+grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
+grpc-kotlin-stub = { module = "io.grpc:grpc-kotlin-stub", version.ref = "grpc-kotlin" }
+grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
+grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
 
-simpleCloudProtoSpecs = { module = "build.buf.gen:simplecloud_proto-specs_grpc_kotlin", version.ref = "simpleCloudProtoSpecs" }
-simpleCloudPubSub = { module = "app.simplecloud:simplecloud-pubsub", version.ref = "simpleCloudPubSub" }
+simplecloud-droplet-api = { module = "app.simplecloud.droplet.api:droplet-api", version.ref = "simplecloud-droplet-api" }
+simplecloud-pubsub = { module = "app.simplecloud:simplecloud-pubsub", version.ref = "simplecloud-pubsub" }
 
 velocity = { module = "com.velocitypowered:velocity-api", version.ref = "velocity" }
 paper = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
-spigo = { module = "org.spigotmc:spigot-api", version.ref = "spigot" }
+spigot = { module = "org.spigotmc:spigot-api", version.ref = "spigot" }
 bungeecord = { module = "net.md-5:bungeecord-api", version.ref = "bungeecord" }
 
-qooq = { module = "org.jooq:jooq-kotlin", version.ref = "jooq" }
-qooqMeta = { module = "org.jooq:jooq-meta", version.ref = "jooq" }
-jooqMetaExtensions = { module = "org.jooq:jooq-meta-extensions", version.ref = "jooq" }
-jooqPostgres = { module = "org.jooq:jooq-postgres-extensions", version.ref = "jooq" }
-jooqKotlinCoroutines = { module = "org.jooq:jooq-kotlin-coroutines", version.ref = "jooq" }
+jooq = { module = "org.jooq:jooq-kotlin", version.ref = "jooq" }
+jooq-meta = { module = "org.jooq:jooq-meta", version.ref = "jooq" }
+jooq-meta-extensions = { module = "org.jooq:jooq-meta-extensions", version.ref = "jooq" }
+jooq-postgres = { module = "org.jooq:jooq-postgres-extensions", version.ref = "jooq" }
+jooq-kotlin-coroutines = { module = "org.jooq:jooq-kotlin-coroutines", version.ref = "jooq" }
 
-gson = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson-version" }
 
 adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
-adventureGson = { module = "net.kyori:adventure-text-serializer-gson", version.ref = "adventure" }
-adventurePlatformSpigot = { module = "net.kyori:adventure-platform-bukkit", version.ref = "adventurPlatform" }
-adventurePlatformBungeecord = { module = "net.kyori:adventure-platform-bungeecord", version.ref = "adventurPlatform" }
+adventure-gson = { module = "net.kyori:adventure-text-serializer-gson", version.ref = "adventure" }
+adventure-platform-spigot = { module = "net.kyori:adventure-platform-bukkit", version.ref = "adventur-platform" }
+adventure-platform-bungeecord = { module = "net.kyori:adventure-platform-bungeecord", version.ref = "adventur-platform" }
 
-configurateYaml = { module = "org.spongepowered:configurate-yaml", version.ref = "configurate" }
-configurateExtraKotlin = { module = "org.spongepowered:configurate-extra-kotlin", version.ref = "configurate" }
+configurate-yaml = { module = "org.spongepowered:configurate-yaml", version.ref = "configurate" }
+configurate-extra-kotlin = { module = "org.spongepowered:configurate-extra-kotlin", version.ref = "configurate" }
 
-sqliteJdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "sqliteJdbc" }
-
+sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "sqlite-jdbc" }
 
 [bundles]
 log4j = [
-    "log4jCore",
-    "log4jApi",
-    "log4jSlf4j"
+    "log4j-core",
+    "log4j-api",
+    "log4j-slf4j"
 ]
 proto = [
-    "protobufKotlin",
-    "grpcStub",
-    "grpcKotlinStub",
-    "grpcProtobuf",
-    "grpcNettyShaded",
-    "simpleCloudProtoSpecs",
+    "protobuf-kotlin",
+    "grpc-stub",
+    "grpc-kotlin-stub",
+    "grpc-protobuf",
+    "grpc-netty-shaded",
 ]
 jooq = [
-    "qooq",
-    "qooqMeta",
-    "jooqPostgres",
-    "jooqKotlinCoroutines"
+    "jooq",
+    "jooq-meta",
+    "jooq-postgres",
+    "jooq-kotlin-coroutines"
 ]
 configurate = [
-    "configurateYaml",
-    "configurateExtraKotlin"
+    "configurate-yaml",
+    "configurate-extra-kotlin"
 ]
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
-jooqCodegen = { id = "org.jooq.jooq-codegen-gradle", version.ref = "jooq" }
+jooq-codegen = { id = "org.jooq.jooq-codegen-gradle", version.ref = "jooq" }

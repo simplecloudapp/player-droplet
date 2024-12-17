@@ -1,9 +1,9 @@
 dependencies {
-    compileOnly(rootProject.libs.spigo)
+    compileOnly(rootProject.libs.spigot)
     api(project(":player-shared"))
     api(project(":player-plugin:plugin-shared"))
     api(project(":player-api"))
-    api(rootProject.libs.adventurePlatformSpigot)
+    api(rootProject.libs.adventure.platform.spigot)
 }
 
 tasks {
