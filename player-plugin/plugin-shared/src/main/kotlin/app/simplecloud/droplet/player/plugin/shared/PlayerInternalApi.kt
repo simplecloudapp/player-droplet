@@ -1,14 +1,17 @@
 package app.simplecloud.droplet.player.plugin.shared
 
+import app.simplecloud.droplet.player.api.PlayerApi
 import app.simplecloud.droplet.player.api.impl.PlayerApiImpl
-
 import app.simplecloud.pubsub.PubSubClient
 import app.simplecloud.pubsub.PubSubListener
 import com.google.protobuf.Message
 
 open class PlayerInternalApi(
     private val onlinePlayerChecker: OnlinePlayerChecker
-) : PlayerApiImpl() {
+) : PlayerApiImpl(
+    PlayerApi.createFutureApi(),
+    PlayerApi.createCoroutineApi()
+) {
 
     val pubSubClient = PubSubClient(
         System.getenv("PLAYER_DROPLET_HOST") ?: "127.0.0.1",
