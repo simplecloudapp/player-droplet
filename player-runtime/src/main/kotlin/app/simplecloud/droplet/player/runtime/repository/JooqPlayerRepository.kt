@@ -43,13 +43,18 @@ class JooqPlayerRepository(
             .set(OFFLINE_PLAYERS.FIRST_LOGIN, LocalDateTime.ofEpochSecond(player.firstLogin / 1000, 0, ZoneOffset.UTC))
             .set(OFFLINE_PLAYERS.LAST_LOGIN, LocalDateTime.ofEpochSecond(player.lastLogin / 1000, 0, ZoneOffset.UTC))
             .set(OFFLINE_PLAYERS.ONLINE_TIME, player.onlineTime)
-            .executeAsync().exceptionally {
+            .executeAsync()
+            .thenAccept(
+                {
+                    saveConnection(player)
+                }
+            )
+            .exceptionally {
                 println("Error saving player: $it")
                 it.printStackTrace()
                 null
             }
 
-        saveConnection(player)
 
     }
 
