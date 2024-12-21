@@ -26,8 +26,14 @@ class PlayerRuntime {
 
     private val pubSubServer = createPubSubGrpcServerFromEnv()
 
+    fun setupDatabase() {
+        logger.info("Setting up database...")
+        database.setup()
+    }
+
     fun start() {
         logger.info("Starting Player server...")
+        setupDatabase()
         startGrpcServer()
         startPubSubGrpcServer()
     }
