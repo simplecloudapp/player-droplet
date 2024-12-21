@@ -11,6 +11,7 @@ import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerKickEvent
 import build.buf.gen.simplecloud.droplet.player.v1.ConnectCloudPlayerEvent
 import net.md_5.bungee.api.plugin.Plugin
+import java.util.concurrent.TimeUnit
 
 class PlayerBungeecordPlugin : Plugin() {
 
@@ -20,7 +21,7 @@ class PlayerBungeecordPlugin : Plugin() {
 
     override fun onEnable() {
         PlayerApiSingleton.init(playerApi)
-        proxy.pluginManager.registerListener(this, PlayerConnectionListener(playerApi))
+        proxy.pluginManager.registerListener(this, PlayerConnectionListener(playerApi, plugin = this))
         proxy.pluginManager.registerListener(this, PlayerDisconnectListener(playerApi))
 
         playerApi.registerPubSubListener(

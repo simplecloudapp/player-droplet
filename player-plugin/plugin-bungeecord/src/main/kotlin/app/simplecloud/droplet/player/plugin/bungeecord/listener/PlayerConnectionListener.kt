@@ -1,16 +1,21 @@
 package app.simplecloud.droplet.player.plugin.bungeecord.listener
 
+import app.simplecloud.droplet.player.plugin.bungeecord.PlayerBungeecordPlugin
 import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
 import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerLoginRequest
 import build.buf.gen.simplecloud.droplet.player.v1.PlayerConnectionConfiguration
+import net.kyori.adventure.text.Component
+import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.event.PostLoginEvent
 import net.md_5.bungee.api.event.ServerConnectedEvent
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
+import java.util.concurrent.TimeUnit
 
 
 class PlayerConnectionListener(
-    private val proxyApi: PlayerProxyApi
+    private val proxyApi: PlayerProxyApi,
+    private val plugin: PlayerBungeecordPlugin
 ) : Listener {
 
     @EventHandler
@@ -24,7 +29,7 @@ class PlayerConnectionListener(
                     PlayerConnectionConfiguration.newBuilder()
                         .setOnlineMode(player.pendingConnection.isOnlineMode)
                         .setNumericalClientVersion(player.pendingConnection.version)
-                        .setClientLanguage(player.locale.language)
+                        .setClientLanguage(if (player.locale != null) player.locale.language else "en")
                         .setOnline(true)
                         .setLastServerName(
                             if (player.server == null) "lobby" else player.server.info.name
@@ -36,6 +41,14 @@ class PlayerConnectionListener(
             event.player.disconnect("§cUnable to connect player!")
             null
         }
+
+        this.plugin.proxy.scheduler.schedule(plugin, {
+            proxyApi.getFutureApi().getOnlinePlayer(player.uniqueId).thenAccept {
+                it.sendMessage(Component.text("§aWelcome to the server!") )
+            }
+            proxyApi.getFutureApi().connectPlayer(player.uniqueId, "lobby-1")
+        }, 5, TimeUnit.SECONDS)
+
     }
 
     @EventHandler
