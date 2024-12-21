@@ -20,6 +20,8 @@ class JooqPlayerRepository(
     private val datbase: Database
 ) : PlayerRepository<OfflinePlayerEntity> {
     override suspend fun save(player: OfflinePlayerEntity) {
+        saveConnection(player)
+
         datbase.context.insertInto(
             OfflinePlayers.OFFLINE_PLAYERS,
             OFFLINE_PLAYERS.UNIQUE_ID,
@@ -43,9 +45,12 @@ class JooqPlayerRepository(
             .set(OFFLINE_PLAYERS.FIRST_LOGIN, LocalDateTime.ofEpochSecond(player.firstLogin / 1000, 0, ZoneOffset.UTC))
             .set(OFFLINE_PLAYERS.LAST_LOGIN, LocalDateTime.ofEpochSecond(player.lastLogin / 1000, 0, ZoneOffset.UTC))
             .set(OFFLINE_PLAYERS.ONLINE_TIME, player.onlineTime)
-            .executeAsync()
+            .executeAsync().exceptionally {
+                println("Error saving player: $it")
+                it.printStackTrace()
+                null
+            }
 
-        saveConnection(player)
 
     }
 
@@ -84,7 +89,11 @@ class JooqPlayerRepository(
             .set(PLAYER_CONNECTION.ONLINE_MODE, connection.lastPlayerConnection.onlineMode)
             .set(PLAYER_CONNECTION.LAST_SERVER, connection.lastPlayerConnection.lastServer)
             .set(PLAYER_CONNECTION.ONLINE, connection.lastPlayerConnection.online)
-            .executeAsync()
+            .executeAsync().exceptionally {
+                println("Error saving connection: $it")
+                it.printStackTrace()
+                null
+            }
     }
 
     override suspend fun updateDisplayName(uniqueId: UUID, displayName: String) {
