@@ -42,12 +42,6 @@ class PlayerConnectionListener(
             null
         }
 
-        this.plugin.proxy.scheduler.schedule(plugin, {
-            proxyApi.getFutureApi().getOnlinePlayer(player.uniqueId).thenAccept {
-                it.sendMessage(Component.text("§aWelcome to the server!") )
-            }
-            proxyApi.getFutureApi().connectPlayer(player.uniqueId, "lobby-1")
-        }, 5, TimeUnit.SECONDS)
 
     }
 
