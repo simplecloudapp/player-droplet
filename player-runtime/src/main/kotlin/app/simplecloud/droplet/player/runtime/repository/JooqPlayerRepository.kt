@@ -20,8 +20,6 @@ class JooqPlayerRepository(
     private val datbase: Database
 ) : PlayerRepository<OfflinePlayerEntity> {
     override suspend fun save(player: OfflinePlayerEntity) {
-        saveConnection(player)
-
         datbase.context.insertInto(
             OfflinePlayers.OFFLINE_PLAYERS,
             OFFLINE_PLAYERS.UNIQUE_ID,
@@ -51,6 +49,7 @@ class JooqPlayerRepository(
                 null
             }
 
+        saveConnection(player)
 
     }
 
