@@ -9,8 +9,11 @@ import com.velocitypowered.api.event.PostOrder
 import com.velocitypowered.api.event.ResultedEvent
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.LoginEvent
+import com.velocitypowered.api.event.connection.PostLoginEvent
 import com.velocitypowered.api.event.player.ServerConnectedEvent
 import com.velocitypowered.api.proxy.ProxyServer
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 
@@ -27,7 +30,7 @@ class PlayerConnectionListener(
         val player = event.player
         playerApi.proxyController.handleLogin(
             CloudPlayerLoginRequest.newBuilder()
-                .setName(player.username.lowercase())
+                .setName(player.username)
                 .setUniqueId(player.uniqueId.toString())
                 .setPlayerConnection(
                     PlayerConnectionConfiguration.newBuilder()

@@ -31,14 +31,14 @@ class JooqPlayerRepository(
         )
             .values(
                 player.uniqueId,
-                player.name,
+                player.name.lowercase(),
                 player.displayName,
                 LocalDateTime.ofEpochSecond(player.firstLogin / 1000, 0, ZoneOffset.UTC),
                 LocalDateTime.ofEpochSecond(player.lastLogin / 1000, 0, ZoneOffset.UTC),
                 player.onlineTime
             )
             .onDuplicateKeyUpdate()
-            .set(OFFLINE_PLAYERS.NAME, player.name)
+            .set(OFFLINE_PLAYERS.NAME, player.name.lowercase())
             .set(OFFLINE_PLAYERS.DISPLAY_NAME, player.displayName)
             .set(OFFLINE_PLAYERS.FIRST_LOGIN, LocalDateTime.ofEpochSecond(player.firstLogin / 1000, 0, ZoneOffset.UTC))
             .set(OFFLINE_PLAYERS.LAST_LOGIN, LocalDateTime.ofEpochSecond(player.lastLogin / 1000, 0, ZoneOffset.UTC))
