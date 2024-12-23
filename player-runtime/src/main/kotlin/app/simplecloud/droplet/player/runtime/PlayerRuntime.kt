@@ -1,5 +1,7 @@
 package app.simplecloud.droplet.player.runtime
 
+import app.simplecloud.droplet.api.auth.AuthCallCredentials
+import app.simplecloud.droplet.api.droplet.Droplet
 import app.simplecloud.droplet.player.runtime.connection.PlayerConnectionHandler
 import app.simplecloud.droplet.player.runtime.database.DatabaseFactory
 import app.simplecloud.droplet.player.runtime.launcher.PlayerDropletStartCommand
@@ -8,6 +10,9 @@ import app.simplecloud.droplet.player.runtime.service.PlayerAdventureService
 import app.simplecloud.droplet.player.runtime.service.PlayerService
 import app.simplecloud.pubsub.PubSubClient
 import app.simplecloud.pubsub.PubSubService
+import build.buf.gen.simplecloud.controller.v1.ControllerDropletServiceGrpcKt
+import build.buf.gen.simplecloud.controller.v1.RegisterDropletRequest
+import io.grpc.ManagedChannelBuilder
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import org.apache.logging.log4j.LogManager
@@ -24,6 +29,8 @@ class PlayerRuntime(
     private val jooqPlayerRepository = JooqPlayerRepository(database)
     private val pubSubClient = PubSubClient(startCommand.pubSubGrpcHost, startCommand.pubSubGrpcPort)
     private val playerConnectionHandler = PlayerConnectionHandler(jooqPlayerRepository)
+    private val authCallCredentials = AuthCallCredentials(startCommand.authSecret)
+
 
     private val server = createGrpcServerFromEnv()
 
@@ -34,11 +41,34 @@ class PlayerRuntime(
         database.setup()
     }
 
-    fun start() {
+    suspend fun start() {
         logger.info("Starting Player server...")
         setupDatabase()
         startGrpcServer()
         startPubSubGrpcServer()
+        registerDroplet()
+    }
+
+    suspend fun registerDroplet() {
+        if (startCommand.authSecret != "none") {
+            val controllerDropletStub =
+                ControllerDropletServiceGrpcKt.ControllerDropletServiceCoroutineStub(
+                    ManagedChannelBuilder.forAddress(startCommand.controllerHost, startCommand.controllerPort).usePlaintext()
+                    .build())
+                    .withCallCredentials(authCallCredentials)
+
+            controllerDropletStub.registerDroplet(
+                RegisterDropletRequest.newBuilder().setDefinition(
+                    Droplet(
+                        type = "players",
+                        host = startCommand.grpcHost,
+                        id = InetAddress.getLocalHost().hostName,
+                        port = startCommand.grpcPort,
+                        envoyPort = 8081
+                    ).toDefinition()
+                ).build()
+            )
+        }
     }
 
     private fun startGrpcServer() {

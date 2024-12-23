@@ -2,6 +2,7 @@ package app.simplecloud.droplet.player.runtime.launcher
 
 import app.simplecloud.droplet.api.secret.AuthFileSecretFactory
 import app.simplecloud.droplet.player.runtime.PlayerRuntime
+import com.github.ajalt.clikt.command.SuspendingCliktCommand
 import com.github.ajalt.clikt.completion.CompletionCandidates
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
@@ -10,8 +11,19 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 import com.github.ajalt.clikt.parameters.types.path
 import java.nio.file.Path
+import com.github.ajalt.clikt.core.context
+import com.github.ajalt.clikt.sources.PropertiesValueSource
+import com.github.ajalt.clikt.sources.ValueSource
+import java.io.File
 
-class PlayerDropletStartCommand : CliktCommand() {
+
+class PlayerDropletStartCommand : SuspendingCliktCommand() {
+
+    init {
+        context {
+            valueSource = PropertiesValueSource.from(File("players.properties"), false, ValueSource.envvarKey())
+        }
+    }
 
     private val defaultDatabaseUrl = "jdbc:sqlite:player.db"
 
@@ -30,17 +42,16 @@ class PlayerDropletStartCommand : CliktCommand() {
     val databaseUrl: String by option(help = "Database URL (default: ${defaultDatabaseUrl})", envvar = "DATABASE_URL")
         .default(defaultDatabaseUrl)
 
-    private val authSecretPath: Path by option(
-        help = "Path to auth secret file (default: .auth.secret)",
-        envvar = "AUTH_SECRET_PATH"
-    )
-        .path()
-        .default(Path.of(".secrets", "auth.secret"))
 
     val authSecret: String by option(help = "Auth secret", envvar = "AUTH_SECRET_KEY")
-        .defaultLazy { AuthFileSecretFactory.loadOrCreate(authSecretPath) }
+        .default("none")
 
-    override fun run() {
+    val controllerHost: String by option(help = "Controller host", envvar = "CONTROLLER_HOST")
+        .default("localhost")
+
+    val controllerPort: Int by option(help = "Controller port", envvar = "CONTROLLER_PORT").int().default(5816)
+
+    override suspend fun run() {
         val playerRuntime = PlayerRuntime(this)
         playerRuntime.start()
 
