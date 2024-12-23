@@ -73,7 +73,7 @@ class PlayerRuntime(
     }
 
     private fun createPubSubGrpcServerFromEnv(): Server {
-        val port = startCommand.grpcPort
+        val port = startCommand.pubSubGrpcPort
         return ServerBuilder.forPort(port)
             .addService(PubSubService())
             .build()
