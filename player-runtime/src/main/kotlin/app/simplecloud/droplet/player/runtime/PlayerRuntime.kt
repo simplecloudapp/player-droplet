@@ -2,6 +2,7 @@ package app.simplecloud.droplet.player.runtime
 
 import app.simplecloud.droplet.player.runtime.connection.PlayerConnectionHandler
 import app.simplecloud.droplet.player.runtime.database.DatabaseFactory
+import app.simplecloud.droplet.player.runtime.launcher.PlayerDropletStartCommand
 import app.simplecloud.droplet.player.runtime.repository.JooqPlayerRepository
 import app.simplecloud.droplet.player.runtime.service.PlayerAdventureService
 import app.simplecloud.droplet.player.runtime.service.PlayerService
@@ -13,13 +14,15 @@ import org.apache.logging.log4j.LogManager
 import java.net.InetAddress
 import kotlin.concurrent.thread
 
-class PlayerRuntime {
+class PlayerRuntime(
+    private val startCommand: PlayerDropletStartCommand
+) {
 
     private val logger = LogManager.getLogger(PlayerRuntime::class.java)
 
-    private val database = DatabaseFactory.createDatabase(System.getenv("DATABASE_URL") ?: "jdbc:sqlite:player.db")
+    private val database = DatabaseFactory.createDatabase(startCommand.databaseUrl)
     private val jooqPlayerRepository = JooqPlayerRepository(database)
-    private val pubSubClient = PubSubClient(System.getenv("GRPC_HOST") ?: "127.0.0.1", System.getenv("GRPC_PUB_SUB_PORT")?.toInt() ?: 5827)
+    private val pubSubClient = PubSubClient(startCommand.pubSubGrpcHost, startCommand.pubSubGrpcPort)
     private val playerConnectionHandler = PlayerConnectionHandler(jooqPlayerRepository)
 
     private val server = createGrpcServerFromEnv()
@@ -39,7 +42,7 @@ class PlayerRuntime {
     }
 
     private fun startGrpcServer() {
-        logger.info("Starting gRPC server on ${InetAddress.getLocalHost().hostAddress} with port ${System.getenv("GRPC_PORT")}")
+        logger.info("Starting gRPC server on ${startCommand.grpcHost} with port ${startCommand.grpcPort}")
         thread {
             server.start()
             server.awaitTermination()
@@ -47,7 +50,7 @@ class PlayerRuntime {
     }
 
     private fun startPubSubGrpcServer() {
-        logger.info("Starting PubSub gRPC server on ${InetAddress.getLocalHost().hostAddress} with port ${System.getenv("GRPC_PUB_SUB_PORT")}")
+        logger.info("Starting PubSub gRPC server on ${startCommand.pubSubGrpcHost} with port ${startCommand.pubSubGrpcPort}")
         thread {
             pubSubServer.start()
             pubSubServer.awaitTermination()
@@ -55,7 +58,7 @@ class PlayerRuntime {
     }
 
     private fun createGrpcServerFromEnv(): Server {
-        val port = System.getenv("GRPC_PORT")?.toInt() ?: 5826
+        val port = startCommand.grpcPort
         return ServerBuilder.forPort(port)
             .addService(
                 PlayerService(
@@ -70,7 +73,7 @@ class PlayerRuntime {
     }
 
     private fun createPubSubGrpcServerFromEnv(): Server {
-        val port = System.getenv("GRPC_PUB_SUB_PORT")?.toInt() ?: 5827
+        val port = startCommand.grpcPort
         return ServerBuilder.forPort(port)
             .addService(PubSubService())
             .build()

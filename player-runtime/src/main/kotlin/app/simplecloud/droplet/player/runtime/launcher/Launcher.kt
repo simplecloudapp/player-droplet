@@ -1,8 +1,9 @@
 package app.simplecloud.droplet.player.runtime.launcher
 
 import app.simplecloud.droplet.player.runtime.PlayerRuntime
+import com.github.ajalt.clikt.core.main
 
-fun main() {
-    val server = PlayerRuntime()
-    server.start()
+suspend fun main(args: Array<String>) {
+
+    PlayerDropletStartCommand().main(args)
 }

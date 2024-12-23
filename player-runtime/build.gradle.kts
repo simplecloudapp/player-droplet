@@ -11,6 +11,8 @@ dependencies {
     api(rootProject.libs.sqlite.jdbc)
     jooqCodegen(rootProject.libs.jooq.meta.extensions)
     implementation(rootProject.libs.bundles.log4j)
+    implementation(rootProject.libs.clikt)
+    implementation(rootProject.libs.simplecloud.controller)
 }
 
 tasks.named("compileKotlin") {
