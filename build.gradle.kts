@@ -1,40 +1,52 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.8.0"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    java
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.shadow)
 }
+val baseVersion = "0.0.1"
+val commitHash = System.getenv("COMMIT_HASH")
+val snapshotversion = "${baseVersion}-dev.$commitHash"
+
 
 allprojects {
-    group = "app.simplecloud.droplet"
-    version = "1.0-SNAPSHOT"
-
-    apply {
-        plugin("java")
-        plugin("org.jetbrains.kotlin.jvm")
-        plugin("com.github.johnrengelman.shadow")
-    }
+    version = if (commitHash != null) snapshotversion else baseVersion
 
     repositories {
         mavenCentral()
-    }
-
-    kotlin {
-        jvmToolchain(17)
+        maven("https://buf.build/gen/maven")
+        maven("https://repo.simplecloud.app/snapshots/")
     }
 }
 
 subprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "com.gradleup.shadow")
+    apply(plugin = "maven-publish")
+
     dependencies {
-        implementation(kotlin("stdlib"))
+        testImplementation(rootProject.libs.kotlin.test)
+        implementation(rootProject.libs.kotlin.jvm)
     }
 
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    }
+
+    kotlin {
+        jvmToolchain(21)
+        compilerOptions {
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+        }
     }
 
     tasks.named("shadowJar", ShadowJar::class) {
         mergeServiceFiles()
+        archiveFileName.set("${project.name}.jar")
     }
+
+    tasks.test {
+        useJUnitPlatform()
+    }
+
 }

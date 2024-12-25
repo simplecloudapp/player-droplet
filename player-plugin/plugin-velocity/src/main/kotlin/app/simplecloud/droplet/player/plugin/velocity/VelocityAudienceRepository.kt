@@ -1,5 +1,6 @@
 package app.simplecloud.droplet.player.plugin.velocity
 
+import app.simplecloud.droplet.player.api.PlayerApiSingleton
 import app.simplecloud.droplet.player.plugin.shared.adventure.AudienceRepository
 import com.velocitypowered.api.proxy.ProxyServer
 import net.kyori.adventure.audience.Audience

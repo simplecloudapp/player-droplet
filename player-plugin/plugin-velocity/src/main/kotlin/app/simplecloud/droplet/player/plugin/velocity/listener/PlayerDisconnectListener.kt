@@ -1,7 +1,7 @@
 package app.simplecloud.droplet.player.plugin.velocity.listener
 
 import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
-import app.simplecloud.droplet.player.proto.CloudPlayerDisconnectRequest
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerDisconnectRequest
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.DisconnectEvent
 

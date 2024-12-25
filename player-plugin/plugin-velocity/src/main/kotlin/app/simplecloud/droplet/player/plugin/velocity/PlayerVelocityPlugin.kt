@@ -7,9 +7,9 @@ import app.simplecloud.droplet.player.plugin.velocity.connection.CloudPlayerConn
 import app.simplecloud.droplet.player.plugin.velocity.connection.CloudPlayerKickListener
 import app.simplecloud.droplet.player.plugin.velocity.listener.PlayerConnectionListener
 import app.simplecloud.droplet.player.plugin.velocity.listener.PlayerDisconnectListener
-import app.simplecloud.droplet.player.proto.CloudPlayerKickEvent
-import app.simplecloud.droplet.player.proto.ConnectCloudPlayerEvent
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerKickEvent
+import build.buf.gen.simplecloud.droplet.player.v1.ConnectCloudPlayerEvent
 import com.google.inject.Inject
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
@@ -28,16 +28,16 @@ class PlayerVelocityPlugin @Inject constructor(
     fun onProxyInitialize(event: ProxyInitializeEvent) {
         PlayerApiSingleton.init(playerApi)
 
-        playerApi.registerRabbitMqListener(
+        playerApi.registerPubSubListener(
             RabbitMqChannelNames.CONNECTION,
                 CloudPlayerKickEvent::class.java, CloudPlayerKickListener((proxyServer)
         ))
-        playerApi.registerRabbitMqListener(
+        playerApi.registerPubSubListener(
             RabbitMqChannelNames.CONNECTION,
                 ConnectCloudPlayerEvent::class.java, CloudPlayerConnectListener((proxyServer)
         ))
 
-        proxyServer.eventManager.register(this, PlayerConnectionListener(playerApi))
+        proxyServer.eventManager.register(this, PlayerConnectionListener(playerApi, proxyServer, this))
         proxyServer.eventManager.register(this, PlayerDisconnectListener(playerApi))
     }
 

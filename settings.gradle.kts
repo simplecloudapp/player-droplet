@@ -1,6 +1,6 @@
 rootProject.name = "player-droplet"
 include("player-api")
-include("player-server")
+include("player-runtime")
 include("player-shared")
 include("player-plugin")
 include("player-plugin:plugin-shared")

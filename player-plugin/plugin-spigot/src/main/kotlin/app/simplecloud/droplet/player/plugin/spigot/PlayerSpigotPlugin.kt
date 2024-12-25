@@ -29,7 +29,7 @@ class PlayerSpigotPlugin : JavaPlugin() {
 
 
         AdventureListeners.allWithClasses(SpigotAudienceRepository(adventure)).forEach {
-            playerApi.registerRabbitMqListener(RabbitMqChannelNames.ADVENTURE, it.first, it.second)
+            playerApi.registerPubSubListener(RabbitMqChannelNames.ADVENTURE, it.first, it.second)
         }
     }
 

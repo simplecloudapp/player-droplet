@@ -1,9 +1,9 @@
 package app.simplecloud.droplet.player.plugin.shared.proxy
 
-import app.simplecloud.droplet.player.proto.CloudPlayerDisconnectRequest
-import app.simplecloud.droplet.player.proto.CloudPlayerDisconnectResponse
-import app.simplecloud.droplet.player.proto.CloudPlayerLoginRequest
-import app.simplecloud.droplet.player.proto.CloudPlayerLoginResponse
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerDisconnectRequest
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerDisconnectResponse
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerLoginRequest
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerLoginResponse
 import java.util.concurrent.CompletableFuture
 
 interface ProxyController {

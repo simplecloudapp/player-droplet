@@ -1,7 +1,7 @@
 package app.simplecloud.droplet.player.api.impl
 
 import app.simplecloud.droplet.player.api.OfflineCloudPlayer
-import app.simplecloud.droplet.player.proto.OfflineCloudPlayerConfiguration
+import build.buf.gen.simplecloud.droplet.player.v1.OfflineCloudPlayerConfiguration
 import java.util.*
 
 open class OfflineCloudPlayerImpl(

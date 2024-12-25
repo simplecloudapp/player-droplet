@@ -1,7 +1,7 @@
 package app.simplecloud.droplet.player.plugin.bungeecord.listener
 
 import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
-import app.simplecloud.droplet.player.proto.CloudPlayerDisconnectRequest
+import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerDisconnectRequest
 import net.md_5.bungee.api.event.PlayerDisconnectEvent
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
