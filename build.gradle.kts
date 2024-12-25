@@ -4,10 +4,13 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.shadow)
 }
+val baseVersion = "0.0.1"
+val commitHash = System.getenv("COMMIT_HASH")
+val snapshotversion = "${baseVersion}-dev.$commitHash"
+
 
 allprojects {
-    group = "app.simplecloud.droplet"
-    version = "1.0.0"
+    version = if (commitHash != null) snapshotversion else baseVersion
 
     repositories {
         mavenCentral()
