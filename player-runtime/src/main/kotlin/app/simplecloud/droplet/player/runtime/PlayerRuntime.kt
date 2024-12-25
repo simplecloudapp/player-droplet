@@ -1,6 +1,7 @@
 package app.simplecloud.droplet.player.runtime
 
 import app.simplecloud.droplet.api.auth.AuthCallCredentials
+import app.simplecloud.droplet.api.auth.AuthSecretInterceptor
 import app.simplecloud.droplet.api.droplet.Droplet
 import app.simplecloud.droplet.player.runtime.connection.PlayerConnectionHandler
 import app.simplecloud.droplet.player.runtime.database.DatabaseFactory
