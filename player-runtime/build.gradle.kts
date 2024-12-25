@@ -13,6 +13,7 @@ dependencies {
     implementation(rootProject.libs.bundles.log4j)
     implementation(rootProject.libs.clikt)
     implementation(rootProject.libs.simplecloud.controller)
+    implementation(rootProject.libs.sqlite.jdbc)
 }
 
 tasks.named("compileKotlin") {
