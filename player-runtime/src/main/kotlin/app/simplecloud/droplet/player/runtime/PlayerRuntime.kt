@@ -5,6 +5,7 @@ import app.simplecloud.droplet.api.auth.AuthSecretInterceptor
 import app.simplecloud.droplet.api.droplet.Droplet
 import app.simplecloud.droplet.player.runtime.connection.PlayerConnectionHandler
 import app.simplecloud.droplet.player.runtime.database.DatabaseFactory
+import app.simplecloud.droplet.player.runtime.launcher.AuthType
 import app.simplecloud.droplet.player.runtime.launcher.PlayerDropletStartCommand
 import app.simplecloud.droplet.player.runtime.repository.JooqPlayerRepository
 import app.simplecloud.droplet.player.runtime.service.PlayerAdventureService
@@ -37,6 +38,12 @@ class PlayerRuntime(
 
     private val pubSubServer = createPubSubGrpcServerFromEnv()
 
+    private val interceptor = if (startCommand.authType == AuthType.AUTH_SERVER) {
+        AuthSecretInterceptor(startCommand.controllerHost, startCommand.controllerPort)
+    } else {
+        StandaloneAuthSecretInterceptor(startCommand.authSecret)
+    }
+
     fun setupDatabase() {
         logger.info("Setting up database...")
         database.setup()
@@ -51,7 +58,7 @@ class PlayerRuntime(
     }
 
     suspend fun registerDroplet() {
-        if (startCommand.authSecret != "none") {
+        if (startCommand.authType == AuthType.AUTH_SERVER) {
             val controllerDropletStub =
                 ControllerDropletServiceGrpcKt.ControllerDropletServiceCoroutineStub(
                     ManagedChannelBuilder.forAddress(startCommand.controllerHost, startCommand.controllerPort).usePlaintext()
@@ -100,6 +107,7 @@ class PlayerRuntime(
             )
             .addService(PlayerAdventureService(pubSubClient, jooqPlayerRepository))
             .addService(PubSubService())
+            .intercept(interceptor)
             .build()
     }
 
@@ -107,6 +115,7 @@ class PlayerRuntime(
         val port = startCommand.pubSubGrpcPort
         return ServerBuilder.forPort(port)
             .addService(PubSubService())
+            .intercept(interceptor)
             .build()
     }
 
