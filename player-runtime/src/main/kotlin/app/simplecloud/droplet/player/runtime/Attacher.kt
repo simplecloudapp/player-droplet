@@ -21,11 +21,11 @@ class Attacher(
             stub.registerDroplet(
                 RegisterDropletRequest.newBuilder().setDefinition(
                     Droplet(
-                        type = "metrics",
+                        type = "player",
                         id = playerDropletStartCommand.dropletId,
                         host = playerDropletStartCommand.grpcHost,
                         port = playerDropletStartCommand.grpcPort,
-                        envoyPort = 8082
+                        envoyPort = 8085
                     ).toDefinition()
                 ).build()
             )
