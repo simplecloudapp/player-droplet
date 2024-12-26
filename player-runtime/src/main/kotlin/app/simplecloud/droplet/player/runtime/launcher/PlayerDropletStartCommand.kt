@@ -29,6 +29,9 @@ class PlayerDropletStartCommand : SuspendingCliktCommand() {
     val grpcHost: String by option(help = "Grpc host (default: localhost)", envvar = "GRPC_HOST").default("localhost")
     val grpcPort: Int by option(help = "Grpc port (default: 5826)", envvar = "GRPC_PORT").int().default(5826)
 
+    val id: String by option(help = "ID", envvar = "ID").default("internal-player")
+
+
     val pubSubGrpcHost: String by option(
         help = "PubSub Grpc host (default: localhost)",
         envvar = "GRPC_PUBSUB_HOST"

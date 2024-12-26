@@ -1,9 +1,8 @@
 package app.simplecloud.droplet.player.runtime
 
 import app.simplecloud.droplet.api.auth.AuthCallCredentials
-import app.simplecloud.droplet.api.auth.AuthSecretInterceptor
-import app.simplecloud.droplet.api.droplet.Droplet
 import app.simplecloud.droplet.player.runtime.connection.PlayerConnectionHandler
+import app.simplecloud.droplet.player.runtime.controller.Attacher
 import app.simplecloud.droplet.player.runtime.database.DatabaseFactory
 import app.simplecloud.droplet.player.runtime.launcher.PlayerDropletStartCommand
 import app.simplecloud.droplet.player.runtime.repository.JooqPlayerRepository
@@ -12,12 +11,10 @@ import app.simplecloud.droplet.player.runtime.service.PlayerService
 import app.simplecloud.pubsub.PubSubClient
 import app.simplecloud.pubsub.PubSubService
 import build.buf.gen.simplecloud.controller.v1.ControllerDropletServiceGrpcKt
-import build.buf.gen.simplecloud.controller.v1.RegisterDropletRequest
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import org.apache.logging.log4j.LogManager
-import java.net.InetAddress
 import kotlin.concurrent.thread
 
 class PlayerRuntime(
@@ -47,30 +44,32 @@ class PlayerRuntime(
         setupDatabase()
         startGrpcServer()
         startPubSubGrpcServer()
-        registerDroplet()
+        attach()
     }
 
-    suspend fun registerDroplet() {
-        if (startCommand.authSecret != "none") {
-            val controllerDropletStub =
-                ControllerDropletServiceGrpcKt.ControllerDropletServiceCoroutineStub(
-                    ManagedChannelBuilder.forAddress(startCommand.controllerHost, startCommand.controllerPort).usePlaintext()
-                    .build())
-                    .withCallCredentials(authCallCredentials)
+    private fun attach() {
 
-            controllerDropletStub.registerDroplet(
-                RegisterDropletRequest.newBuilder().setDefinition(
-                    Droplet(
-                        type = "players",
-                        host = startCommand.grpcHost,
-                        id = InetAddress.getLocalHost().hostName,
-                        port = startCommand.grpcPort,
-                        envoyPort = 8081
-                    ).toDefinition()
-                ).build()
+        val controllerDropletStub =
+            ControllerDropletServiceGrpcKt.ControllerDropletServiceCoroutineStub(
+                ManagedChannelBuilder.forAddress(startCommand.controllerHost, startCommand.controllerPort)
+                    .usePlaintext()
+                    .build()
             )
-        }
+                .withCallCredentials(authCallCredentials)
+
+        logger.info("Attaching to controller...")
+        val attacher =
+            Attacher(
+                startCommand,
+                ManagedChannelBuilder.forAddress(startCommand.controllerHost, startCommand.controllerPort)
+                    .usePlaintext()
+                    .build(),
+                controllerDropletStub
+            )
+        attacher.enforceAttach()
+
     }
+
 
     private fun startGrpcServer() {
         logger.info("Starting gRPC server on ${startCommand.grpcHost} with port ${startCommand.grpcPort}")
