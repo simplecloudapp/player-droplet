@@ -56,6 +56,8 @@ class PlayerDropletStartCommand : SuspendingCliktCommand() {
 
     val controllerPort: Int by option(help = "Controller port", envvar = "CONTROLLER_PORT").int().default(5816)
 
+    val controllerAuthPort: Int by option(help = "Controller Auth port", envvar = "CONTROLLER_AUTH_PORT").int().default(5818)
+
     val authType: AuthType by option(help = "Auth type (default: SECRET)", envvar = "AUTH_TYPE").enum<AuthType>()
         .default(AuthType.SECRET)
 

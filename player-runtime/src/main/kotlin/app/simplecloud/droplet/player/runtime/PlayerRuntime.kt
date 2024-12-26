@@ -27,22 +27,21 @@ class PlayerRuntime(
 
     private val logger = LogManager.getLogger(PlayerRuntime::class.java)
 
+    private val interceptor = if (startCommand.authType == AuthType.AUTH_SERVER) {
+        AuthSecretInterceptor(startCommand.controllerHost, startCommand.controllerAuthPort)
+    } else {
+        StandaloneAuthSecretInterceptor(startCommand.authSecret)
+    }
+
     private val database = DatabaseFactory.createDatabase(startCommand.databaseUrl)
     private val jooqPlayerRepository = JooqPlayerRepository(database)
     private val pubSubClient = PubSubClient(startCommand.pubSubGrpcHost, startCommand.pubSubGrpcPort)
     private val playerConnectionHandler = PlayerConnectionHandler(jooqPlayerRepository)
     private val authCallCredentials = AuthCallCredentials(startCommand.authSecret)
 
-
     private val server = createGrpcServerFromEnv()
 
     private val pubSubServer = createPubSubGrpcServerFromEnv()
-
-    private val interceptor = if (startCommand.authType == AuthType.AUTH_SERVER) {
-        AuthSecretInterceptor(startCommand.controllerHost, startCommand.controllerPort)
-    } else {
-        StandaloneAuthSecretInterceptor(startCommand.authSecret)
-    }
 
     fun setupDatabase() {
         logger.info("Setting up database...")
@@ -72,7 +71,7 @@ class PlayerRuntime(
                         host = startCommand.grpcHost,
                         id = InetAddress.getLocalHost().hostName,
                         port = startCommand.grpcPort,
-                        envoyPort = 8081
+                        envoyPort = 8085
                     ).toDefinition()
                 ).build()
             )
