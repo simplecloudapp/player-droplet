@@ -52,7 +52,7 @@ class PlayerDropletStartCommand : SuspendingCliktCommand() {
         .defaultLazy { AuthFileSecretFactory.loadOrCreate(authSecretPath) }
 
     val controllerHost: String by option(help = "Controller host", envvar = "CONTROLLER_HOST")
-        .default("localhost")
+        .default("127.0.0.1")
 
     val controllerPort: Int by option(help = "Controller port", envvar = "CONTROLLER_PORT").int().default(5816)
 
