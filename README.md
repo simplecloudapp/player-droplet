@@ -1,42 +1,93 @@
-# player-droplet
+# Server Host Droplet
 
-player-droplet is a microserver designed to manage player connections and provide an API for other droplets or plugins such as Spigot, Minestom, Velocity, and BungeeCord, with Kyori Adventure support and the ability to scale in Kubernetes.
+![Banner][banner]
 
-## Getting Started
+<div align="center">
 
-To get started with player-droplet, you can run it in Kubernetes or Docker using the provided image.
+[![Modrinth][badge-modrinth]][modrinth]
+[![License][badge-license]][license]
+<br>
 
-The server uses the following environment variables:
+[![Discord][badge-discord]][social-discord]
+[![Follow @simplecloudapp][badge-x]][social-x]
+[![Follow @simplecloudapp][badge-bluesky]][social-bluesky]
+[![Follow @simplecloudapp][badge-youtube]][social-youtube]
+<br>
 
-| Variable Name | Description | Default Value |
-|---------------|-------------|---------------|
-| `GRPC_PORT` | The port the gRPC server should listen on. | `5826`        |
-| `MONGO_CONNECTION_STRING` | The connection string for the MongoDB instance. | (required)    |
-| `MONGO_DATABASE` | The name of the MongoDB database to use. | `players`     |
-| `REDIS_HOST` | The hostname or IP address of the Redis instance. | `127.0.0.1`   |
-| `REDIS_PORT` | The port number for the Redis instance. | `6379`        |
-| `REDIS_PASSWORD` | The password for the Redis instance. | `null`        |
-| `RABBITMQ_HOST` | The hostname or IP address of the RabbitMQ instance. | `127.0.0.1`   |
-| `RABBITMQ_USERNAME` | The username to use when connecting to RabbitMQ. | `user`        |
-| `RABBITMQ_PASSWORD` | The password to use when connecting to RabbitMQ. | `bitnami`     |
+[Report a Bug][issue-bug-report]
+·
+[Request a Feature][issue-feature-request]
+<br>
 
-To use the API, you'll need to install the plugin on your platform. The plugin uses the following environment variables:
+🌟 Give us a star — your support means the world to us!
+</div>
+<br>
 
-| Variable Name | Description | Default Value                                   |
-|---------------|-------------|-------------------------------------------------|
-| `PLAYER_DROPLET_HOST` | The hostname or IP address of the Player-Droplet server. | `127.0.0.1`                                     |
-| `PLAYER_DROPLET_PORT` | The port number for the gRPC server on the Player-Droplet server. | `5826` (should match `GRPC_PORT` on the server) |
+> All information about this project can be found in our detailed [documentation][docs-thisproject].
+
+The player droplet is an optional but powerful component that provides comprehensive player management, cross-server
+communication, and advanced interaction features using the Adventure API.
+
+## Features
+
+- [x] **Adventure API Integration**: Full support for Kyori's Adventure API enables rich content delivery across your
+  network
+- [x] **Cross-Server Management**: The player droplet operates independently of Minecraft servers, allowing you to
+  manage players across your entire network
+- [x] **Optional Integration**: While the player droplet provides powerful player management capabilities, it's
+  completely optional within the SimpleCloud ecosystem
+- [x] **Network-Wide Player Data**: The droplet automatically tracks and stores essential player information
 
 ## Contributing
 
-If you're interested in contributing to player-droplet, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature/some-name`
-3. Make your changes and commit them: `git commit -am 'feat: some feature'`
-4. Push to the branch: `git push origin feature/some-name`
-5. Submit a pull request.
+Contributions to SimpleCloud are welcome and highly appreciated. However, before you jump right into it, we would like
+you to read our [Contribution Guide][docs-contribute].
 
 ## License
 
-player-droplet is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+This repository is licensed under [Apache 2.0][license].
+
+
+<!-- LINK GROUP -->
+
+<!-- ✅ PLEASE EDIT -->
+
+[banner]: https://github.com/simplecloudapp/branding/blob/main/readme/banner/droplet/player.png?raw=true
+
+[issue-bug-report]: https://github.com/theSimpleCloud/player-droplet/issues/new?labels=bug&projects=template=01_BUG-REPORT.yml&title=%5BBUG%5D+%3Ctitle%3E
+
+[issue-feature-request]: https://github.com/theSimpleCloud/player-droplet/discussions/new?category=ideas
+
+[docs-thisproject]: https://docs.simplecloud.app/droplet/player
+
+[docs-contribute]: https://docs.simplecloud.app/contribute
+
+[modrinth]: https://modrinth.com/organization/simplecloud
+
+<!-- ⛔ DON'T TOUCH -->
+
+[license]: https://opensource.org/licenses/Apache-2.0
+
+[snapshots]: https://repo.simplecloud.app/#/snapshots
+
+[gnu-screen]: https://www.gnu.org/software/screen/
+
+[social-x]: https://x.com/simplecloudapp
+
+[social-bluesky]: https://bsky.app/profile/simplecloud.app
+
+[social-youtube]: https://www.youtube.com/@thesimplecloud9075
+
+[social-discord]: https://discord.simplecloud.app
+
+[badge-modrinth]: https://img.shields.io/badge/modrinth-18181b.svg?style=flat-square&logo=modrinth
+
+[badge-license]: https://img.shields.io/badge/apache%202.0-blue.svg?style=flat-square&label=license&labelColor=18181b&style=flat-square&color=e11d48
+
+[badge-discord]: https://img.shields.io/badge/Community_Discord-d95652.svg?style=flat-square&logo=discord&color=27272a
+
+[badge-x]: https://img.shields.io/badge/Follow_@simplecloudapp-d95652.svg?style=flat-square&logo=x&color=27272a
+
+[badge-bluesky]: https://img.shields.io/badge/Follow_@simplecloud.app-d95652.svg?style=flat-square&logo=bluesky&color=27272a
+
+[badge-youtube]: https://img.shields.io/badge/youtube-d95652.svg?style=flat-square&logo=youtube&color=27272a
