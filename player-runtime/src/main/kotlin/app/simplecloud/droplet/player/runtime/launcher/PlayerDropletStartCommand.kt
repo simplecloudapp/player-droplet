@@ -26,6 +26,8 @@ class PlayerDropletStartCommand : SuspendingCliktCommand() {
 
     private val defaultDatabaseUrl = "jdbc:sqlite:player.db"
 
+    val dropletId: String by option(help = "Droplet ID (default: internal-player)", envvar = "DROPLET_ID").default("internal-player")
+
     val grpcHost: String by option(help = "Grpc host (default: localhost)", envvar = "GRPC_HOST").default("localhost")
     val grpcPort: Int by option(help = "Grpc port (default: 5826)", envvar = "GRPC_PORT").int().default(5826)
 

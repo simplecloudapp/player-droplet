@@ -2,7 +2,6 @@ package app.simplecloud.droplet.player.runtime
 
 import app.simplecloud.droplet.api.auth.AuthCallCredentials
 import app.simplecloud.droplet.api.auth.AuthSecretInterceptor
-import app.simplecloud.droplet.api.droplet.Droplet
 import app.simplecloud.droplet.player.runtime.connection.PlayerConnectionHandler
 import app.simplecloud.droplet.player.runtime.database.DatabaseFactory
 import app.simplecloud.droplet.player.runtime.launcher.AuthType
@@ -13,12 +12,11 @@ import app.simplecloud.droplet.player.runtime.service.PlayerService
 import app.simplecloud.pubsub.PubSubClient
 import app.simplecloud.pubsub.PubSubService
 import build.buf.gen.simplecloud.controller.v1.ControllerDropletServiceGrpcKt
-import build.buf.gen.simplecloud.controller.v1.RegisterDropletRequest
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Server
 import io.grpc.ServerBuilder
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.apache.logging.log4j.LogManager
-import java.net.InetAddress
 import kotlin.concurrent.thread
 
 class PlayerRuntime(
@@ -39,43 +37,49 @@ class PlayerRuntime(
     private val playerConnectionHandler = PlayerConnectionHandler(jooqPlayerRepository)
     private val authCallCredentials = AuthCallCredentials(startCommand.authSecret)
 
+    private val controllerChannel =
+        ManagedChannelBuilder.forAddress(startCommand.controllerHost, startCommand.controllerPort)
+            .usePlaintext()
+            .build()
+    val controllerDropletStub =
+        ControllerDropletServiceGrpcKt.ControllerDropletServiceCoroutineStub(controllerChannel)
+            .withCallCredentials(authCallCredentials)
+
     private val server = createGrpcServerFromEnv()
 
     private val pubSubServer = createPubSubGrpcServerFromEnv()
-
-    fun setupDatabase() {
-        logger.info("Setting up database...")
-        database.setup()
-    }
 
     suspend fun start() {
         logger.info("Starting Player server...")
         setupDatabase()
         startGrpcServer()
+        attach()
         startPubSubGrpcServer()
-        registerDroplet()
+
+        suspendCancellableCoroutine<Unit> { continuation ->
+            Runtime.getRuntime().addShutdownHook(Thread {
+                server.shutdown()
+                continuation.resume(Unit) { cause, _, _ ->
+                    logger.info("Server shutdown due to: $cause")
+                }
+            })
+        }
     }
 
-    suspend fun registerDroplet() {
-        if (startCommand.authType == AuthType.AUTH_SERVER) {
-            val controllerDropletStub =
-                ControllerDropletServiceGrpcKt.ControllerDropletServiceCoroutineStub(
-                    ManagedChannelBuilder.forAddress(startCommand.controllerHost, startCommand.controllerPort).usePlaintext()
-                    .build())
-                    .withCallCredentials(authCallCredentials)
-
-            controllerDropletStub.registerDroplet(
-                RegisterDropletRequest.newBuilder().setDefinition(
-                    Droplet(
-                        type = "players",
-                        host = startCommand.grpcHost,
-                        id = InetAddress.getLocalHost().hostName,
-                        port = startCommand.grpcPort,
-                        envoyPort = 8085
-                    ).toDefinition()
-                ).build()
-            )
+    private fun attach() {
+        if (startCommand.authType != AuthType.AUTH_SERVER) {
+            return
         }
+
+        logger.info("Attaching to controller...")
+        val attacher =
+            Attacher(startCommand, controllerChannel, controllerDropletStub)
+        attacher.enforceAttach()
+    }
+
+    private fun setupDatabase() {
+        logger.info("Setting up database...")
+        database.setup()
     }
 
     private fun startGrpcServer() {
