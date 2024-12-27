@@ -12,6 +12,7 @@ val snapshotversion = "${baseVersion}-dev.$commitHash"
 
 allprojects {
     version = if (commitHash != null) snapshotversion else baseVersion
+    group = "app.simplecloud.droplet.player"
 
     repositories {
         mavenCentral()
