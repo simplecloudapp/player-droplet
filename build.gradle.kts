@@ -3,6 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.shadow)
+    `maven-publish`
 }
 val baseVersion = "0.0.1"
 val commitHash = System.getenv("COMMIT_HASH")
@@ -27,6 +28,37 @@ subprojects {
     dependencies {
         testImplementation(rootProject.libs.kotlin.test)
         implementation(rootProject.libs.kotlin.jvm)
+    }
+
+    publishing {
+        repositories {
+            maven {
+                name = "simplecloud"
+                url = uri("https://repo.simplecloud.app/snapshots/")
+                credentials {
+                    username = System.getenv("SIMPLECLOUD_USERNAME")?: (project.findProperty("simplecloudUsername") as? String)
+                    password = System.getenv("SIMPLECLOUD_PASSWORD")?: (project.findProperty("simplecloudPassword") as? String)
+                }
+                authentication {
+                    create<BasicAuthentication>("basic")
+                }
+            }
+        }
+
+        publications {
+            // Not publish controller-runtime
+            if (project.name == "player-runtime") {
+                return@publications
+            }
+
+            if (project.name.contains("plugin")) {
+                return@publications
+            }
+
+            create<MavenPublication>("mavenJava") {
+                from(components["java"])
+            }
+        }
     }
 
     java {
