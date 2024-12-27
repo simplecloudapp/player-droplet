@@ -1,5 +1,6 @@
 package app.simplecloud.droplet.player.plugin.shared
 
+import app.simplecloud.droplet.api.auth.AuthCallCredentials
 import app.simplecloud.droplet.player.api.PlayerApi
 import app.simplecloud.droplet.player.api.impl.PlayerApiImpl
 import app.simplecloud.pubsub.PubSubClient
@@ -15,7 +16,8 @@ open class PlayerInternalApi(
 
     val pubSubClient = PubSubClient(
         System.getenv("PLAYER_DROPLET_HOST") ?: "127.0.0.1",
-        System.getenv("PLAYER_PUBSUB_DROPLET_PORT")?.toInt() ?: 5827
+        System.getenv("PLAYER_PUBSUB_DROPLET_PORT")?.toInt() ?: 5827,
+        AuthCallCredentials(System.getenv("CONTROLLER_SECRET") ?: "")
     )
 
     fun <T : Message> registerPubSubListener(
