@@ -1,6 +1,7 @@
 dependencies {
     compileOnly(rootProject.libs.velocity)
     api(rootProject.libs.cloud.velocity)
+    api(rootProject.libs.cloud.core)
     api(project(":player-shared"))
     api(project(":player-plugin:plugin-shared"))
     api(project(":player-api"))

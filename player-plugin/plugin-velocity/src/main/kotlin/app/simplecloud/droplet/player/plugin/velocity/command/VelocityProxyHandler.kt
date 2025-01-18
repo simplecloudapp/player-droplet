@@ -25,5 +25,11 @@ class VelocityProxyHandler(private val proxyServer: ProxyServer) : ProxyHandler 
         return true
     }
 
+    override fun sendMessageToPlayer(playerName: String, message: Component): Boolean {
+       val player = proxyServer.getPlayer(playerName).orElse(null) ?: return false
+        player.sendMessage(message)
+        return true
+    }
+
 
 }
