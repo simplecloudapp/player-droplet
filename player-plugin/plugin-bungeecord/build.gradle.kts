@@ -1,6 +1,7 @@
 dependencies {
     compileOnly(rootProject.libs.bungeecord)
     api(rootProject.libs.cloud.core)
+    api(rootProject.libs.adventure.platform.bungeecord)
     api(rootProject.libs.cloud.bungeecord)
     api("net.kyori:adventure-text-serializer-legacy:4.14.0")
     api(project(":player-shared"))

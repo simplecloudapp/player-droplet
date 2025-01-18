@@ -1,11 +1,12 @@
 package app.simplecloud.droplet.player.plugin.bungeecord.command
 
 import app.simplecloud.droplet.player.plugin.shared.command.ProxyHandler
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.md_5.bungee.api.ProxyServer
 
-class BungeeCordProxyHandler(private val proxyServer: ProxyServer): ProxyHandler {
+class BungeeCordProxyHandler(private val proxyServer: ProxyServer, private val audiences: BungeeAudiences): ProxyHandler {
     override fun getServers(): List<String> {
         return proxyServer.servers.map { it.value.name }
     }
@@ -28,7 +29,7 @@ class BungeeCordProxyHandler(private val proxyServer: ProxyServer): ProxyHandler
 
     override fun sendMessageToPlayer(playerName: String, message: Component): Boolean {
         val player = proxyServer.getPlayer(playerName) ?: return false
-        player.sendMessage(MiniMessage.miniMessage().serialize(message))
+        audiences.sender(player).sendMessage(message)
         return true
     }
 }

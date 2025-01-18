@@ -16,17 +16,18 @@ import app.simplecloud.droplet.player.plugin.shared.proxy.PlayerProxyApi
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerKickEvent
 import build.buf.gen.simplecloud.droplet.player.v1.ConnectCloudPlayerEvent
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.plugin.Plugin
 import org.incendo.cloud.SenderMapper
 import org.incendo.cloud.bungee.BungeeCommandManager
 import org.incendo.cloud.execution.ExecutionCoordinator
-import java.util.concurrent.TimeUnit
-import kotlin.io.path.pathString
 
 class PlayerBungeecordPlugin : Plugin() {
 
     private lateinit var commandManager: BungeeCommandManager<CloudSender>
+
+    private lateinit var adventure: BungeeAudiences
 
     private val playerApi = PlayerProxyApi(
         OnlinePlayerChecker { proxy.getPlayer(it) != null }
@@ -34,6 +35,7 @@ class PlayerBungeecordPlugin : Plugin() {
 
     override fun onEnable() {
         PlayerApiSingleton.init(playerApi)
+        this.adventure = BungeeAudiences.create(this);
         proxy.pluginManager.registerListener(this, PlayerConnectionListener(playerApi, plugin = this))
         proxy.pluginManager.registerListener(this, PlayerDisconnectListener(playerApi))
 
@@ -44,7 +46,7 @@ class PlayerBungeecordPlugin : Plugin() {
         val executionCoordinator = ExecutionCoordinator.simpleCoordinator<CloudSender>()
 
         val senderMapper = SenderMapper.create<CommandSender, CloudSender>(
-            { commandSender -> BungeeCordSender(commandSender) },
+            { commandSender -> BungeeCordSender(commandSender, adventure) },
             { cloudSender -> (cloudSender as BungeeCordSender).getCommandSender() }
         )
 
@@ -54,7 +56,7 @@ class PlayerBungeecordPlugin : Plugin() {
             senderMapper
         )
 
-        val bungeeCordProxyHandler = BungeeCordProxyHandler(proxy)
+        val bungeeCordProxyHandler = BungeeCordProxyHandler(proxy, adventure)
 
         val playerCommand = PlayerCommand(commandManager, messageConfiguration, bungeeCordProxyHandler)
         playerCommand.createPlayerCommand()
