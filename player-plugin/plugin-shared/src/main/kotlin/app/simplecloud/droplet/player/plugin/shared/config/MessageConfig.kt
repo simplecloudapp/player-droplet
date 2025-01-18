@@ -11,7 +11,7 @@ data class MessageConfig(
     val playerSendCommand: String = "   <color:#a3a3a3>/players send <server> <user>",
     val playerMessageCommand: String = "   <color:#a3a3a3>/players message <user> <message>",
 
-    val userInfoTitle: String = "<color:#38bdf8><bold>⚡</bold></color> <color:#ffffff>Information of user <user> <color:#a3e635>● <online>",
+    val userInfoTitle: String = "<color:#38bdf8><bold>⚡</bold></color> <color:#ffffff>Information of user <user> <online>",
     val userInfoName: String = "   <color:#a3a3a3>Name: <color:#38bdf8><name>",
     val userInfoId: String = "   <color:#a3a3a3>Unique Id: <color:#38bdf8><id>",
     val userInfoServer: String = "   <color:#a3a3a3>Last known server: <color:#38bdf8><server>",

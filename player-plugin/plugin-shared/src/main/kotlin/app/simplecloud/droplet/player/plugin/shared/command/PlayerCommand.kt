@@ -2,7 +2,6 @@ package app.simplecloud.droplet.player.plugin.shared.command
 
 import app.simplecloud.droplet.player.api.PlayerApi
 import app.simplecloud.droplet.player.plugin.shared.config.MessageConfig
-import build.buf.gen.simplecloud.droplet.player.v1.CloudPlayerConnectResult
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -20,7 +19,6 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.concurrent.CompletableFuture
 
 class PlayerCommand<C : CloudSender>(
     private val commandManager: CommandManager<C>,
@@ -82,7 +80,7 @@ class PlayerCommand<C : CloudSender>(
                 .handler { context: CommandContext<C> ->
                     val user = context.get<String>("user")
 
-                    playerApi.getOfflinePlayer(user).thenAccept { player ->
+                    playerApi.getOfflinePlayer(user.lowercase()).thenAccept { player ->
                         context.sender().sendMessage(
                             MiniMessage.miniMessage().deserialize(
                                 messageConfig.userInfoTitle,
@@ -94,7 +92,7 @@ class PlayerCommand<C : CloudSender>(
                                     Placeholder.component(
                                         "online",
                                         MiniMessage.miniMessage()
-                                            .deserialize(if (player.isOnline()) "<color:#a3e635>Online" else "<color:#dc2626>Offline")
+                                            .deserialize(if (player.isOnline()) "<color:#a3e635>● Online" else "<color:#dc2626>● Offline")
                                     )
                                 )
                             )
@@ -206,6 +204,7 @@ class PlayerCommand<C : CloudSender>(
                                 players.filter { it.getConnectedServerName() == server }
                                     .forEach { player -> playerList.add(player.getDisplayName()) }
 
+
                                 context.sender().sendMessage(
                                     MiniMessage.miniMessage().deserialize(
                                         messageConfig.serversInfoServer,
@@ -257,7 +256,8 @@ class PlayerCommand<C : CloudSender>(
                     }
 
                 }
-                .permission(Permission.permission("simplecloud.command.player.info.server")))
+            .permission(Permission.permission("simplecloud.command.player.info.server"))
+        )
     }
 
     private fun registerPlayerSendCommand() {
@@ -323,7 +323,8 @@ class PlayerCommand<C : CloudSender>(
                     }
 
                 }
-                .permission(Permission.permission("simplecloud.command.player.send")))
+            .permission(Permission.permission("simplecloud.command.player.send"))
+        )
     }
 
     private fun registerSendMessageCommand() {
@@ -363,7 +364,8 @@ class PlayerCommand<C : CloudSender>(
                         )
                     )
                 }
-                .permission(Permission.permission("simplecloud.command.player.message")))
+            .permission(Permission.permission("simplecloud.command.player.message"))
+        )
     }
 
 
