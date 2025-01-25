@@ -43,6 +43,15 @@ class PlayerDropletStartCommand : SuspendingCliktCommand() {
         envvar = "GRPC_PUB_SUB_PORT"
     ).int().default(5827)
 
+    val controllerPubSubGrpcHost: String by option(
+        help = "PubSub Grpc host (default: localhost)",
+        envvar = "CONTROLLER_GRPC_PUBSUB_HOST"
+    ).default("localhost")
+    val controllerPubSubGrpcPort: Int by option(
+        help = "PubSub Grpc port (default: 5817)",
+        envvar = "CONTROLLER_GRPC_PUB_SUB_PORT"
+    ).int().default(5817)
+
     val databaseUrl: String by option(help = "Database URL (default: ${defaultDatabaseUrl})", envvar = "DATABASE_URL")
         .default(defaultDatabaseUrl)
 
