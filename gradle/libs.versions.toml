@@ -19,6 +19,7 @@ paper = "1.20-R0.1-SNAPSHOT"
 spigot = "1.20-R0.1-SNAPSHOT"
 bungeecord = "1.20-R0.1-SNAPSHOT"
 clikt = "4.3.0"
+simplecloud-metrics = "1.0.0"
 simplecloud-controller = "0.0.30-dev.e6c9f03"
 
 
@@ -28,6 +29,7 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
 
 simplecloud-controller = { module = "app.simplecloud.controller:controller-api", version.ref = "simplecloud-controller" }
+simplecloud-metrics = { module = "app.simplecloud:internal-metrics-api", version.ref = "simplecloud-metrics" }
 
 
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }

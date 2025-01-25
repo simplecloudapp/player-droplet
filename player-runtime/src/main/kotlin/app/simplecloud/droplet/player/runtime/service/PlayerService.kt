@@ -1,17 +1,23 @@
 package app.simplecloud.droplet.player.runtime.service
 
+import app.simplecloud.droplet.api.time.ProtobufTimestamp
+import app.simplecloud.droplet.player.runtime.MetricsEventNames
 import app.simplecloud.droplet.player.runtime.connection.PlayerConnectionHandler
 import app.simplecloud.droplet.player.runtime.repository.JooqPlayerRepository
 import app.simplecloud.droplet.player.shared.rabbitmq.RabbitMqChannelNames
 import app.simplecloud.pubsub.PubSubClient
 import build.buf.gen.simplecloud.droplet.player.v1.*
+import build.buf.gen.simplecloud.metrics.v1.metric
+import build.buf.gen.simplecloud.metrics.v1.metricMeta
 import org.apache.logging.log4j.LogManager
+import java.time.LocalDateTime
 import java.util.*
 
 class PlayerService(
     private val pubSubClient: PubSubClient,
     private val jooqPlayerRepository: JooqPlayerRepository,
-    private val playerConnectionHandler: PlayerConnectionHandler
+    private val playerConnectionHandler: PlayerConnectionHandler,
+    private val controllerPubSubClient: PubSubClient
 ) : PlayerServiceGrpcKt.PlayerServiceCoroutineImplBase() {
 
     override suspend fun getOfflineCloudPlayerByUniqueId(request: GetCloudPlayerByUniqueIdRequest): GetOfflineCloudPlayerResponse {
@@ -76,6 +82,44 @@ class PlayerService(
     override suspend fun loginCloudPlayer(request: CloudPlayerLoginRequest): CloudPlayerLoginResponse {
         val success = playerConnectionHandler.handleLogin(request)
 
+        val player = jooqPlayerRepository.findByName(request.name)
+
+        val displayName = if (player == null) {
+            request.name
+        } else {
+            player.displayName ?: request.name
+        }
+
+        controllerPubSubClient.publish(MetricsEventNames.CONNECT, metric {
+            metricType = "ACTIVITY_LOG"
+            metricValue = 1L
+            time = ProtobufTimestamp.fromLocalDateTime(LocalDateTime.now())
+            meta.addAll(
+                listOf(
+                    metricMeta {
+                        dataName = "status"
+                        dataValue = "CONNECTED"
+                    },
+                    metricMeta {
+                        dataName = "resourceType"
+                        dataValue = "PLAYER"
+                    },
+                    metricMeta {
+                        dataName = "playerUniqueId"
+                        dataValue = request.uniqueId
+                    },
+                    metricMeta {
+                        dataName = "playerName"
+                        dataValue = request.name
+                    },
+                    metricMeta {
+                        dataName = "playerDisplayName"
+                        dataValue = displayName
+                    }
+                )
+            )
+        })
+
         return CloudPlayerLoginResponse.newBuilder()
             .setSuccess(success)
             .build()
@@ -83,6 +127,44 @@ class PlayerService(
 
     override suspend fun disconnectCloudPlayer(request: CloudPlayerDisconnectRequest): CloudPlayerDisconnectResponse {
         val success = playerConnectionHandler.handleLogout(request)
+
+        val player = jooqPlayerRepository.findByUniqueId(request.uniqueId)
+        val displayName = if (player == null) {
+            request.uniqueId
+        } else {
+            player.displayName ?: request.uniqueId
+        }
+
+
+        controllerPubSubClient.publish(MetricsEventNames.DISCONNECT, metric {
+            metricType = "ACTIVITY_LOG"
+            metricValue = 1L
+            time = ProtobufTimestamp.fromLocalDateTime(LocalDateTime.now())
+            meta.addAll(
+                listOf(
+                    metricMeta {
+                        dataName = "status"
+                        dataValue = "DISCONNECTED"
+                    },
+                    metricMeta {
+                        dataName = "resourceType"
+                        dataValue = "PLAYER"
+                    },
+                    metricMeta {
+                        dataName = "playerUniqueId"
+                        dataValue = request.uniqueId
+                    },
+                    metricMeta {
+                        dataName = "playerName"
+                        dataValue = player?.name ?: request.uniqueId
+                    },
+                    metricMeta {
+                        dataName = "playerDisplayName"
+                        dataValue = displayName
+                    }
+                )
+            )
+        })
 
         return CloudPlayerDisconnectResponse.newBuilder()
             .setSuccess(success)

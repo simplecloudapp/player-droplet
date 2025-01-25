@@ -45,6 +45,8 @@ class PlayerRuntime(
         ControllerDropletServiceGrpcKt.ControllerDropletServiceCoroutineStub(controllerChannel)
             .withCallCredentials(authCallCredentials)
 
+    val controllerPubSubClient = PubSubClient(startCommand.controllerPubSubGrpcHost, startCommand.controllerPubSubGrpcPort, authCallCredentials)
+
     private val server = createGrpcServerFromEnv()
 
     private val pubSubServer = createPubSubGrpcServerFromEnv()
@@ -105,7 +107,8 @@ class PlayerRuntime(
                 PlayerService(
                     pubSubClient,
                     jooqPlayerRepository,
-                    playerConnectionHandler
+                    playerConnectionHandler,
+                    controllerPubSubClient
                 )
             )
             .addService(PlayerAdventureService(pubSubClient, jooqPlayerRepository))
