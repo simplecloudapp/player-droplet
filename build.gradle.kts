@@ -30,34 +30,6 @@ subprojects {
         implementation(rootProject.libs.kotlin.jvm)
     }
 
-    publishing {
-        repositories {
-            maven {
-                name = "simplecloud"
-                url = uri(determineRepositoryUrl())
-                credentials {
-                    username = System.getenv("SIMPLECLOUD_USERNAME")
-                        ?: (project.findProperty("simplecloudUsername") as? String)
-                    password = System.getenv("SIMPLECLOUD_PASSWORD")
-                        ?: (project.findProperty("simplecloudPassword") as? String)
-                }
-                authentication {
-                    create<BasicAuthentication>("basic")
-                }
-            }
-        }
-
-        publications {
-            if (project.name == "player-runtime" || project.name.contains("plugin")) {
-                return@publications
-            }
-
-            create<MavenPublication>("mavenJava") {
-                from(components["java"])
-            }
-        }
-    }
-
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
@@ -80,6 +52,7 @@ subprojects {
 
         named("shadowJar", ShadowJar::class) {
             mergeServiceFiles()
+
             archiveFileName.set("${project.name}.jar")
         }
 
@@ -113,6 +86,30 @@ subprojects {
             scm {
                 url.set("https://github.com/simplecloudapp/player-droplet.git")
                 connection.set("git:git@github.com:simplecloudapp/player-droplet.git")
+            }
+        }
+    }
+
+    publishing {
+        repositories {
+            maven {
+                name = "simplecloud"
+                url = uri(determineRepositoryUrl())
+                credentials {
+                    username = System.getenv("SIMPLECLOUD_USERNAME")
+                        ?: (project.findProperty("simplecloudUsername") as? String)
+                    password = System.getenv("SIMPLECLOUD_PASSWORD")
+                        ?: (project.findProperty("simplecloudPassword") as? String)
+                }
+                authentication {
+                    create<BasicAuthentication>("basic")
+                }
+            }
+        }
+
+        publications {
+            create<MavenPublication>("mavenJava") {
+                from(components["java"])
             }
         }
     }
